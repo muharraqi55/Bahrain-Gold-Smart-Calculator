@@ -14,13 +14,14 @@
             --text-sub: #555555;
             --border-color: #e0e0e0;
             --success: #2e7d32;
+            --danger: #c62828;
             --bg-status: #fff9e6;
             --border-status: #ffeeba;
             --text-status: #856404;
             --bg-readonly: #e9ecef;
             
             /* مستويات الخطوط الافتراضية */
-            --font-scale: 1; /* سيتم تغييره عبر الجافاسكريبت */
+            --font-scale: 1; 
         }
 
         /* قيم الوضع الليلي */
@@ -31,6 +32,7 @@
             --text-sub: #b0b0b0;
             --border-color: #333333;
             --success: #81c784;
+            --danger: #ef5350;
             --bg-status: #2c2514;
             --border-status: #4d3d1a;
             --text-status: #ffd54f;
@@ -48,7 +50,6 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
-            /* تطبيق حجم الخط الديناميكي */
             font-size: calc(16px * var(--font-scale));
         }
 
@@ -57,7 +58,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             width: 100%;
-            max-width: 580px;
+            max-width: 650px;
             padding: 30px;
             box-sizing: border-box;
             border-top: 5px solid var(--primary);
@@ -317,6 +318,102 @@
             margin-inline-start: 3px;
         }
 
+        /* تصميم قسم الحفظ والمقارنة */
+        .save-container {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none; /* يظهر فقط بعد إجراء عملية الحساب */
+        }
+
+        .save-flex {
+            display: flex;
+            gap: 10px;
+        }
+
+        .save-flex input {
+            flex: 2;
+        }
+
+        .btn-save-shop {
+            flex: 1;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-save-shop:hover {
+            opacity: 0.9;
+        }
+
+        /* تصميم جدول المقارنة */
+        .comparison-section {
+            margin-top: 30px;
+            display: none; /* يظهر فقط إذا كان هناك بيانات محفوظة */
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-clear-all {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: calc(13px * var(--font-scale));
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-body);
+            color: var(--text-sub);
+            font-weight: bold;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-delete-row {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
         .live-price-info {
             font-size: calc(11px * var(--font-scale));
             color: var(--text-sub);
@@ -335,19 +432,18 @@
             color: var(--text-sub);
             line-height: 1.6;
         }
-        
-        .footer-copyrights strong {
-            color: var(--primary);
-        }
     </style>
 </head>
 <body>
 
 <div class="calculator-card">
     
+    <!-- كتابة في الأعلى تماماً -->
     <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
 
+    <!-- شريط التحكم العلوي المطور -->
     <div class="top-controls">
+        <!-- اختيار اللغة -->
         <select id="langSelect" class="lang-select" onchange="changeLanguage()">
             <option value="ar">العربية 🇸🇦</option>
             <option value="en">English 🇬🇧</option>
@@ -355,12 +451,14 @@
         </select>
 
         <div class="controls-right">
+            <!-- التحكم بحجم الخط -->
             <div class="font-sizer-container">
                 <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
                 <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
                 <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
             </div>
 
+            <!-- تبديل الثيم -->
             <button class="theme-toggle-btn" onclick="toggleTheme()">
                 <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
             </button>
@@ -369,11 +467,13 @@
 
     <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
     
+    <!-- شريط الحالة مع زر التحديث المباشر -->
     <div id="statusWrapper" class="status-bar">
         <span id="statusText">جاري تحميل الأسعار...</span>
         <button id="btnRefresh" class="btn-refresh" onclick="fetchGoldPrices()">تحديث الأسعار 🔄</button>
     </div>
 
+    <!-- طريقة جلب السعر -->
     <div class="form-group">
         <label id="lblPriceSource">طريقة جلب سعر الذهب:</label>
         <div class="price-source-container">
@@ -388,6 +488,7 @@
         </div>
     </div>
 
+    <!-- اختيار عيار الذهب -->
     <div class="form-group" id="caratGroup">
         <label id="lblCarat" for="carat">اختر عيار الذهب:</label>
         <select id="carat" onchange="updateSelectedPrice()">
@@ -398,16 +499,19 @@
         </select>
     </div>
 
+    <!-- سعر غرام السوق الحالي -->
     <div class="form-group">
         <label id="lblMarketPrice" for="marketPriceDisplay">سعر غرام السوق الحالي بالبحرين (د.ب):</label>
         <input type="number" id="marketPriceDisplay" min="0" step="any" placeholder="سعر الغرام...">
     </div>
 
+    <!-- الوزن الكلي للذهب -->
     <div class="form-group">
         <label id="lblTotalWeight" for="totalWeight">الوزن الكلي للذهب (غرام):</label>
         <input type="number" id="totalWeight" placeholder="مثال: 20" min="0" step="any" oninput="syncWeight()">
     </div>
 
+    <!-- الجزء الأول: تحليل السعر المعروض -->
     <div class="section-title" id="secTitle1">أولاً: تحليل السعر المعروض بالمحل</div>
     
     <div class="form-group">
@@ -428,6 +532,16 @@
         </div>
     </div>
 
+    <!-- شريط حفظ المحل للمقارنة -->
+    <div class="save-container" id="saveContainer">
+        <label id="lblSaveShop" for="shopNameInput">احفظ نتائج هذا المحل للمقارنة لاحقاً:</label>
+        <div class="save-flex">
+            <input type="text" id="shopNameInput" placeholder="أكتب اسم المحل هنا... (مثال: مجوهرات الزين)">
+            <button class="btn-save-shop" id="btnSaveShop" onclick="saveToComparison()">حفظ 💾</button>
+        </div>
+    </div>
+
+    <!-- الجزء الثاني: تحديد فائدة معينة للحساب -->
     <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
 
     <div class="form-group">
@@ -453,17 +567,43 @@
         </div>
     </div>
 
+    <!-- قسم المقارنة بين المحلات -->
+    <div class="comparison-section" id="comparisonSection">
+        <div class="comparison-header">
+            <h3 class="section-title" id="secTitleComparison" style="margin:0; border:none;">📊 جدول مقارنة عروض المحلات</h3>
+            <button class="btn-clear-all" id="btnClearAll" onclick="clearAllShops()">مسح الكل 🗑️</button>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th id="thShop">المحل</th>
+                        <th id="thWeight">الوزن (غ)</th>
+                        <th id="thTotalPrice">السعر الإجمالي</th>
+                        <th id="thPricePerGram">سعر غرام المحل</th>
+                        <th id="thProfit">المصنعية/غرام</th>
+                        <th id="thDelete">حذف</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <!-- تعبئة البيانات برمجياً -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="live-price-info" id="footerInfo">
         * يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.
     </div>
 
+    <!-- قسم الحقوق والدعاء بالخير -->
     <div class="footer-copyrights" id="footerCopyrights">
         &copy; 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍
     </div>
 </div>
 
 <script>
-    // قاموس الترجمات بالكامل للغات الثلاثة مع الحقوق وعبارة المطور
+    // قاموس الترجمات بالكامل للغات الثلاثة
     const translations = {
         ar: {
             devTag: "تم عمل الموقع بواسطة Muharraqi",
@@ -489,6 +629,17 @@
             btnCalc2: "احسب التكلفة الإضافية",
             resBox3Title: "سعر الغرام بالفائدة والمصنعية",
             resBox4Title: "المجموع الكلي المقدر للشراء",
+            lblSaveShop: "احفظ نتائج هذا المحل للمقارنة لاحقاً:",
+            shopNamePlaceholder: "أكتب اسم المحل هنا... (مثال: مجوهرات الزين)",
+            btnSaveShop: "حفظ 💾",
+            secTitleComparison: "📊 جدول مقارنة عروض المحلات",
+            btnClearAll: "مسح الكل 🗑️",
+            thShop: "المحل",
+            thWeight: "الوزن (غ)",
+            thTotalPrice: "السعر الإجمالي",
+            thPricePerGram: "سعر غرام المحل",
+            thProfit: "المصنعية/غرام",
+            thDelete: "حذف",
             footerInfo: "* يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.",
             copyrightText: "&copy; 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍",
             currency: "د.ب",
@@ -506,7 +657,8 @@
             carat22: "عيار 22",
             carat21: "عيار 21 (الأكثر شيوعاً)",
             carat18: "عيار 18",
-            weightUnit: "غرام"
+            weightUnit: "غرام",
+            alertShopName: "الرجاء كتابة اسم المحل أولاً لحفظ البيانات!"
         },
         en: {
             devTag: "Website developed by Muharraqi",
@@ -532,6 +684,17 @@
             btnCalc2: "Calculate Total Cost",
             resBox3Title: "Gram Price with Profit & Making Fee",
             resBox4Title: "Estimated Total Buying Price",
+            lblSaveShop: "Save this shop's result for later comparison:",
+            shopNamePlaceholder: "Type shop name... (e.g. Al-Zain Jewellery)",
+            btnSaveShop: "Save 💾",
+            secTitleComparison: "📊 Shop Offers Comparison Board",
+            btnClearAll: "Clear All 🗑️",
+            thShop: "Shop",
+            thWeight: "Weight (g)",
+            thTotalPrice: "Total Price",
+            thPricePerGram: "Shop Gram Price",
+            thProfit: "Making Fee/g",
+            thDelete: "Delete",
             footerInfo: "* Prices are updated automatically from the global market and converted to BHD.",
             copyrightText: "&copy; 2026 All rights reserved. This website was created for the benefit of people, please pray for me and my parents for goodness before Allah. 🤍",
             currency: "BHD",
@@ -549,7 +712,8 @@
             carat22: "Carat 22",
             carat21: "Carat 21 (Most Popular)",
             carat18: "Carat 18",
-            weightUnit: "g"
+            weightUnit: "g",
+            alertShopName: "Please write the shop name first to save data!"
         },
         hi: {
             devTag: "Muharraqi द्वारा विकसित वेबसाइट",
@@ -575,6 +739,17 @@
             btnCalc2: "कुल अनुमानित लागत",
             resBox3Title: "लाभ और मेकिंग चार्ज के साथ ग्राम मूल्य",
             resBox4Title: "अनुमानित कुल खरीद मूल्य",
+            lblSaveShop: "बाद में तुलना के लिए इस दुकान के परिणाम सहेजें:",
+            shopNamePlaceholder: "दुकान का नाम लिखें... (जैसे अल ज़ैन ज्वैलर्स)",
+            btnSaveShop: "सहेजें 💾",
+            secTitleComparison: "📊 दुकान प्रस्ताव तुलना बोर्ड",
+            btnClearAll: "सभी हटाएं 🗑️",
+            thShop: "दुकान",
+            thWeight: "वजन (ग्राम)",
+            thTotalPrice: "कुल कीमत",
+            thPricePerGram: "दुकान ग्राम मूल्य",
+            thProfit: "मेकिंग/ग्राम",
+            thDelete: "हटाएं",
             footerInfo: "* वैश्विक बाजार से कीमतें स्वचालित रूप से अपडेट की जाती हैं और BHD में परिवर्तित की जाती हैं।",
             copyrightText: "&copy; 2026 सर्वाधिकार सुरक्षित। यह वेबसाइट लोगों के हित के लिए बनाई गई है, कृपया मेरे और मेरे माता-पिता के लिए भगवान (अल्लाह) से प्रार्थना करें। 🤍",
             currency: "BHD",
@@ -592,32 +767,32 @@
             carat22: "कैरेट 22",
             carat21: "कैरेट 21 (सबसे लोकप्रिय)",
             carat18: "कैरेट 18",
-            weightUnit: "ग्राम"
+            weightUnit: "ग्राम",
+            alertShopName: "डेटा सहेजने के लिए कृपया पहले दुकान का नाम लिखें!"
         }
     };
 
     let goldPrices = { 24: 0, 22: 0, 21: 0, 18: 0 };
     let isManualMode = false;
     let currentLang = 'ar';
+    let lastCalculatedData = null; // يحفظ بيانات الحسبة الأخيرة الصالحة لتخزينها
 
     // دالة تكبير وتصغير الخط وتخزين القيمة
     function setFontSize(scale, btnElement) {
         document.documentElement.style.setProperty('--font-scale', scale);
         localStorage.setItem('fontScale', scale);
         
-        // تحديث مظهر الأزرار النشطة
         document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
         if (btnElement) {
             btnElement.classList.add('active');
         }
     }
 
-    // تبديل اللغة وتوطين كامل عناصر الصفحة
+    // تبديل اللغة وتوطين عناصر الصفحة
     function changeLanguage() {
         currentLang = document.getElementById('langSelect').value;
         const t = translations[currentLang];
 
-        // اتجاه النصوص RTL أو LTR
         if (currentLang === 'ar') {
             document.documentElement.dir = 'rtl';
             document.documentElement.lang = 'ar';
@@ -650,13 +825,26 @@
         document.getElementById('btnRefresh').innerText = t.btnRefresh;
         document.getElementById('footerCopyrights').innerHTML = t.copyrightText;
 
-        // ترجمة خيارات القائمة المنسدلة للعيارات
+        // نصوص التخزين والمقارنة
+        document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
+        document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
+        document.getElementById('btnSaveShop').innerText = t.btnSaveShop;
+        document.getElementById('secTitleComparison').innerText = t.secTitleComparison;
+        document.getElementById('btnClearAll').innerText = t.btnClearAll;
+
+        // عناوين جدول المقارنة
+        document.getElementById('thShop').innerText = t.thShop;
+        document.getElementById('thWeight').innerText = t.thWeight;
+        document.getElementById('thTotalPrice').innerText = t.thTotalPrice;
+        document.getElementById('thPricePerGram').innerText = t.thPricePerGram;
+        document.getElementById('thProfit').innerText = t.thProfit;
+        document.getElementById('thDelete').innerText = t.thDelete;
+
         document.getElementById('carat24').innerText = t.carat24;
         document.getElementById('carat22').innerText = t.carat22;
         document.getElementById('carat21').innerText = t.carat21;
         document.getElementById('carat18').innerText = t.carat18;
 
-        // ترجمة حقول الإدخال والـ Placeholders
         document.getElementById('marketPriceDisplay').placeholder = t.marketPricePlaceholder;
         document.getElementById('totalWeight').placeholder = t.totalWeightPlaceholder;
         document.getElementById('totalPrice').placeholder = t.totalPricePlaceholder;
@@ -667,6 +855,7 @@
         updateSelectedPrice();
         syncWeight();
         updateThemeButtonUI();
+        renderShopsTable(); // إعادة بناء الجدول لتعريب القيم
     }
 
     function updateCurrencies() {
@@ -674,7 +863,7 @@
         document.querySelectorAll('.currency').forEach(el => el.innerText = cur);
     }
 
-    // تبديل الثيم الداكن والنهاري وحفظ الخيار
+    // تبديل الثيم
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         let newTheme = 'light';
@@ -701,7 +890,6 @@
         }
     }
 
-    // التبديل بين جلب السعر التلقائي واليدوي
     function togglePriceSource() {
         const selectedSource = document.querySelector('input[name="priceSource"]:checked').value;
         const marketInput = document.getElementById('marketPriceDisplay');
@@ -725,7 +913,6 @@
         }
     }
 
-    // مزامنة حقل الوزن تلقائياً
     function syncWeight() {
         const weightInput = document.getElementById('totalWeight').value;
         const adoptedDisplay = document.getElementById('adoptedWeightDisplay');
@@ -737,7 +924,6 @@
         }
     }
 
-    // جلب أسعار الذهب التلقائية من الإنترنت المباشر
     async function fetchGoldPrices() {
         if (isManualMode) return;
         
@@ -833,11 +1019,97 @@
             document.getElementById('profitOnly').style.color = "var(--success)";
         } else {
             document.getElementById('profitOnly').innerHTML = t.lessThanMarket;
-            document.getElementById('profitOnly').style.color = "#dc3545"; 
+            document.getElementById('profitOnly').style.color = "var(--danger)"; 
         }
 
         document.getElementById('box1_1').classList.add('active');
         document.getElementById('box1_2').classList.add('active');
+
+        // إظهار مربع حفظ المحل وتجهيز البيانات المؤقتة للحفظ
+        document.getElementById('saveContainer').style.display = "block";
+        lastCalculatedData = {
+            weight: totalWeight,
+            totalPrice: totalPrice,
+            pricePerGram: pricePerGramStoreVal,
+            profitOnly: profitOnlyVal >= 0 ? profitOnlyVal : 0
+        };
+    }
+
+    // حفظ بيانات المحل في المقارنة
+    function saveToComparison() {
+        const t = translations[currentLang];
+        const shopNameInput = document.getElementById('shopNameInput');
+        const shopName = shopNameInput.value.trim();
+
+        if (!shopName) {
+            alert(t.alertShopName);
+            return;
+        }
+
+        if (!lastCalculatedData) return;
+
+        // جلب البيانات المخزنة مسبقاً أو إنشاء مصفوفة جديدة
+        let savedShops = JSON.parse(localStorage.getItem('goldShops')) || [];
+
+        // إضافة المحل الجديد
+        savedShops.push({
+            id: Date.now(),
+            name: shopName,
+            weight: lastCalculatedData.weight,
+            totalPrice: lastCalculatedData.totalPrice,
+            pricePerGram: lastCalculatedData.pricePerGram,
+            profitOnly: lastCalculatedData.profitOnly
+        });
+
+        // حفظ البيانات في الذاكرة وإعادة بناء الجدول
+        localStorage.setItem('goldShops', JSON.stringify(savedShops));
+        renderShopsTable();
+
+        // تنظيف حقل إدخال الاسم ليكون جاهزاً للمرة القادمة
+        shopNameInput.value = "";
+    }
+
+    // عرض وبناء جدول مقارنة المحلات المخزنة
+    function renderShopsTable() {
+        const t = translations[currentLang];
+        const comparisonSection = document.getElementById('comparisonSection');
+        const tableBody = document.getElementById('comparisonTableBody');
+        let savedShops = JSON.parse(localStorage.getItem('goldShops')) || [];
+
+        if (savedShops.length === 0) {
+            comparisonSection.style.display = "none";
+            return;
+        }
+
+        comparisonSection.style.display = "block";
+        tableBody.innerHTML = "";
+
+        savedShops.forEach(shop => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${shop.name}</strong></td>
+                <td>${shop.weight.toFixed(2)}</td>
+                <td>${shop.totalPrice.toFixed(3)} <span class="currency">${t.currency}</span></td>
+                <td>${shop.pricePerGram.toFixed(3)} <span class="currency">${t.currency}</span></td>
+                <td style="color: var(--success); font-weight: bold;">+${shop.profitOnly.toFixed(3)} <span class="currency">${t.currency}</span></td>
+                <td><button class="btn-delete-row" onclick="deleteShop(${shop.id})">❌</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // حذف محل معين من الجدول
+    function deleteShop(id) {
+        let savedShops = JSON.parse(localStorage.getItem('goldShops')) || [];
+        savedShops = savedShops.filter(shop => shop.id !== id);
+        localStorage.setItem('goldShops', JSON.stringify(savedShops));
+        renderShopsTable();
+    }
+
+    // مسح كافة المحلات المخزنة
+    function clearAllShops() {
+        localStorage.removeItem('goldShops');
+        renderShopsTable();
     }
 
     // حساب السعر البديل بناءً على الفائدة والمصنعية المحددة
@@ -876,7 +1148,6 @@
         const savedFontScale = localStorage.getItem('fontScale') || 1;
         document.documentElement.style.setProperty('--font-scale', savedFontScale);
         
-        // تحديد الزر النشط المقابل لحجم الخط المستعاد
         document.querySelectorAll('.font-btn').forEach(btn => {
             btn.classList.remove('active');
             if (parseFloat(savedFontScale) === 0.85 && btn.innerText === 'A-') btn.classList.add('active');

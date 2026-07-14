@@ -18,6 +18,9 @@
             --border-status: #ffeeba;
             --text-status: #856404;
             --bg-readonly: #e9ecef;
+            
+            /* مستويات الخطوط الافتراضية */
+            --font-scale: 1; /* سيتم تغييره عبر الجافاسكريبت */
         }
 
         /* قيم الوضع الليلي */
@@ -45,6 +48,8 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
+            /* تطبيق حجم الخط الديناميكي */
+            font-size: calc(16px * var(--font-scale));
         }
 
         .calculator-card {
@@ -52,7 +57,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             width: 100%;
-            max-width: 550px;
+            max-width: 580px;
             padding: 30px;
             box-sizing: border-box;
             border-top: 5px solid var(--primary);
@@ -62,20 +67,56 @@
         /* عبارة المطور في الأعلى */
         .developer-tag {
             text-align: center;
-            font-size: 13px;
+            font-size: calc(13px * var(--font-scale));
             color: var(--primary);
             font-weight: bold;
             margin-bottom: 15px;
             letter-spacing: 0.5px;
         }
 
-        /* أدوات التحكم العلوية (اللغة والثيم) */
+        /* أدوات التحكم العلوية */
         .top-controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             gap: 10px;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* أزرار التحكم في حجم الخط */
+        .font-sizer-container {
+            display: flex;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            overflow: hidden;
+            background: var(--bg-card);
+        }
+
+        .font-btn {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .font-btn:not(:last-child) {
+            border-inline-end: 1px solid var(--border-color);
+        }
+
+        .font-btn:hover, .font-btn.active {
+            background-color: var(--primary);
+            color: white;
         }
 
         .theme-toggle-btn {
@@ -85,11 +126,12 @@
             padding: 8px 12px;
             cursor: pointer;
             color: var(--text-main);
-            font-size: 16px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 5px;
             transition: all 0.3s;
+            font-weight: bold;
         }
 
         .theme-toggle-btn:hover {
@@ -104,6 +146,7 @@
             color: var(--text-main);
             font-weight: bold;
             cursor: pointer;
+            font-size: 14px;
             width: auto;
         }
 
@@ -112,7 +155,7 @@
             color: var(--text-main);
             margin-top: 0;
             margin-bottom: 25px;
-            font-size: 24px;
+            font-size: calc(24px * var(--font-scale));
         }
 
         .status-bar {
@@ -122,7 +165,7 @@
             padding: 12px;
             border-radius: 8px;
             text-align: center;
-            font-size: 14px;
+            font-size: calc(14px * var(--font-scale));
             margin-bottom: 20px;
             font-weight: bold;
             display: flex;
@@ -138,7 +181,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: calc(12px * var(--font-scale));
             transition: background 0.3s;
         }
 
@@ -147,7 +190,7 @@
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: calc(16px * var(--font-scale));
             color: var(--text-main);
             border-bottom: 2px solid var(--primary);
             padding-bottom: 5px;
@@ -165,6 +208,7 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--text-sub);
+            font-size: calc(14px * var(--font-scale));
         }
 
         select, input {
@@ -174,7 +218,7 @@
             background-color: var(--bg-card);
             color: var(--text-main);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: calc(16px * var(--font-scale));
             box-sizing: border-box;
             transition: all 0.3s;
         }
@@ -201,6 +245,7 @@
             cursor: pointer;
             font-weight: bold;
             color: var(--text-main);
+            font-size: calc(14px * var(--font-scale));
         }
 
         .radio-group input {
@@ -215,7 +260,7 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: calc(18px * var(--font-scale));
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
@@ -250,10 +295,10 @@
         }
 
         .result-box h3 {
-            font-size: 13px;
+            font-size: calc(13px * var(--font-scale));
             margin: 0 0 10px 0;
             color: var(--text-sub);
-            height: 40px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -261,19 +306,19 @@
         }
 
         .result-box .value {
-            font-size: 18px;
+            font-size: calc(18px * var(--font-scale));
             font-weight: bold;
             color: var(--text-main);
         }
 
         .currency {
-            font-size: 12px;
+            font-size: calc(12px * var(--font-scale));
             color: var(--text-sub);
             margin-inline-start: 3px;
         }
 
         .live-price-info {
-            font-size: 11px;
+            font-size: calc(11px * var(--font-scale));
             color: var(--text-sub);
             text-align: center;
             margin-top: 25px;
@@ -286,7 +331,7 @@
             padding-top: 15px;
             border-top: 1px solid var(--border-color);
             text-align: center;
-            font-size: 11px;
+            font-size: calc(11px * var(--font-scale));
             color: var(--text-sub);
             line-height: 1.6;
         }
@@ -300,33 +345,35 @@
 
 <div class="calculator-card">
     
-    <!-- كتابة في الأعلى تماماً -->
     <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
 
-    <!-- شريط التحكم العلوي -->
     <div class="top-controls">
-        <!-- اختيار اللغة -->
         <select id="langSelect" class="lang-select" onchange="changeLanguage()">
             <option value="ar">العربية 🇸🇦</option>
             <option value="en">English 🇬🇧</option>
             <option value="hi">हिंदी 🇮🇳</option>
         </select>
 
-        <!-- تبديل الثيم -->
-        <button class="theme-toggle-btn" onclick="toggleTheme()">
-            <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
-        </button>
+        <div class="controls-right">
+            <div class="font-sizer-container">
+                <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
+                <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
+                <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
+            </div>
+
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
+            </button>
+        </div>
     </div>
 
     <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
     
-    <!-- شريط الحالة مع زر التحديث المباشر -->
     <div id="statusWrapper" class="status-bar">
         <span id="statusText">جاري تحميل الأسعار...</span>
         <button id="btnRefresh" class="btn-refresh" onclick="fetchGoldPrices()">تحديث الأسعار 🔄</button>
     </div>
 
-    <!-- طريقة جلب السعر -->
     <div class="form-group">
         <label id="lblPriceSource">طريقة جلب سعر الذهب:</label>
         <div class="price-source-container">
@@ -341,7 +388,6 @@
         </div>
     </div>
 
-    <!-- اختيار عيار الذهب -->
     <div class="form-group" id="caratGroup">
         <label id="lblCarat" for="carat">اختر عيار الذهب:</label>
         <select id="carat" onchange="updateSelectedPrice()">
@@ -352,19 +398,16 @@
         </select>
     </div>
 
-    <!-- سعر غرام السوق الحالي -->
     <div class="form-group">
         <label id="lblMarketPrice" for="marketPriceDisplay">سعر غرام السوق الحالي بالبحرين (د.ب):</label>
         <input type="number" id="marketPriceDisplay" min="0" step="any" placeholder="سعر الغرام...">
     </div>
 
-    <!-- الوزن الكلي للذهب -->
     <div class="form-group">
         <label id="lblTotalWeight" for="totalWeight">الوزن الكلي للذهب (غرام):</label>
         <input type="number" id="totalWeight" placeholder="مثال: 20" min="0" step="any" oninput="syncWeight()">
     </div>
 
-    <!-- الجزء الأول: تحليل السعر المعروض -->
     <div class="section-title" id="secTitle1">أولاً: تحليل السعر المعروض بالمحل</div>
     
     <div class="form-group">
@@ -385,7 +428,6 @@
         </div>
     </div>
 
-    <!-- الجزء الثاني: تحديد فائدة معينة للحساب -->
     <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
 
     <div class="form-group">
@@ -415,14 +457,13 @@
         * يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.
     </div>
 
-    <!-- قسم الحقوق والدعاء بالخير -->
     <div class="footer-copyrights" id="footerCopyrights">
         &copy; 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍
     </div>
 </div>
 
 <script>
-    // قاموس الترجمات بالكامل للغات الثلاثة مع الحقوق وعبارة المطور المحدثة
+    // قاموس الترجمات بالكامل للغات الثلاثة مع الحقوق وعبارة المطور
     const translations = {
         ar: {
             devTag: "تم عمل الموقع بواسطة Muharraqi",
@@ -558,6 +599,18 @@
     let goldPrices = { 24: 0, 22: 0, 21: 0, 18: 0 };
     let isManualMode = false;
     let currentLang = 'ar';
+
+    // دالة تكبير وتصغير الخط وتخزين القيمة
+    function setFontSize(scale, btnElement) {
+        document.documentElement.style.setProperty('--font-scale', scale);
+        localStorage.setItem('fontScale', scale);
+        
+        // تحديث مظهر الأزرار النشطة
+        document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+        if (btnElement) {
+            btnElement.classList.add('active');
+        }
+    }
 
     // تبديل اللغة وتوطين كامل عناصر الصفحة
     function changeLanguage() {
@@ -819,6 +872,18 @@
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         
+        // استعادة تفضيل حجم الخط المحفوظ
+        const savedFontScale = localStorage.getItem('fontScale') || 1;
+        document.documentElement.style.setProperty('--font-scale', savedFontScale);
+        
+        // تحديد الزر النشط المقابل لحجم الخط المستعاد
+        document.querySelectorAll('.font-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (parseFloat(savedFontScale) === 0.85 && btn.innerText === 'A-') btn.classList.add('active');
+            if (parseFloat(savedFontScale) === 1 && btn.innerText === 'A') btn.classList.add('active');
+            if (parseFloat(savedFontScale) === 1.2 && btn.innerText === 'A+') btn.classList.add('active');
+        });
+
         changeLanguage(); 
         togglePriceSource(); 
     };

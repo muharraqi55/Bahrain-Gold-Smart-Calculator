@@ -1425,11 +1425,19 @@
             btn.innerText = isLoading ? "..." : translations[goldData.currentLang].btnRefresh;
         }
 
+        // ==================== التعديل الأساسي هنا لضمان منع التعديل اليدوي في الوضع التلقائي ====================
         function updateSelectedPrice() {
             const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
-            if(!isManual) {
+            const displayInput = document.getElementById('marketPriceDisplay');
+            
+            if (!isManual) {
                 const carat = document.getElementById('carat').value;
-                document.getElementById('marketPriceDisplay').value = livePrices[carat];
+                displayInput.value = livePrices[carat] || 0;
+                displayInput.readOnly = true;
+                displayInput.style.backgroundColor = "var(--bg-readonly)";
+            } else {
+                displayInput.readOnly = false;
+                displayInput.style.backgroundColor = "var(--bg-card)";
             }
         }
 
@@ -1468,16 +1476,11 @@
         }
 
         function togglePriceSource() {
+            // نستدعي الدالة المحدثة لضبط القيمة وحالة القراءة فقط والخلفية بشكل موحد
+            updateSelectedPrice();
             const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
-            const displayInput = document.getElementById('marketPriceDisplay');
             if (isManual) {
-                displayInput.readOnly = false;
-                displayInput.style.backgroundColor = "var(--bg-card)";
-                displayInput.focus();
-            } else {
-                displayInput.readOnly = true;
-                displayInput.style.backgroundColor = "var(--bg-readonly)";
-                updateSelectedPrice();
+                document.getElementById('marketPriceDisplay').focus();
             }
         }
 
@@ -1832,7 +1835,6 @@
             goldData.theme = targetTheme;
             const isDark = targetTheme === 'dark';
             document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
-            // التعديل هنا: استخدام كائن الترجمات للوضع النهاري والليلي
             document.getElementById('themeText').innerText = isDark ? translations[goldData.currentLang].themeDay : translations[goldData.currentLang].themeNight;
             saveLocalData();
         }
@@ -1867,7 +1869,6 @@
             document.getElementById('lblCustomProfit').innerText = t.lblCustomProfit;
             document.getElementById('customProfit').placeholder = t.phCustomProfit;
             document.getElementById('lblAdoptedWeight').innerText = t.lblAdoptedWeight;
-            // التعديل هنا: ترجمة Placeholder الوزن المعتمد
             document.getElementById('adoptedWeightDisplay').placeholder = t.phAdoptedWeight;
             document.getElementById('btnCalc2').innerText = t.btnCalc2;
             document.getElementById('resBox3Title').innerText = t.resBox3Title;
@@ -1933,7 +1934,6 @@
             document.getElementById('thBProfit').innerText = t.thBProfit;
             document.getElementById('thBActions').innerText = t.thBActions;
             
-            // التعديل هنا: ترجمة زر تحديث أسعار الذهب في قسم السبائك
             document.getElementById('btnRefreshBullionGold').innerText = t.btnRefreshBullionGold;
 
             document.documentElement.lang = lang;

@@ -6,7 +6,7 @@
     <title>حاسبة الذهب والسبائك الذكية - البحرين 🇧🇭</title>
     <style>
         :root {
-            --primary: #d4af37; /* لون ذهبي */
+            --primary: #d4af37;
             --primary-hover: #aa8c2c;
             --bg-body: #f0f2f5;
             --bg-card: #ffffff;
@@ -19,7 +19,7 @@
             --border-status: #ffeeba;
             --text-status: #856404;
             --bg-readonly: #e9ecef;
-            --font-scale: 1; 
+            --font-scale: 1;
         }
         [data-theme="dark"] {
             --bg-body: #121212;
@@ -691,1584 +691,1654 @@
             color: #ef5350;
             background-color: rgba(239, 83, 80, 0.2);
         }
+
+        .tradingview-nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: calc(14px * var(--font-scale));
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .tradingview-nav-btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.03);
+        }
+        .tradingview-embed-container {
+            width: 100%;
+            height: 80vh;
+            min-height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            position: relative;
+        }
+        .tradingview-embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* تنسيق خاص لوضع الشارت في المنتصف */
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-        <h1 id="page-title">🇧🇭 حاسبة الذهب الذكية - البحرين</h1>
-        <div style="width: 24px;"></div>
-    </header>
+<header>
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <h1 id="page-title">🇧🇭 حاسبة الذهب الذكية - البحرين</h1>
+    <button class="tradingview-nav-btn" onclick="switchTab('tradingview-page')">
+        📊 TradingView
+    </button>
+</header>
 
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-        <button class="close-btn" onclick="toggleSidebar()">✕</button>
-        <ul>
-            <li class="active" id="menu-calc" onclick="switchTab('calculator-page')">🇧🇭 حاسبة الذهب الذكية - البحرين</li>
-            <li id="menu-bullion" onclick="switchTab('bullion-page')">المتوسط السعري للسبائك</li>
-        </ul>
-    </div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+    <ul>
+        <li class="active" id="menu-calc" onclick="switchTab('calculator-page')">🇧🇭 حاسبة الذهب الذكية - البحرين</li>
+        <li id="menu-bullion" onclick="switchTab('bullion-page')">المتوسط السعري للسبائك</li>
+        <li id="menu-tradingview" onclick="switchTab('tradingview-page')">📊 TradingView (XAUUSD)</li>
+    </ul>
+</div>
 
-    <div class="container">
+<div class="container">
 
-        <!-- ================= القسم الأول: حاسبة الذهب الذكية الأصلية ================= -->
-        <div id="calculator-page" class="page-section active">
-            <div class="calculator-card">
-                <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
-                
-                <div class="top-controls">
-                    <select id="langSelect" class="lang-select" onchange="changeLanguage()">
-                        <option value="ar">العربية 🇸🇦</option>
-                        <option value="en">English 🇬🇧</option>
-                        <option value="hi">हिंदी 🇮🇳</option>
-                    </select>
+    <!-- ================= القسم الأول: حاسبة الذهب الذكية الأصلية ================= -->
+    <div id="calculator-page" class="page-section active">
+        <div class="calculator-card">
+            <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
+            
+            <div class="top-controls">
+                <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+                    <option value="ar">العربية 🇸🇦</option>
+                    <option value="en">English 🇬🇧</option>
+                    <option value="hi">हिंदी 🇮🇳</option>
+                </select>
 
-                    <div class="controls-right">
-                        <div class="font-sizer-container">
-                            <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
-                            <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
-                            <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
-                        </div>
-
-                        <button class="theme-toggle-btn" onclick="toggleTheme()">
-                            <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
-                        </button>
+                <div class="controls-right">
+                    <div class="font-sizer-container">
+                        <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
+                        <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
+                        <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
                     </div>
-                </div>
 
-                <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
-                
-                <div id="statusWrapper" class="status-bar">
-                    <span id="statusText">جاري تحميل الأسعار...</span>
-                    <button id="btnRefresh" class="btn-refresh" onclick="fetchGoldPrices()">تحديث الأسعار 🔄</button>
+                    <button class="theme-toggle-btn" onclick="toggleTheme()">
+                        <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
+                    </button>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label id="lblPriceSource">طريقة جلب سعر الذهب:</label>
-                    <div class="price-source-container">
-                        <label class="radio-group">
-                            <input type="radio" name="priceSource" value="auto" checked onchange="togglePriceSource()">
-                            <span id="optAuto">تلقائي (من الإنترنت المباشر) 🌐</span>
-                        </label>
-                        <label class="radio-group">
-                            <input type="radio" name="priceSource" value="manual" onchange="togglePriceSource()">
-                            <span id="optManual">يدوي (أكتبه بنفسي) ✍️</span>
-                        </label>
+            <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
+            
+            <div id="statusWrapper" class="status-bar">
+                <span id="statusText">جاري تحميل الأسعار...</span>
+                <button id="btnRefresh" class="btn-refresh" onclick="fetchGoldPrices()">تحديث الأسعار 🔄</button>
+            </div>
+
+            <div class="form-group">
+                <label id="lblPriceSource">طريقة جلب سعر الذهب:</label>
+                <div class="price-source-container">
+                    <label class="radio-group">
+                        <input type="radio" name="priceSource" value="auto" checked onchange="togglePriceSource()">
+                        <span id="optAuto">تلقائي (من الإنترنت المباشر) 🌐</span>
+                    </label>
+                    <label class="radio-group">
+                        <input type="radio" name="priceSource" value="manual" onchange="togglePriceSource()">
+                        <span id="optManual">يدوي (أكتبه بنفسي) ✍️</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="caratGroup">
+                <label id="lblCarat" for="carat">اختر عيار الذهب:</label>
+                <select id="carat" onchange="updateSelectedPrice()">
+                    <option value="24" id="carat24">عيار 24</option>
+                    <option value="22" id="carat22">عيار 22</option>
+                    <option value="21" id="carat21" selected>عيار 21 (الأكثر شيوعاً)</option>
+                    <option value="18" id="carat18">عيار 18</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="lblMarketPrice" for="marketPriceDisplay">سعر غرام السوق الحالي بالبحرين (د.ب):</label>
+                <input type="number" id="marketPriceDisplay" min="0" step="any">
+            </div>
+
+            <div class="form-group">
+                <label id="lblTotalWeight" for="totalWeight">الوزن الكلي للذهب (غرام):</label>
+                <input type="number" id="totalWeight" min="0" step="any" oninput="syncWeight()">
+            </div>
+
+            <div class="section-title" id="secTitle1">أولاً: تحليل السعر المعروض بالمحل</div>
+            <div class="form-group">
+                <label id="lblTotalPrice" for="totalPrice">سعر الذهب الكلي المعروض بالمحل (د.ب):</label>
+                <input type="number" id="totalPrice" min="0" step="any">
+            </div>
+
+            <button class="btn-calc" id="btnCalc1" onclick="calculateProfit()">تحليل السعر المعروض</button>
+            <div class="results-container">
+                <div class="result-box" id="box1_1">
+                    <h3 id="resBox1Title">سعر الغرام الكلي في المحل</h3>
+                    <div class="value" id="pricePerGramStore">0.00 <span class="currency">د.ب</span></div>
+                </div>
+                <div class="result-box" id="box1_2">
+                    <h3 id="resBox2Title">فائدة ومصنعية المحل (لكل غرام)</h3>
+                    <div class="value" id="profitOnly">0.00 <span class="currency">د.ب</span></div>
+                </div>
+            </div>
+
+            <div class="save-container" id="saveContainer">
+                <div class="save-flex">
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label id="lblSaveShop" for="shopNameInput">اسم المحل:</label>
+                        <input type="text" id="shopNameInput">
                     </div>
-                </div>
 
-                <div class="form-group" id="caratGroup">
-                    <label id="lblCarat" for="carat">اختر عيار الذهب:</label>
-                    <select id="carat" onchange="updateSelectedPrice()">
-                        <option value="24" id="carat24">عيار 24</option>
-                        <option value="22" id="carat22">عيار 22</option>
-                        <option value="21" id="carat21" selected>عيار 21 (الأكثر شيوعاً)</option>
-                        <option value="18" id="carat18">عيار 18</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label id="lblMarketPrice" for="marketPriceDisplay">سعر غرام السوق الحالي بالبحرين (د.ب):</label>
-                    <input type="number" id="marketPriceDisplay" min="0" step="any">
-                </div>
-
-                <div class="form-group">
-                    <label id="lblTotalWeight" for="totalWeight">الوزن الكلي للذهب (غرام):</label>
-                    <input type="number" id="totalWeight" min="0" step="any" oninput="syncWeight()">
-                </div>
-
-                <div class="section-title" id="secTitle1">أولاً: تحليل السعر المعروض بالمحل</div>
-                <div class="form-group">
-                    <label id="lblTotalPrice" for="totalPrice">سعر الذهب الكلي المعروض بالمحل (د.ب):</label>
-                    <input type="number" id="totalPrice" min="0" step="any">
-                </div>
-
-                <button class="btn-calc" id="btnCalc1" onclick="calculateProfit()">تحليل السعر المعروض</button>
-                <div class="results-container">
-                    <div class="result-box" id="box1_1">
-                        <h3 id="resBox1Title">سعر الغرام الكلي في المحل</h3>
-                        <div class="value" id="pricePerGramStore">0.00 <span class="currency">د.ب</span></div>
-                    </div>
-                    <div class="result-box" id="box1_2">
-                        <h3 id="resBox2Title">فائدة ومصنعية المحل (لكل غرام)</h3>
-                        <div class="value" id="profitOnly">0.00 <span class="currency">د.ب</span></div>
-                    </div>
-                </div>
-
-                <div class="save-container" id="saveContainer">
-                    <div class="save-flex">
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label id="lblSaveShop" for="shopNameInput">اسم المحل:</label>
-                            <input type="text" id="shopNameInput">
-                        </div>
-
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label id="lblAddPhoto">إرفاق صور المعاينة أو الفاتورة (اختياري - صورتين كحد أقصى):</label>
-                            <div class="images-grid-inputs">
-                                <div class="image-picker-block">
-                                    <label style="font-size:12px; margin-bottom:4px;" id="lblPic1">الصورة الأولى 📸</label>
-                                    <div class="image-options-container">
-                                        <button class="btn-img-option" onclick="openLiveCamera(1)">📷</button>
-                                        <button class="btn-img-option" onclick="document.getElementById('imageFileInput1').click()">📁</button>
-                                    </div>
-                                    <input type="file" id="imageFileInput1" accept="image/*" style="display:none;" onchange="handleFileImport(event, 1)">
-                                    <div id="imgPreviewWrapper1" class="img-preview-container" style="display:none;">
-                                        <img id="imgPreviewEl1" class="img-preview" src="" alt="preview1" onclick="openLightbox(this.src)">
-                                        <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;" onclick="removeAttachedImage(1)">✕</button>
-                                    </div>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label id="lblAddPhoto">إرفاق صور المعاينة أو الفاتورة (اختياري - صورتين كحد أقصى):</label>
+                        <div class="images-grid-inputs">
+                            <div class="image-picker-block">
+                                <label style="font-size:12px; margin-bottom:4px;" id="lblPic1">الصورة الأولى 📸</label>
+                                <div class="image-options-container">
+                                    <button class="btn-img-option" onclick="openLiveCamera(1)">📷</button>
+                                    <button class="btn-img-option" onclick="document.getElementById('imageFileInput1').click()">📁</button>
                                 </div>
+                                <input type="file" id="imageFileInput1" accept="image/*" style="display:none;" onchange="handleFileImport(event, 1)">
+                                <div id="imgPreviewWrapper1" class="img-preview-container" style="display:none;">
+                                    <img id="imgPreviewEl1" class="img-preview" src="" alt="preview1" onclick="openLightbox(this.src)">
+                                    <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;" onclick="removeAttachedImage(1)">✕</button>
+                                </div>
+                            </div>
 
-                                <div class="image-picker-block">
-                                    <label style="font-size:12px; margin-bottom:4px;" id="lblPic2">الصورة الثانية 💎</label>
-                                    <div class="image-options-container">
-                                        <button class="btn-img-option" onclick="openLiveCamera(2)">📷</button>
-                                        <button class="btn-img-option" onclick="document.getElementById('imageFileInput2').click()">📁</button>
-                                    </div>
-                                    <input type="file" id="imageFileInput2" accept="image/*" style="display:none;" onchange="handleFileImport(event, 2)">
-                                    <div id="imgPreviewWrapper2" class="img-preview-container" style="display:none;">
-                                        <img id="imgPreviewEl2" class="img-preview" src="" alt="preview2" onclick="openLightbox(this.src)">
-                                        <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;" onclick="removeAttachedImage(2)">✕</button>
-                                    </div>
+                            <div class="image-picker-block">
+                                <label style="font-size:12px; margin-bottom:4px;" id="lblPic2">الصورة الثانية 💎</label>
+                                <div class="image-options-container">
+                                    <button class="btn-img-option" onclick="openLiveCamera(2)">📷</button>
+                                    <button class="btn-img-option" onclick="document.getElementById('imageFileInput2').click()">📁</button>
+                                </div>
+                                <input type="file" id="imageFileInput2" accept="image/*" style="display:none;" onchange="handleFileImport(event, 2)">
+                                <div id="imgPreviewWrapper2" class="img-preview-container" style="display:none;">
+                                    <img id="imgPreviewEl2" class="img-preview" src="" alt="preview2" onclick="openLightbox(this.src)">
+                                    <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;" onclick="removeAttachedImage(2)">✕</button>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group" style="margin-bottom:15px;">
-                            <label id="lblAddLocation">موقع المحل الجغرافي (اختياري):</label>
-                            <button type="button" class="btn-gps" id="btnGps" onclick="getGPSLocation()">
-                                📍 <span id="gpsBtnText">تحديد موقعي الحالي بالـ GPS</span>
-                            </button>
-                        </div>
-
-                        <button class="btn-save-shop" id="btnSaveShop" onclick="saveToComparison()">حفظ العرض في الجدول 💾</button>
-                    </div>
-                </div>
-
-                <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
-                <div class="form-group">
-                    <label id="lblCustomProfit" for="customProfit">حدد الفائدة والمصنعية للغرام الواحد (د.ب):</label>
-                    <input type="number" id="customProfit" min="0" step="any">
-                </div>
-                <div class="form-group">
-                    <label id="lblAdoptedWeight">الوزن الكلي المعتمد (غرام):</label>
-                    <input type="text" id="adoptedWeightDisplay" readonly style="background-color: var(--bg-readonly); color: var(--text-sub);">
-                </div>
-                <button class="btn-calc" id="btnCalc2" onclick="calculateCustomPrice()">احسب التكلفة الإضافية</button>
-                <div class="results-container">
-                    <div class="result-box" id="box2_1">
-                        <h3 id="resBox3Title">سعر الغرام بالفائدة والمصنعية</h3>
-                        <div class="value" id="gramWithProfit">0.00 <span class="currency">د.ب</span></div>
-                    </div>
-                    <div class="result-box" id="box2_2">
-                        <h3 id="resBox4Title">المجموع الكلي المقدر للشراء</h3>
-                        <div class="value" id="totalWithProfit">0.00 <span class="currency">د.ب</span></div>
-                    </div>
-                </div>
-
-                <div class="comparison-section" id="comparisonSection">
-                    <div class="comparison-header">
-                        <h3 class="section-title" id="secTitleComparison" style="margin:0; border:none;">📊 جدول مقارنة عروض المحلات</h3>
-                        <div class="sort-container">
-                            <label id="lblSort" for="sortSelect" style="margin:0; font-size:12px;">ترتيب بحسب:</label>
-                            <select id="sortSelect" class="sort-select" onchange="changeSortOrder()">
-                                <option value="none" id="optSortNone">تاريخ الإضافة</option>
-                                <option value="profitAsc" id="optSortProfitAsc">الأقل مصنعية (الأرخص)</option>
-                                <option value="priceAsc" id="optSortPriceAsc">الأقل سعراً إجمالياً</option>
-                            </select>
-                        </div>
-                        <button class="btn-clear-all" id="btnClearAll" onclick="clearAllShops()">مسح الكل 🗑️</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th id="thShop">المحل</th>
-                                    <th id="thPhoto">الصور (1 و 2)</th>
-                                    <th id="thWeight">الوزن (غ)</th>
-                                    <th id="thTotalPrice">السعر الإجمالي</th>
-                                    <th id="thPricePerGram">سعر غرام المحل</th>
-                                    <th id="thProfit">المصنعية/غرام</th>
-                                    <th id="thLocation">الموقع</th>
-                                    <th id="thDelete">التحكم</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comparisonTableBody"></tbody>
-                        </table>
                     </div>
 
-                    <div class="backup-container">
-                        <button class="btn-backup" onclick="exportBackupData()">
-                            📤 <span id="btnExportTxt">تصدير نسخة احتياطية</span>
+                    <div class="form-group" style="margin-bottom:15px;">
+                        <label id="lblAddLocation">موقع المحل الجغرافي (اختياري):</label>
+                        <button type="button" class="btn-gps" id="btnGps" onclick="getGPSLocation()">
+                            📍 <span id="gpsBtnText">تحديد موقعي الحالي بالـ GPS</span>
                         </button>
-                        <button class="btn-backup" onclick="document.getElementById('importFileInput').click()">
-                            📥 <span id="btnImportTxt">استيراد نسخة احتياطية</span>
-                        </button>
-                        <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importBackupData(event)">
                     </div>
-                </div>
 
-                <div class="live-price-info" id="footerInfo">
-                    * يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.
+                    <button class="btn-save-shop" id="btnSaveShop" onclick="saveToComparison()">حفظ العرض في الجدول 💾</button>
                 </div>
             </div>
-        </div>
 
-        <!-- ================= القسم الثاني: حساب المتوسط السعري للسبائك ================= -->
-        <div id="bullion-page" class="page-section">
-            <div class="calculator-card">
-                <div class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
-                <h2 id="bullionMainTitle">📊 المتوسط السعري للسبائك</h2>
-                
-                <div class="form-group" style="background: var(--bg-status); padding: 15px; border-radius: 8px; border: 1px solid var(--border-status); margin-bottom: 20px;">
-                    <label id="lblBullionLivePriceHelp" style="color: var(--text-status);">💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:</label>
-                    
-                    <div class="bullion-price-source">
-                        <label>
-                            <input type="radio" name="bullionPriceSource" value="auto" checked onchange="toggleBullionPriceSource()"> 
-                            <span id="bullionOptAuto">تلقائي (من سعر الذهب الرئيسي)</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="bullionPriceSource" value="manual" onchange="toggleBullionPriceSource()"> 
-                            <span id="bullionOptManual">يدوي (أكتب السعر بنفسي)</span>
-                        </label>
-                    </div>
+            <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
+            <div class="form-group">
+                <label id="lblCustomProfit" for="customProfit">حدد الفائدة والمصنعية للغرام الواحد (د.ب):</label>
+                <input type="number" id="customProfit" min="0" step="any">
+            </div>
+            <div class="form-group">
+                <label id="lblAdoptedWeight">الوزن الكلي المعتمد (غرام):</label>
+                <input type="text" id="adoptedWeightDisplay" readonly style="background-color: var(--bg-readonly); color: var(--text-sub);">
+            </div>
+            <button class="btn-calc" id="btnCalc2" onclick="calculateCustomPrice()">احسب التكلفة الإضافية</button>
+            <div class="results-container">
+                <div class="result-box" id="box2_1">
+                    <h3 id="resBox3Title">سعر الغرام بالفائدة والمصنعية</h3>
+                    <div class="value" id="gramWithProfit">0.00 <span class="currency">د.ب</span></div>
+                </div>
+                <div class="result-box" id="box2_2">
+                    <h3 id="resBox4Title">المجموع الكلي المقدر للشراء</h3>
+                    <div class="value" id="totalWithProfit">0.00 <span class="currency">د.ب</span></div>
+                </div>
+            </div>
 
-                    <!-- التعديل هنا: إضافة زر تحديث أسعار الذهب فوق زر تحديث الأرباح -->
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
-                        <button id="btnRefreshBullionGold" class="btn-refresh" onclick="fetchGoldPrices()" style="width: 100%; padding: 10px; font-size: 14px;">تحديث أسعار الذهب 🔄</button>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="number" id="bullion-market-price" step="any" style="flex: 2;">
-                            <button id="btnUpdateBullionProfits" onclick="updateAndSaveBullionProfits()" style="flex: 1; white-space: nowrap; background-color: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">تحديث الأرباح 🔄</button>
-                        </div>
+            <div class="comparison-section" id="comparisonSection">
+                <div class="comparison-header">
+                    <h3 class="section-title" id="secTitleComparison" style="margin:0; border:none;">📊 جدول مقارنة عروض المحلات</h3>
+                    <div class="sort-container">
+                        <label id="lblSort" for="sortSelect" style="margin:0; font-size:12px;">ترتيب بحسب:</label>
+                        <select id="sortSelect" class="sort-select" onchange="changeSortOrder()">
+                            <option value="none" id="optSortNone">تاريخ الإضافة</option>
+                            <option value="profitAsc" id="optSortProfitAsc">الأقل مصنعية (الأرخص)</option>
+                            <option value="priceAsc" id="optSortPriceAsc">الأقل سعراً إجمالياً</option>
+                        </select>
                     </div>
-                    <div class="bullion-price-help" id="bullionPriceHelp">* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).</div>
+                    <button class="btn-clear-all" id="btnClearAll" onclick="clearAllShops()">مسح الكل 🗑️</button>
                 </div>
-
-                <div class="summary-box">
-                    <div class="summary-card">
-                        <h3 id="lblTotalInvested">إجمالي الاستثمار</h3>
-                        <p id="total-invested">0.00 د.ب</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3 id="lblTotalWeightB">إجمالي الوزن</h3>
-                        <p id="total-weight-b">0 غرام</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3 id="lblAvgGramPrice">متوسط سعر الغرام</h3>
-                        <p id="avg-price-per-gram">0.00 د.ب</p>
-                    </div>
-                    <div id="profit-loss-card" class="summary-card">
-                        <h3 id="lblNetProfitLoss">صافي الربح / الخسارة</h3>
-                        <p id="profit-loss-val">0.00 د.ب</p>
-                    </div>
-                </div>
-
-                <div class="section-title" id="bullionFormTitle">إضافة عملية شراء سبيكة جديدة</div>
-                <input type="hidden" id="bullion-edit-index" value="-1">
-                
-                <div class="form-group">
-                    <label id="lblBullionPriceInput">سعر الشراء الإجمالي (بالدينار البحريني):</label>
-                    <input type="number" id="bullion-price" step="any">
-                </div>
-                <div class="form-group">
-                    <label id="lblBullionWeightInput">الوزن (بالغرام):</label>
-                    <input type="number" id="bullion-weight" step="any">
-                </div>
-                <div class="form-group">
-                    <label id="lblBullionDateInput">تاريخ الشراء:</label>
-                    <input type="date" id="bullion-date">
-                </div>
-
-                <div class="btn-action-container">
-                    <button id="btn-save-bullion" class="btn-calc" onclick="saveBullionTransaction()" style="margin-top:0;">حفظ العملية 💾</button>
-                    <button id="btn-cancel-edit" class="btn-calc" onclick="resetBullionForm()" style="margin-top:0; background-color: #95a5a6; display: none;">إلغاء التعديل ✕</button>
-                </div>
-
-                <div class="section-title" id="bullionTableTitle">سجل عمليات الشراء والسبائك</div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th id="thBDate">التاريخ</th>
-                                <th id="thBWeight">الوزن (غرام)</th>
-                                <th id="thBPrice">سعر الشراء</th>
-                                <th id="thBPerGram">سعر الغرام</th>
-                                <th id="thBProfit">حالة الصفقة (ربح/خسارة)</th>
-                                <th id="thBActions">إجراءات</th>
+                                <th id="thShop">المحل</th>
+                                <th id="thPhoto">الصور (1 و 2)</th>
+                                <th id="thWeight">الوزن (غ)</th>
+                                <th id="thTotalPrice">السعر الإجمالي</th>
+                                <th id="thPricePerGram">سعر غرام المحل</th>
+                                <th id="thProfit">المصنعية/غرام</th>
+                                <th id="thLocation">الموقع</th>
+                                <th id="thDelete">التحكم</th>
                             </tr>
                         </thead>
-                        <tbody id="bullion-table-body"></tbody>
+                        <tbody id="comparisonTableBody"></tbody>
                     </table>
                 </div>
+
+                <div class="backup-container">
+                    <button class="btn-backup" onclick="exportBackupData()">
+                        📤 <span id="btnExportTxt">تصدير نسخة احتياطية</span>
+                    </button>
+                    <button class="btn-backup" onclick="document.getElementById('importFileInput').click()">
+                        📥 <span id="btnImportTxt">استيراد نسخة احتياطية</span>
+                    </button>
+                    <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importBackupData(event)">
+                </div>
+            </div>
+
+            <div class="live-price-info" id="footerInfo">
+                * يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.
             </div>
         </div>
-
-        <div class="footer-copyrights" id="footerCopyrights">
-            © 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍
-        </div>
     </div>
 
-    <div id="cameraModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeLiveCamera()">✕</button>
-            <h3 id="modalCamTitle" style="margin-top:0; color:var(--text-main);">الكاميرا الحية داخل التطبيق</h3>
-            <video id="videoFeed" class="camera-video" autoplay playsinline></video>
-            <button class="btn-capture" onclick="capturePhotoFromFeed()">
-                📸 <span id="btnTxtTake">التقاط الآن</span>
-            </button>
-        </div>
-    </div>
-
-    <div id="lightboxModal" class="modal-overlay" onclick="closeLightbox()">
-        <div class="modal-content" style="background:none; box-shadow:none; padding:0;" onclick="event.stopPropagation()">
-            <button class="modal-close" style="color:#fff; top:-35px; right:0;" onclick="closeLightbox()">✕</button>
-            <img id="lightboxImageEl" class="lightbox-img" src="" alt="Zoomed image">
-        </div>
-    </div>
-
-    <canvas id="hiddenCompressCanvas" style="display:none;"></canvas>
-
-    <script>
-        function getFormattedDateTime() {
-            const now = new Date();
-            const lang = goldData.currentLang;
-            if (lang === 'ar') {
-                return now.toLocaleString('ar-BH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            } else if (lang === 'en') {
-                return now.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            } else {
-                return now.toLocaleString('hi-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            }
-        }
-
-        const translations = {
-            ar: {
-                devTag: "تم عمل الموقع بواسطة Muharraqi",
-                title: "🇧🇭 حاسبة الذهب الذكية - البحرين",
-                menuCalc: "🇧🇭 حاسبة الذهب الذكية - البحرين",
-                menuBullion: "المتوسط السعري للسبائك",
-                statusLoading: "جاري تحميل الأسعار...",
-                statusSuccess: "تم تحديث الأسعار بنجاح 🟢",
-                statusFail: "فشل التحديث التلقائي. تم استخدام أسعار تقريبية 🔴",
-                btnRefresh: "تحديث الأسعار 🔄",
-                lblPriceSource: "طريقة جلب سعر الذهب:",
-                optAuto: "تلقائي (من الإنترنت المباشر) 🌐",
-                optManual: "يدوي (أكتبه بنفسي) ✍️",
-                lblCarat: "اختر عيار الذهب:",
-                carat24: "عيار 24",
-                carat22: "عيار 22",
-                carat21: "عيار 21 (الأكثر شيوعاً)",
-                carat18: "عيار 18",
-                lblMarketPrice: "سعر غرام السوق الحالي بالبحرين (د.ب):",
-                lblTotalWeight: "الوزن الكلي للذهب (غرام):",
-                phTotalWeight: "مثال: 20",
-                lblTotalPrice: "سعر الذهب الكلي المعروض بالمحل (د.ب):",
-                phTotalPrice: "مثال: 550",
-                secTitle1: "أولاً: تحليل السعر المعروض بالمحل",
-                btnCalc1: "تحليل السعر المعروض",
-                resBox1Title: "سعر الغرام الكلي في المحل",
-                resBox2Title: "فائدة ومصنعية المحل (لكل غرام)",
-                secTitle2: "ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية",
-                lblCustomProfit: "حدد الفائدة والمصنعية للغرام الواحد (د.ب):",
-                phCustomProfit: "مثال: 3.5",
-                lblAdoptedWeight: "الوزن الكلي المعتمد (غرام):",
-                phAdoptedWeight: "سيتم اعتماده تلقائياً",
-                btnCalc2: "احسب التكلفة الإضافية",
-                resBox3Title: "سعر الغرام بالفائدة والمصنعية",
-                resBox4Title: "المجموع الكلي المقدر للشراء",
-                lblSaveShop: "اسم المحل:",
-                shopNamePlaceholder: "أكتب اسم المحل هنا... (مثال: مجوهرات الزين)",
-                btnSaveShop: "حفظ العرض في الجدول 💾",
-                btnUpdateShop: "تحديث البيانات المحددة 🔄",
-                secTitleComparison: "📊 جدول مقارنة عروض المحلات",
-                btnClearAll: "مسح الكل 🗑️",
-                thShop: "المحل",
-                thPhoto: "الصور (1 و 2)",
-                thWeight: "الوزن (غ)",
-                thTotalPrice: "السعر الإجمالي",
-                thPricePerGram: "سعر غرام المحل",
-                thProfit: "المصنعية/غرام",
-                thLocation: "الموقع",
-                thDelete: "التحكم",
-                lblSort: "ترتيب بحسب:",
-                optSortNone: "تاريخ الإضافة",
-                optSortProfitAsc: "الأقل مصنعية (الأرخص)",
-                optSortPriceAsc: "الأقل سعراً إجمالياً",
-                btnExportTxt: "تصدير نسخة احتياطية",
-                btnImportTxt: "استيراد نسخة احتياطية",
-                footerInfo: "* يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.",
-                footerCopyrights: "© 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍",
-                lblAddPhoto: "إرفاق صور المعاينة أو الفاتورة (اختياري - صورتين كحد أقصى):",
-                lblPic1: "الصورة الأولى 📸",
-                lblPic2: "الصورة الثانية 💎",
-                lblAddLocation: "موقع المحل الجغرافي (اختياري):",
-                gpsBtnText: "تحديد موقعي الحالي بالـ GPS",
-                gpsSuccess: "تم تحديد موقعك الجغرافي بنجاح! 📍",
-                gpsFail: "فشل الحصول على الموقع الجغرافي.",
-                modalCamTitle: "الكاميرا الحية داخل التطبيق",
-                btnTxtTake: "التقاط الآن",
-                promptDelRow: "هل أنت متأكد من رغبتك في حذف هذا العرض من جدول المقارنات؟",
-                promptClearAll: "هل أنت متأكد من رغبتك في مسح كافة العروض والبدء من جديد؟",
-                themeDay: "الوضع النهاري",
-                themeNight: "الوضع الليلي",
-                btnRefreshBullionGold: "تحديث أسعار الذهب 🔄",
-                
-                bullionMainTitle: "📊 المتوسط السعري للسبائك",
-                lblBullionLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
-                bullionOptAuto: "تلقائي (من سعر الذهب الرئيسي)",
-                bullionOptManual: "يدوي (أكتب السعر بنفسي)",
-                btnUpdateProfits: "تحديث الأرباح 🔄",
-                bullionHelp: "* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).",
-                phBullionMarketPrice: "سعر الغرام الحالي بالدينار...",
-                lblTotalInvested: "إجمالي الاستثمار",
-                lblTotalWeightB: "إجمالي الوزن",
-                lblAvgGramPrice: "متوسط سعر الغرام",
-                lblNetProfitLoss: "صافي الربح / الخسارة",
-                bullionFormTitle: "إضافة عملية شراء سبيكة جديدة",
-                lblBullionPriceInput: "سعر الشراء الإجمالي (بالدينار البحريني):",
-                phBullionPrice: "مثال: 290",
-                lblBullionWeightInput: "الوزن (بالغرام):",
-                phBullionWeight: "مثال: 10",
-                lblBullionDateInput: "تاريخ الشراء:",
-                btnSaveBullion: "حفظ العملية 💾",
-                btnCancelEdit: "إلغاء التعديل ✕",
-                bullionTableTitle: "سجل عمليات الشراء والسبائك",
-                thBDate: "التاريخ",
-                thBWeight: "الوزن (غرام)",
-                thBPrice: "سعر الشراء",
-                thBPerGram: "سعر الغرام",
-                thBProfit: "حالة الصفقة (ربح/خسارة)",
-                thBActions: "إجراءات",
-                noTransactions: "لا توجد معاملات مسجلة حالياً.",
-                alertFillBullion: "الرجاء تعبئة بيانات السعر، الغرام، والتاريخ بشكل صحيح.",
-                alertDeleteBullion: "هل أنت متأكد من حذف هذه العملية؟",
-                bullionEditTitle: "تعديل عملية الشراء ✏️",
-                bullionUpdateBtn: "تحديث التعديلات ✅",
-                bullionAddTitle: "إضافة عملية شراء سبيكة جديدة",
-                bullionSaveBtn: "حفظ العملية 💾",
-                updatedSuccess: "✅ تم التحديث والحفظ"
-            },
-            en: {
-                devTag: "Website developed by Muharraqi",
-                title: "Smart Gold Calculator - Bahrain 🇧🇭",
-                menuCalc: "🇧🇭 Smart Gold Calculator - Bahrain",
-                menuBullion: "Bullion Average Pricing",
-                statusLoading: "Loading gold prices...",
-                statusSuccess: "Prices updated successfully 🟢",
-                statusFail: "Automatic update failed. Standard prices loaded 🔴",
-                btnRefresh: "Refresh Prices 🔄",
-                lblPriceSource: "Price Fetching Method:",
-                optAuto: "Automatic (Live Online API) 🌐",
-                optManual: "Manual (Enter myself) ✍️",
-                lblCarat: "Select Gold Carat:",
-                carat24: "24 Carat",
-                carat22: "22 Carat",
-                carat21: "21 Carat (Most Common)",
-                carat18: "18 Carat",
-                lblMarketPrice: "Current Market Price per Gram in Bahrain (BHD):",
-                lblTotalWeight: "Total Gold Weight (Grams):",
-                phTotalWeight: "e.g., 20",
-                lblTotalPrice: "Total Price Offered by the Shop (BHD):",
-                phTotalPrice: "e.g., 550",
-                secTitle1: "First: Analyzing the Shop's Price Offer",
-                btnCalc1: "Analyze Shop Price",
-                resBox1Title: "Total Price per Gram at Shop",
-                resBox2Title: "Shop Profit & Fees (Per Gram)",
-                secTitle2: "Second: Calculate Estimate Based on Customized Profit/Fees",
-                lblCustomProfit: "Specify Target Profit & Fees per Gram (BHD):",
-                phCustomProfit: "e.g., 3.5",
-                lblAdoptedWeight: "Adopted Weight (Grams):",
-                phAdoptedWeight: "Will be adopted automatically",
-                btnCalc2: "Calculate Estimated Cost",
-                resBox3Title: "Price per Gram with Profit",
-                resBox4Title: "Total Estimated Purchase Price",
-                lblSaveShop: "Shop Name:",
-                shopNamePlaceholder: "Type the shop's name here... (e.g. Al-Zain Jewellery)",
-                btnSaveShop: "Save Offer to Table 💾",
-                btnUpdateShop: "Update Selected Data 🔄",
-                secTitleComparison: "📊 Shop Offers Comparison Matrix",
-                btnClearAll: "Clear All 🗑️",
-                thShop: "Shop",
-                thPhoto: "Photos (1 & 2)",
-                thWeight: "Weight (g)",
-                thTotalPrice: "Total Price",
-                thPricePerGram: "Shop Price/g",
-                thProfit: "Profit-Fees/g",
-                thLocation: "Location",
-                thDelete: "Actions",
-                lblSort: "Sort by:",
-                optSortNone: "Date Added",
-                optSortProfitAsc: "Lowest Fees (Cheapest)",
-                optSortPriceAsc: "Lowest Total Price",
-                btnExportTxt: "Export Backup",
-                btnImportTxt: "Import Backup",
-                footerInfo: "* Gold prices are retrieved automatically from the global market indices and converted to BHD.",
-                footerCopyrights: "© 2026 All Rights Reserved. Developed for community benefit, please pray for me and my parents. 🤍",
-                lblAddPhoto: "Attach preview or receipt photos (Optional - Max 2 photos):",
-                lblPic1: "First Photo 📸",
-                lblPic2: "Second Photo 💎",
-                lblAddLocation: "Shop Geographical Location (Optional):",
-                gpsBtnText: "Set current location via GPS",
-                gpsSuccess: "Geographical location resolved successfully! 📍",
-                gpsFail: "Unable to retrieve GPS coordinates.",
-                modalCamTitle: "Live In-App Camera Access",
-                btnTxtTake: "Capture Now",
-                promptDelRow: "Are you sure you want to delete this offer from the matrix?",
-                promptClearAll: "Are you sure you want to delete ALL offers and start clean?",
-                themeDay: "Day Mode",
-                themeNight: "Night Mode",
-                btnRefreshBullionGold: "Refresh Gold Prices 🔄",
-                
-                bullionMainTitle: "📊 Bullion Average Pricing",
-                lblBullionLivePriceHelp: "💡 To update profits and losses, please confirm the current market gold gram price:",
-                bullionOptAuto: "Auto (from main gold price)",
-                bullionOptManual: "Manual (enter price myself)",
-                btnUpdateProfits: "Update Profits 🔄",
-                bullionHelp: "* Auto price is linked to the main gold gram price (24 carat).",
-                phBullionMarketPrice: "Current gram price in BHD...",
-                lblTotalInvested: "Total Invested",
-                lblTotalWeightB: "Total Weight",
-                lblAvgGramPrice: "Avg Price per Gram",
-                lblNetProfitLoss: "Net Profit / Loss",
-                bullionFormTitle: "Add New Bullion Purchase",
-                lblBullionPriceInput: "Total Purchase Price (BHD):",
-                phBullionPrice: "e.g., 290",
-                lblBullionWeightInput: "Weight (Grams):",
-                phBullionWeight: "e.g., 10",
-                lblBullionDateInput: "Purchase Date:",
-                btnSaveBullion: "Save Transaction 💾",
-                btnCancelEdit: "Cancel Edit ✕",
-                bullionTableTitle: "Bullion Purchase & Operations Log",
-                thBDate: "Date",
-                thBWeight: "Weight (g)",
-                thBPrice: "Purchase Price",
-                thBPerGram: "Price per Gram",
-                thBProfit: "Deal Status (Profit/Loss)",
-                thBActions: "Actions",
-                noTransactions: "No transactions recorded yet.",
-                alertFillBullion: "Please fill out price, grams, and date accurately.",
-                alertDeleteBullion: "Are you sure you want to delete this transaction?",
-                bullionEditTitle: "Edit Purchase Transaction ✏️",
-                bullionUpdateBtn: "Update Transaction ✅",
-                bullionAddTitle: "Add New Bullion Purchase",
-                bullionSaveBtn: "Save Transaction 💾",
-                updatedSuccess: "✅ Updated & Saved"
-            },
-            hi: {
-                devTag: "वेबसाइट मुहर्रकी (Muharraqi) द्वारा बनाई गई है",
-                title: "स्मार्ट गोल्ड कैलकुलेटर - बहरीन 🇧🇭",
-                menuCalc: "🇧🇭 स्मार्ट गोल्ड कैलकुलेटर - बहरीन",
-                menuBullion: "बुलियन औसत मूल्य",
-                statusLoading: "सोने की कीमतें लोड हो रही हैं...",
-                statusSuccess: "कीमतें सफलतापूर्वक अपडेट की गईं 🟢",
-                statusFail: "स्वचालित अपडेट विफल। मानक कीमतें लोड की गईं 🔴",
-                btnRefresh: "कीमतें रीफ्रेश करें 🔄",
-                lblPriceSource: "मूल्य प्राप्त करने की विधि:",
-                optAuto: "स्वचालित (सीधे इंटरनेट से) 🌐",
-                optManual: "मैनुअल (स्वयं दर्ज करें) ✍️",
-                lblCarat: "सोने का कैरेट चुनें:",
-                carat24: "24 कैरेट",
-                carat22: "22 कैरेट",
-                carat21: "21 कैरेट (सबसे आम)",
-                carat18: "18 कैरेट",
-                lblMarketPrice: "बहरीन में सोने का प्रति ग्राम मूल्य (BHD):",
-                lblTotalWeight: "कुल सोने का वजन (ग्राम):",
-                phTotalWeight: "उदा. 20",
-                lblTotalPrice: "दुकान द्वारा प्रस्तावित कुल कीमत (BHD):",
-                phTotalPrice: "उदा. 550",
-                secTitle1: "पहला: दुकान की पेशकश का विश्लेषण",
-                btnCalc1: "दुकान की कीमत का विश्लेषण",
-                resBox1Title: "दुकान पर कुल प्रति ग्राम कीमत",
-                resBox2Title: "दुकान का लाभ और मेकिंग चार्ज (प्रति ग्राम)",
-                secTitle2: "दूसरा: लक्षित मेकिंग चार्ज के आधार पर गणना",
-                lblCustomProfit: "प्रति ग्राम लक्षित मेकिंग चार्ज निर्दिष्ट करें (BHD):",
-                phCustomProfit: "उदा. 3.5",
-                lblAdoptedWeight: "स्वीकृत वजन (ग्राम):",
-                phAdoptedWeight: "स्वचालित रूप से अपनाया जाएगा",
-                btnCalc2: "अनुमानित कुल लागत",
-                resBox3Title: "मेकिंग चार्ज के साथ प्रति ग्राम कीमत",
-                resBox4Title: "अनुमानित कुल खरीद मूल्य",
-                lblSaveShop: "दुकान का नाम:",
-                shopNamePlaceholder: "दुकान का नाम लिखें... (उदा. अल ज़ैन ज्वैलर्स)",
-                btnSaveShop: "ऑफर को टेबल में सहेजें 💾",
-                btnUpdateShop: "डेटा अपडेट करें 🔄",
-                secTitleComparison: "📊 दुकानों के ऑफर्स की तुलना तालिका",
-                btnClearAll: "सभी साफ़ करें 🗑️",
-                thShop: "दुकान",
-                thPhoto: "तस्वीरें (1 और 2)",
-                thWeight: "वजन (ग्राम)",
-                thTotalPrice: "कुल कीमत",
-                thPricePerGram: "दुकान मूल्य/ग्राम",
-                thProfit: "मेकिंग चार्ज/ग्राम",
-                thLocation: "स्थान",
-                thDelete: "नियंत्रण",
-                lblSort: "क्रमबद्ध करें:",
-                optSortNone: "जोड़ने की तिथि",
-                optSortProfitAsc: "कम मेकिंग चार्ज (किफायती)",
-                optSortPriceAsc: "कम कुल मूल्य",
-                btnExportTxt: "बैकअप निर्यात करें",
-                btnImportTxt: "बैकअप आयात करें",
-                footerInfo: "* सोने की कीमतें वैश्विक बाजार सूचकांकों से स्वचालित रूप से प्राप्त की जाती हैं और BHD में परिवर्तित होती हैं।",
-                footerCopyrights: "© 2026 सर्वाधिकार सुरक्षित। जनकल्याण हेतु विकसित, कृपया मेरे और मेरे माता-पिता के लिए प्रार्थना करें। 🤍",
-                lblAddPhoto: "पूर्वावलोकन या रसीद तस्वीरें संलग्न करें (वैकल्पिक - अधिकतम 2 तस्वीरें):",
-                lblPic1: "पहली तस्वीर 📸",
-                lblPic2: "दूसरी तस्वीर 💎",
-                lblAddLocation: "दुकान का भौगोलिक स्थान (वैकल्पिक):",
-                gpsBtnText: "जीपीएस द्वारा वर्तमान स्थान सेट करें",
-                gpsSuccess: "भौगोलिक स्थान सफलतापूर्वक हल किया गया! 📍",
-                gpsFail: "जीपीएस समन्वय पुनर्प्राप्त करने में असमर्थ।",
-                modalCamTitle: "लाइव इन-ऐप कैमरा एक्सेस",
-                btnTxtTake: "अभी कैप्चर करें",
-                promptDelRow: "क्या आप निश्चित रूप से इस ऑफर को तालिका से हटाना चाहते हैं?",
-                promptClearAll: "क्या आप वाकई सभी ऑफर्स को हटाना चाहते हैं और नए सिरे से शुरुआत करना चाहते हैं?",
-                themeDay: "दिन का मोड",
-                themeNight: "रात्रि मोड",
-                btnRefreshBullionGold: "सोने की कीमतें रीफ्रेश करें 🔄",
-                
-                bullionMainTitle: "📊 बुलियन औसत मूल्य निर्धारण",
-                lblBullionLivePriceHelp: "💡 लाभ और हानि को अपडेट करने के लिए, कृपया वर्तमान बाजार सोने के ग्राम मूल्य की पुष्टि करें:",
-                bullionOptAuto: "स्वचालित (मुख्य सोने की कीमत से)",
-                bullionOptManual: "मैनुअल (स्वयं मूल्य दर्ज करें)",
-                btnUpdateProfits: "लाभ अपडेट करें 🔄",
-                bullionHelp: "* स्वचालित मूल्य मुख्य सोने के ग्राम मूल्य (24 कैरेट) से जुड़ा है।",
-                phBullionMarketPrice: "वर्तमान ग्राम मूल्य (BHD)...",
-                lblTotalInvested: "कुल निवेश",
-                lblTotalWeightB: "कुल वजन",
-                lblAvgGramPrice: "प्रति ग्राम औसत मूल्य",
-                lblNetProfitLoss: "शुद्ध लाभ / हानि",
-                bullionFormTitle: "नई बुलियन खरीद जोड़ें",
-                lblBullionPriceInput: "कुल खरीद मूल्य (BHD):",
-                phBullionPrice: "उदा. 290",
-                lblBullionWeightInput: "वजन (ग्राम):",
-                phBullionWeight: "उदा. 10",
-                lblBullionDateInput: "खरीद की तारीख:",
-                btnSaveBullion: "लेनदेन सहेजें 💾",
-                btnCancelEdit: "संपादन रद्द करें ✕",
-                bullionTableTitle: "बुलियन खरीद और संचालन लॉग",
-                thBDate: "तारीख",
-                thBWeight: "वजन (ग्राम)",
-                thBPrice: "खरीद मूल्य",
-                thBPerGram: "प्रति ग्राम मूल्य",
-                thBProfit: "सौदे की स्थिति (लाभ/हानि)",
-                thBActions: "क्रियाएँ",
-                noTransactions: "अभी तक कोई लेनदेन दर्ज नहीं किया गया है।",
-                alertFillBullion: "कृपया मूल्य, ग्राम और तारीख को सटीक रूप से भरें।",
-                alertDeleteBullion: "क्या आप वाकई इस लेनदेन को हटाना चाहते हैं?",
-                bullionEditTitle: "खरीद लेनदेन संपादित करें ✏️",
-                bullionUpdateBtn: "लेनदेन अपडेट करें ✅",
-                bullionAddTitle: "नई बुलियन खरीद जोड़ें",
-                bullionSaveBtn: "लेनदेन सहेजें 💾",
-                updatedSuccess: "✅ अपडेट और सहेजा गया"
-            }
-        };
-
-        let goldData = {
-            currentLang: 'ar',
-            fontSize: 1.0,
-            theme: 'light',
-            savedShops: []
-        };
-
-        let bullionTransactions = [];
-        let attachedImages = { 1: null, 2: null };
-        let activeCamBlock = null;
-        let localStream = null;
-        let resolvedGPS = null;
-        let editingShopId = null; 
-        let livePrices = { 24: 31.2, 22: 28.6, 21: 27.3, 18: 23.4 };
-        let bullionManualPrice = 28.5;
-
-        async function fetchGoldPrices() {
-            setLoadingState(true);
-            try {
-                const response = await fetch('https://api.gold-api.com/price/XAU');
-                if(!response.ok) throw new Error("API Error");
-                const data = await response.json();
-                
-                const priceUSD_Ounce = data.price;
-                const priceBHD_Gram24 = (priceUSD_Ounce / 31.1034768) * 0.377;
-                
-                livePrices[24] = parseFloat(priceBHD_Gram24.toFixed(3));
-                livePrices[22] = parseFloat((priceBHD_Gram24 * (22/24)).toFixed(3));
-                livePrices[21] = parseFloat((priceBHD_Gram24 * (21/24)).toFixed(3));
-                livePrices[18] = parseFloat((priceBHD_Gram24 * (18/24)).toFixed(3));
-
-                const dateTimeStr = getFormattedDateTime();
-                const successMsg = translations[goldData.currentLang].statusSuccess + ` (${dateTimeStr})`;
-                setStatus(successMsg, 'success');
-                
-                updateSelectedPrice();
-                updateBullionMarketPriceField();
-            } catch(e) {
-                const dateTimeStr = getFormattedDateTime();
-                const failMsg = translations[goldData.currentLang].statusFail + ` (${dateTimeStr})`;
-                setStatus(failMsg, 'fail');
-                updateSelectedPrice();
-                updateBullionMarketPriceField();
-            } finally {
-                setLoadingState(false);
-            }
-        }
-
-        function setStatus(text, type) {
-            const statusWrapper = document.getElementById('statusWrapper');
-            const statusText = document.getElementById('statusText');
-            statusText.innerText = text;
-            statusWrapper.style.borderColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
-            statusWrapper.style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
-        }
-
-        function setLoadingState(isLoading) {
-            const btn = document.getElementById('btnRefresh');
-            btn.disabled = isLoading;
-            btn.innerText = isLoading ? "..." : translations[goldData.currentLang].btnRefresh;
-        }
-
-        // ==================== التعديل الأساسي هنا لضمان منع التعديل اليدوي في الوضع التلقائي ====================
-        function updateSelectedPrice() {
-            const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
-            const displayInput = document.getElementById('marketPriceDisplay');
+    <!-- ================= القسم الثاني: حساب المتوسط السعري للسبائك ================= -->
+    <div id="bullion-page" class="page-section">
+        <div class="calculator-card">
+            <div class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
+            <h2 id="bullionMainTitle">📊 المتوسط السعري للسبائك</h2>
             
-            if (!isManual) {
-                const carat = document.getElementById('carat').value;
-                displayInput.value = livePrices[carat] || 0;
-                displayInput.readOnly = true;
-                displayInput.style.backgroundColor = "var(--bg-readonly)";
-            } else {
-                displayInput.readOnly = false;
-                displayInput.style.backgroundColor = "var(--bg-card)";
-            }
-        }
+            <div class="form-group" style="background: var(--bg-status); padding: 15px; border-radius: 8px; border: 1px solid var(--border-status); margin-bottom: 20px;">
+                <label id="lblBullionLivePriceHelp" style="color: var(--text-status);">💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:</label>
+                
+                <div class="bullion-price-source">
+                    <label>
+                        <input type="radio" name="bullionPriceSource" value="auto" checked onchange="toggleBullionPriceSource()"> 
+                        <span id="bullionOptAuto">تلقائي (من سعر الذهب الرئيسي)</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="bullionPriceSource" value="manual" onchange="toggleBullionPriceSource()"> 
+                        <span id="bullionOptManual">يدوي (أكتب السعر بنفسي)</span>
+                    </label>
+                </div>
 
-        function updateBullionMarketPriceField() {
-            const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
-            const field = document.getElementById('bullion-market-price');
-            if (source === 'auto') {
-                field.value = livePrices[24] || 31.2;
-                field.readOnly = true;
-                field.style.backgroundColor = 'var(--bg-readonly)';
-            } else {
-                field.readOnly = false;
-                field.style.backgroundColor = 'var(--bg-card)';
-                if (bullionManualPrice) {
-                    field.value = bullionManualPrice;
-                }
-            }
-            calculateBullionMetrics();
-        }
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+                    <button id="btnRefreshBullionGold" class="btn-refresh" onclick="fetchGoldPrices()" style="width: 100%; padding: 10px; font-size: 14px;">تحديث أسعار الذهب 🔄</button>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="bullion-market-price" step="any" style="flex: 2;">
+                        <button id="btnUpdateBullionProfits" onclick="updateAndSaveBullionProfits()" style="flex: 1; white-space: nowrap; background-color: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">تحديث الأرباح 🔄</button>
+                    </div>
+                </div>
+                <div class="bullion-price-help" id="bullionPriceHelp">* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).</div>
+            </div>
 
-        function toggleBullionPriceSource() {
-            const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
-            const field = document.getElementById('bullion-market-price');
-            if (source === 'auto') {
-                field.value = livePrices[24] || 31.2;
-                field.readOnly = true;
-                field.style.backgroundColor = 'var(--bg-readonly)';
-                document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
-            } else {
-                field.readOnly = false;
-                field.style.backgroundColor = 'var(--bg-card)';
-                bullionManualPrice = parseFloat(field.value) || 31.2;
-                document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
-            }
-            calculateBullionMetrics();
-        }
+            <div class="summary-box">
+                <div class="summary-card">
+                    <h3 id="lblTotalInvested">إجمالي الاستثمار</h3>
+                    <p id="total-invested">0.00 د.ب</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="lblTotalWeightB">إجمالي الوزن</h3>
+                    <p id="total-weight-b">0 غرام</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="lblAvgGramPrice">متوسط سعر الغرام</h3>
+                    <p id="avg-price-per-gram">0.00 د.ب</p>
+                </div>
+                <div id="profit-loss-card" class="summary-card">
+                    <h3 id="lblNetProfitLoss">صافي الربح / الخسارة</h3>
+                    <p id="profit-loss-val">0.00 د.ب</p>
+                </div>
+            </div>
 
-        function togglePriceSource() {
-            // نستدعي الدالة المحدثة لضبط القيمة وحالة القراءة فقط والخلفية بشكل موحد
+            <div class="section-title" id="bullionFormTitle">إضافة عملية شراء سبيكة جديدة</div>
+            <input type="hidden" id="bullion-edit-index" value="-1">
+            
+            <div class="form-group">
+                <label id="lblBullionPriceInput">سعر الشراء الإجمالي (بالدينار البحريني):</label>
+                <input type="number" id="bullion-price" step="any">
+            </div>
+            <div class="form-group">
+                <label id="lblBullionWeightInput">الوزن (بالغرام):</label>
+                <input type="number" id="bullion-weight" step="any">
+            </div>
+            <div class="form-group">
+                <label id="lblBullionDateInput">تاريخ الشراء:</label>
+                <input type="date" id="bullion-date">
+            </div>
+
+            <div class="btn-action-container">
+                <button id="btn-save-bullion" class="btn-calc" onclick="saveBullionTransaction()" style="margin-top:0;">حفظ العملية 💾</button>
+                <button id="btn-cancel-edit" class="btn-calc" onclick="resetBullionForm()" style="margin-top:0; background-color: #95a5a6; display: none;">إلغاء التعديل ✕</button>
+            </div>
+
+            <div class="section-title" id="bullionTableTitle">سجل عمليات الشراء والسبائك</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="thBDate">التاريخ</th>
+                            <th id="thBWeight">الوزن (غرام)</th>
+                            <th id="thBPrice">سعر الشراء</th>
+                            <th id="thBPerGram">سعر الغرام</th>
+                            <th id="thBProfit">حالة الصفقة (ربح/خسارة)</th>
+                            <th id="thBActions">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bullion-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= القسم الثالث: صفحة تريدنج فيو (TradingView) - نسخة تعمل بشكل مضمون ================= -->
+    <div id="tradingview-page" class="page-section">
+        <div class="calculator-card" style="border-top-color: #2962FF; padding: 20px;">
+            <div class="developer-tag">📈 OANDA:XAUUSD - شارت الذهب المباشر</div>
+            <div class="tradingview-embed-container">
+                <!-- استخدام رابط يعمل بشكل مضمون من TradingView -->
+                <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tradingview_widget&symbol=OANDA%3AXAUUSD&interval=1D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&withdaterange=0&hide_legend=0&hideideas=0&hide_side_toolbar=0&allow_symbol_change=1&saveimage=1&details=1&hotlist=1&calendar=1&news=1&signup=1&width=100%25&height=100%25"
+                        style="width:100%; height:100%; border:none;"
+                        scrolling="no"
+                        allowtransparency="true"
+                        frameborder="0">
+                </iframe>
+            </div>
+            <div style="margin-top: 15px; text-align: center; color: var(--text-sub); font-size: calc(13px * var(--font-scale));">
+                ⚡ بيانات الشارت مقدمة من TradingView – يتم التحديث بشكل مباشر.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-copyrights" id="footerCopyrights">
+        © 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍
+    </div>
+</div>
+
+<div id="cameraModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeLiveCamera()">✕</button>
+        <h3 id="modalCamTitle" style="margin-top:0; color:var(--text-main);">الكاميرا الحية داخل التطبيق</h3>
+        <video id="videoFeed" class="camera-video" autoplay playsinline></video>
+        <button class="btn-capture" onclick="capturePhotoFromFeed()">
+            📸 <span id="btnTxtTake">التقاط الآن</span>
+        </button>
+    </div>
+</div>
+
+<div id="lightboxModal" class="modal-overlay" onclick="closeLightbox()">
+    <div class="modal-content" style="background:none; box-shadow:none; padding:0;" onclick="event.stopPropagation()">
+        <button class="modal-close" style="color:#fff; top:-35px; right:0;" onclick="closeLightbox()">✕</button>
+        <img id="lightboxImageEl" class="lightbox-img" src="" alt="Zoomed image">
+    </div>
+</div>
+
+<canvas id="hiddenCompressCanvas" style="display:none;"></canvas>
+
+<script>
+    function getFormattedDateTime() {
+        const now = new Date();
+        const lang = goldData.currentLang;
+        if (lang === 'ar') {
+            return now.toLocaleString('ar-BH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } else if (lang === 'en') {
+            return now.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } else {
+            return now.toLocaleString('hi-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+    }
+
+    const translations = {
+        ar: {
+            devTag: "تم عمل الموقع بواسطة Muharraqi",
+            title: "🇧🇭 حاسبة الذهب الذكية - البحرين",
+            menuCalc: "🇧🇭 حاسبة الذهب الذكية - البحرين",
+            menuBullion: "المتوسط السعري للسبائك",
+            menuTradingview: "📊 TradingView (XAUUSD)",
+            statusLoading: "جاري تحميل الأسعار...",
+            statusSuccess: "تم تحديث الأسعار بنجاح 🟢",
+            statusFail: "فشل التحديث التلقائي. تم استخدام أسعار تقريبية 🔴",
+            btnRefresh: "تحديث الأسعار 🔄",
+            lblPriceSource: "طريقة جلب سعر الذهب:",
+            optAuto: "تلقائي (من الإنترنت المباشر) 🌐",
+            optManual: "يدوي (أكتبه بنفسي) ✍️",
+            lblCarat: "اختر عيار الذهب:",
+            carat24: "عيار 24",
+            carat22: "عيار 22",
+            carat21: "عيار 21 (الأكثر شيوعاً)",
+            carat18: "عيار 18",
+            lblMarketPrice: "سعر غرام السوق الحالي بالبحرين (د.ب):",
+            lblTotalWeight: "الوزن الكلي للذهب (غرام):",
+            phTotalWeight: "مثال: 20",
+            lblTotalPrice: "سعر الذهب الكلي المعروض بالمحل (د.ب):",
+            phTotalPrice: "مثال: 550",
+            secTitle1: "أولاً: تحليل السعر المعروض بالمحل",
+            btnCalc1: "تحليل السعر المعروض",
+            resBox1Title: "سعر الغرام الكلي في المحل",
+            resBox2Title: "فائدة ومصنعية المحل (لكل غرام)",
+            secTitle2: "ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية",
+            lblCustomProfit: "حدد الفائدة والمصنعية للغرام الواحد (د.ب):",
+            phCustomProfit: "مثال: 3.5",
+            lblAdoptedWeight: "الوزن الكلي المعتمد (غرام):",
+            phAdoptedWeight: "سيتم اعتماده تلقائياً",
+            btnCalc2: "احسب التكلفة الإضافية",
+            resBox3Title: "سعر الغرام بالفائدة والمصنعية",
+            resBox4Title: "المجموع الكلي المقدر للشراء",
+            lblSaveShop: "اسم المحل:",
+            shopNamePlaceholder: "أكتب اسم المحل هنا... (مثال: مجوهرات الزين)",
+            btnSaveShop: "حفظ العرض في الجدول 💾",
+            btnUpdateShop: "تحديث البيانات المحددة 🔄",
+            secTitleComparison: "📊 جدول مقارنة عروض المحلات",
+            btnClearAll: "مسح الكل 🗑️",
+            thShop: "المحل",
+            thPhoto: "الصور (1 و 2)",
+            thWeight: "الوزن (غ)",
+            thTotalPrice: "السعر الإجمالي",
+            thPricePerGram: "سعر غرام المحل",
+            thProfit: "المصنعية/غرام",
+            thLocation: "الموقع",
+            thDelete: "التحكم",
+            lblSort: "ترتيب بحسب:",
+            optSortNone: "تاريخ الإضافة",
+            optSortProfitAsc: "الأقل مصنعية (الأرخص)",
+            optSortPriceAsc: "الأقل سعراً إجمالياً",
+            btnExportTxt: "تصدير نسخة احتياطية",
+            btnImportTxt: "استيراد نسخة احتياطية",
+            footerInfo: "* يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.",
+            footerCopyrights: "© 2026 جميع الحقوق محفوظة. تم عمل هذا الموقع لفائدة الناس، وأرجو دعاءكم لي ولوالدي بالخير عند الله. 🤍",
+            lblAddPhoto: "إرفاق صور المعاينة أو الفاتورة (اختياري - صورتين كحد أقصى):",
+            lblPic1: "الصورة الأولى 📸",
+            lblPic2: "الصورة الثانية 💎",
+            lblAddLocation: "موقع المحل الجغرافي (اختياري):",
+            gpsBtnText: "تحديد موقعي الحالي بالـ GPS",
+            gpsSuccess: "تم تحديد موقعك الجغرافي بنجاح! 📍",
+            gpsFail: "فشل الحصول على الموقع الجغرافي.",
+            modalCamTitle: "الكاميرا الحية داخل التطبيق",
+            btnTxtTake: "التقاط الآن",
+            promptDelRow: "هل أنت متأكد من رغبتك في حذف هذا العرض من جدول المقارنات؟",
+            promptClearAll: "هل أنت متأكد من رغبتك في مسح كافة العروض والبدء من جديد؟",
+            themeDay: "الوضع النهاري",
+            themeNight: "الوضع الليلي",
+            btnRefreshBullionGold: "تحديث أسعار الذهب 🔄",
+            
+            bullionMainTitle: "📊 المتوسط السعري للسبائك",
+            lblBullionLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
+            bullionOptAuto: "تلقائي (من سعر الذهب الرئيسي)",
+            bullionOptManual: "يدوي (أكتب السعر بنفسي)",
+            btnUpdateProfits: "تحديث الأرباح 🔄",
+            bullionHelp: "* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).",
+            phBullionMarketPrice: "سعر الغرام الحالي بالدينار...",
+            lblTotalInvested: "إجمالي الاستثمار",
+            lblTotalWeightB: "إجمالي الوزن",
+            lblAvgGramPrice: "متوسط سعر الغرام",
+            lblNetProfitLoss: "صافي الربح / الخسارة",
+            bullionFormTitle: "إضافة عملية شراء سبيكة جديدة",
+            lblBullionPriceInput: "سعر الشراء الإجمالي (بالدينار البحريني):",
+            phBullionPrice: "مثال: 290",
+            lblBullionWeightInput: "الوزن (بالغرام):",
+            phBullionWeight: "مثال: 10",
+            lblBullionDateInput: "تاريخ الشراء:",
+            btnSaveBullion: "حفظ العملية 💾",
+            btnCancelEdit: "إلغاء التعديل ✕",
+            bullionTableTitle: "سجل عمليات الشراء والسبائك",
+            thBDate: "التاريخ",
+            thBWeight: "الوزن (غرام)",
+            thBPrice: "سعر الشراء",
+            thBPerGram: "سعر الغرام",
+            thBProfit: "حالة الصفقة (ربح/خسارة)",
+            thBActions: "إجراءات",
+            noTransactions: "لا توجد معاملات مسجلة حالياً.",
+            alertFillBullion: "الرجاء تعبئة بيانات السعر، الغرام، والتاريخ بشكل صحيح.",
+            alertDeleteBullion: "هل أنت متأكد من حذف هذه العملية؟",
+            bullionEditTitle: "تعديل عملية الشراء ✏️",
+            bullionUpdateBtn: "تحديث التعديلات ✅",
+            bullionAddTitle: "إضافة عملية شراء سبيكة جديدة",
+            bullionSaveBtn: "حفظ العملية 💾",
+            updatedSuccess: "✅ تم التحديث والحفظ"
+        },
+        en: {
+            devTag: "Website developed by Muharraqi",
+            title: "Smart Gold Calculator - Bahrain 🇧🇭",
+            menuCalc: "🇧🇭 Smart Gold Calculator - Bahrain",
+            menuBullion: "Bullion Average Pricing",
+            menuTradingview: "📊 TradingView (XAUUSD)",
+            statusLoading: "Loading gold prices...",
+            statusSuccess: "Prices updated successfully 🟢",
+            statusFail: "Automatic update failed. Standard prices loaded 🔴",
+            btnRefresh: "Refresh Prices 🔄",
+            lblPriceSource: "Price Fetching Method:",
+            optAuto: "Automatic (Live Online API) 🌐",
+            optManual: "Manual (Enter myself) ✍️",
+            lblCarat: "Select Gold Carat:",
+            carat24: "24 Carat",
+            carat22: "22 Carat",
+            carat21: "21 Carat (Most Common)",
+            carat18: "18 Carat",
+            lblMarketPrice: "Current Market Price per Gram in Bahrain (BHD):",
+            lblTotalWeight: "Total Gold Weight (Grams):",
+            phTotalWeight: "e.g., 20",
+            lblTotalPrice: "Total Price Offered by the Shop (BHD):",
+            phTotalPrice: "e.g., 550",
+            secTitle1: "First: Analyzing the Shop's Price Offer",
+            btnCalc1: "Analyze Shop Price",
+            resBox1Title: "Total Price per Gram at Shop",
+            resBox2Title: "Shop Profit & Fees (Per Gram)",
+            secTitle2: "Second: Calculate Estimate Based on Customized Profit/Fees",
+            lblCustomProfit: "Specify Target Profit & Fees per Gram (BHD):",
+            phCustomProfit: "e.g., 3.5",
+            lblAdoptedWeight: "Adopted Weight (Grams):",
+            phAdoptedWeight: "Will be adopted automatically",
+            btnCalc2: "Calculate Estimated Cost",
+            resBox3Title: "Price per Gram with Profit",
+            resBox4Title: "Total Estimated Purchase Price",
+            lblSaveShop: "Shop Name:",
+            shopNamePlaceholder: "Type the shop's name here... (e.g. Al-Zain Jewellery)",
+            btnSaveShop: "Save Offer to Table 💾",
+            btnUpdateShop: "Update Selected Data 🔄",
+            secTitleComparison: "📊 Shop Offers Comparison Matrix",
+            btnClearAll: "Clear All 🗑️",
+            thShop: "Shop",
+            thPhoto: "Photos (1 & 2)",
+            thWeight: "Weight (g)",
+            thTotalPrice: "Total Price",
+            thPricePerGram: "Shop Price/g",
+            thProfit: "Profit-Fees/g",
+            thLocation: "Location",
+            thDelete: "Actions",
+            lblSort: "Sort by:",
+            optSortNone: "Date Added",
+            optSortProfitAsc: "Lowest Fees (Cheapest)",
+            optSortPriceAsc: "Lowest Total Price",
+            btnExportTxt: "Export Backup",
+            btnImportTxt: "Import Backup",
+            footerInfo: "* Gold prices are retrieved automatically from the global market indices and converted to BHD.",
+            footerCopyrights: "© 2026 All Rights Reserved. Developed for community benefit, please pray for me and my parents. 🤍",
+            lblAddPhoto: "Attach preview or receipt photos (Optional - Max 2 photos):",
+            lblPic1: "First Photo 📸",
+            lblPic2: "Second Photo 💎",
+            lblAddLocation: "Shop Geographical Location (Optional):",
+            gpsBtnText: "Set current location via GPS",
+            gpsSuccess: "Geographical location resolved successfully! 📍",
+            gpsFail: "Unable to retrieve GPS coordinates.",
+            modalCamTitle: "Live In-App Camera Access",
+            btnTxtTake: "Capture Now",
+            promptDelRow: "Are you sure you want to delete this offer from the matrix?",
+            promptClearAll: "Are you sure you want to delete ALL offers and start clean?",
+            themeDay: "Day Mode",
+            themeNight: "Night Mode",
+            btnRefreshBullionGold: "Refresh Gold Prices 🔄",
+            
+            bullionMainTitle: "📊 Bullion Average Pricing",
+            lblBullionLivePriceHelp: "💡 To update profits and losses, please confirm the current market gold gram price:",
+            bullionOptAuto: "Auto (from main gold price)",
+            bullionOptManual: "Manual (enter price myself)",
+            btnUpdateProfits: "Update Profits 🔄",
+            bullionHelp: "* Auto price is linked to the main gold gram price (24 carat).",
+            phBullionMarketPrice: "Current gram price in BHD...",
+            lblTotalInvested: "Total Invested",
+            lblTotalWeightB: "Total Weight",
+            lblAvgGramPrice: "Avg Price per Gram",
+            lblNetProfitLoss: "Net Profit / Loss",
+            bullionFormTitle: "Add New Bullion Purchase",
+            lblBullionPriceInput: "Total Purchase Price (BHD):",
+            phBullionPrice: "e.g., 290",
+            lblBullionWeightInput: "Weight (Grams):",
+            phBullionWeight: "e.g., 10",
+            lblBullionDateInput: "Purchase Date:",
+            btnSaveBullion: "Save Transaction 💾",
+            btnCancelEdit: "Cancel Edit ✕",
+            bullionTableTitle: "Bullion Purchase & Operations Log",
+            thBDate: "Date",
+            thBWeight: "Weight (g)",
+            thBPrice: "Purchase Price",
+            thBPerGram: "Price per Gram",
+            thBProfit: "Deal Status (Profit/Loss)",
+            thBActions: "Actions",
+            noTransactions: "No transactions recorded yet.",
+            alertFillBullion: "Please fill out price, grams, and date accurately.",
+            alertDeleteBullion: "Are you sure you want to delete this transaction?",
+            bullionEditTitle: "Edit Purchase Transaction ✏️",
+            bullionUpdateBtn: "Update Transaction ✅",
+            bullionAddTitle: "Add New Bullion Purchase",
+            bullionSaveBtn: "Save Transaction 💾",
+            updatedSuccess: "✅ Updated & Saved"
+        },
+        hi: {
+            devTag: "वेबसाइट मुहर्रकी (Muharraqi) द्वारा बनाई गई है",
+            title: "स्मार्ट गोल्ड कैलकुलेटर - बहरीन 🇧🇭",
+            menuCalc: "🇧🇭 स्मार्ट गोल्ड कैलकुलेटर - बहरीन",
+            menuBullion: "बुलियन औसत मूल्य",
+            menuTradingview: "📊 TradingView (XAUUSD)",
+            statusLoading: "सोने की कीमतें लोड हो रही हैं...",
+            statusSuccess: "कीमतें सफलतापूर्वक अपडेट की गईं 🟢",
+            statusFail: "स्वचालित अपडेट विफल। मानक कीमतें लोड की गईं 🔴",
+            btnRefresh: "कीमतें रीफ्रेश करें 🔄",
+            lblPriceSource: "मूल्य प्राप्त करने की विधि:",
+            optAuto: "स्वचालित (सीधे इंटरनेट से) 🌐",
+            optManual: "मैनुअल (स्वयं दर्ज करें) ✍️",
+            lblCarat: "सोने का कैरेट चुनें:",
+            carat24: "24 कैरेट",
+            carat22: "22 कैरेट",
+            carat21: "21 कैरेट (सबसे आम)",
+            carat18: "18 कैरेट",
+            lblMarketPrice: "बहरीन में सोने का प्रति ग्राम मूल्य (BHD):",
+            lblTotalWeight: "कुल सोने का वजन (ग्राम):",
+            phTotalWeight: "उदा. 20",
+            lblTotalPrice: "दुकान द्वारा प्रस्तावित कुल कीमत (BHD):",
+            phTotalPrice: "उदा. 550",
+            secTitle1: "पहला: दुकान की पेशकश का विश्लेषण",
+            btnCalc1: "दुकान की कीमत का विश्लेषण",
+            resBox1Title: "दुकान पर कुल प्रति ग्राम कीमत",
+            resBox2Title: "दुकान का लाभ और मेकिंग चार्ज (प्रति ग्राम)",
+            secTitle2: "दूसरा: लक्षित मेकिंग चार्ज के आधार पर गणना",
+            lblCustomProfit: "प्रति ग्राम लक्षित मेकिंग चार्ज निर्दिष्ट करें (BHD):",
+            phCustomProfit: "उदा. 3.5",
+            lblAdoptedWeight: "स्वीकृत वजन (ग्राम):",
+            phAdoptedWeight: "स्वचालित रूप से अपनाया जाएगा",
+            btnCalc2: "अनुमानित कुल लागत",
+            resBox3Title: "मेकिंग चार्ज के साथ प्रति ग्राम कीमत",
+            resBox4Title: "अनुमानित कुल खरीद मूल्य",
+            lblSaveShop: "दुकान का नाम:",
+            shopNamePlaceholder: "दुकान का नाम लिखें... (उदा. अल ज़ैन ज्वैलर्स)",
+            btnSaveShop: "ऑफर को टेबल में सहेजें 💾",
+            btnUpdateShop: "डेटा अपडेट करें 🔄",
+            secTitleComparison: "📊 दुकानों के ऑफर्स की तुलना तालिका",
+            btnClearAll: "सभी साफ़ करें 🗑️",
+            thShop: "दुकान",
+            thPhoto: "तस्वीरें (1 और 2)",
+            thWeight: "वजन (ग्राम)",
+            thTotalPrice: "कुल कीमत",
+            thPricePerGram: "दुकान मूल्य/ग्राम",
+            thProfit: "मेकिंग चार्ज/ग्राम",
+            thLocation: "स्थान",
+            thDelete: "नियंत्रण",
+            lblSort: "क्रमबद्ध करें:",
+            optSortNone: "जोड़ने की तिथि",
+            optSortProfitAsc: "कम मेकिंग चार्ज (किफायती)",
+            optSortPriceAsc: "कम कुल मूल्य",
+            btnExportTxt: "बैकअप निर्यात करें",
+            btnImportTxt: "बैकअप आयात करें",
+            footerInfo: "* सोने की कीमतें वैश्विक बाजार सूचकांकों से स्वचालित रूप से प्राप्त की जाती हैं और BHD में परिवर्तित होती हैं।",
+            footerCopyrights: "© 2026 सर्वाधिकार सुरक्षित। जनकल्याण हेतु विकसित, कृपया मेरे और मेरे माता-पिता के लिए प्रार्थना करें। 🤍",
+            lblAddPhoto: "पूर्वावलोकन या रसीद तस्वीरें संलग्न करें (वैकल्पिक - अधिकतम 2 तस्वीरें):",
+            lblPic1: "पहली तस्वीर 📸",
+            lblPic2: "दूसरी तस्वीर 💎",
+            lblAddLocation: "दुकान का भौगोलिक स्थान (वैकल्पिक):",
+            gpsBtnText: "जीपीएस द्वारा वर्तमान स्थान सेट करें",
+            gpsSuccess: "भौगोलिक स्थान सफलतापूर्वक हल किया गया! 📍",
+            gpsFail: "जीपीएस समन्वय पुनर्प्राप्त करने में असमर्थ।",
+            modalCamTitle: "लाइव इन-ऐप कैमरा एक्सेस",
+            btnTxtTake: "अभी कैप्चर करें",
+            promptDelRow: "क्या आप निश्चित रूप से इस ऑफर को तालिका से हटाना चाहते हैं?",
+            promptClearAll: "क्या आप वाकई सभी ऑफर्स को हटाना चाहते हैं और नए सिरे से शुरुआत करना चाहते हैं?",
+            themeDay: "दिन का मोड",
+            themeNight: "रात्रि मोड",
+            btnRefreshBullionGold: "सोने की कीमतें रीफ्रेश करें 🔄",
+            
+            bullionMainTitle: "📊 बुलियन औसत मूल्य निर्धारण",
+            lblBullionLivePriceHelp: "💡 लाभ और हानि को अपडेट करने के लिए, कृपया वर्तमान बाजार सोने के ग्राम मूल्य की पुष्टि करें:",
+            bullionOptAuto: "स्वचालित (मुख्य सोने की कीमत से)",
+            bullionOptManual: "मैनुअल (स्वयं मूल्य दर्ज करें)",
+            btnUpdateProfits: "लाभ अपडेट करें 🔄",
+            bullionHelp: "* स्वचालित मूल्य मुख्य सोने के ग्राम मूल्य (24 कैरेट) से जुड़ा है।",
+            phBullionMarketPrice: "वर्तमान ग्राम मूल्य (BHD)...",
+            lblTotalInvested: "कुल निवेश",
+            lblTotalWeightB: "कुल वजन",
+            lblAvgGramPrice: "प्रति ग्राम औसत मूल्य",
+            lblNetProfitLoss: "शुद्ध लाभ / हानि",
+            bullionFormTitle: "नई बुलियन खरीद जोड़ें",
+            lblBullionPriceInput: "कुल खरीद मूल्य (BHD):",
+            phBullionPrice: "उदा. 290",
+            lblBullionWeightInput: "वजन (ग्राम):",
+            phBullionWeight: "उदा. 10",
+            lblBullionDateInput: "खरीद की तारीख:",
+            btnSaveBullion: "लेनदेन सहेजें 💾",
+            btnCancelEdit: "संपादन रद्द करें ✕",
+            bullionTableTitle: "बुलियन खरीद और संचालन लॉग",
+            thBDate: "तारीख",
+            thBWeight: "वजन (ग्राम)",
+            thBPrice: "खरीद मूल्य",
+            thBPerGram: "प्रति ग्राम मूल्य",
+            thBProfit: "सौदे की स्थिति (लाभ/हानि)",
+            thBActions: "क्रियाएँ",
+            noTransactions: "अभी तक कोई लेनदेन दर्ज नहीं किया गया है।",
+            alertFillBullion: "कृपया मूल्य, ग्राम और तारीख को सटीक रूप से भरें।",
+            alertDeleteBullion: "क्या आप वाकई इस लेनदेन को हटाना चाहते हैं?",
+            bullionEditTitle: "खरीद लेनदेन संपादित करें ✏️",
+            bullionUpdateBtn: "लेनदेन अपडेट करें ✅",
+            bullionAddTitle: "नई बुलियन खरीद जोड़ें",
+            bullionSaveBtn: "लेनदेन सहेजें 💾",
+            updatedSuccess: "✅ अपडेट और सहेजा गया"
+        }
+    };
+
+    let goldData = {
+        currentLang: 'ar',
+        fontSize: 1.0,
+        theme: 'light',
+        savedShops: []
+    };
+
+    let bullionTransactions = [];
+    let attachedImages = { 1: null, 2: null };
+    let activeCamBlock = null;
+    let localStream = null;
+    let resolvedGPS = null;
+    let editingShopId = null; 
+    let livePrices = { 24: 31.2, 22: 28.6, 21: 27.3, 18: 23.4 };
+    let bullionManualPrice = 28.5;
+
+    async function fetchGoldPrices() {
+        setLoadingState(true);
+        try {
+            const response = await fetch('https://api.gold-api.com/price/XAU');
+            if(!response.ok) throw new Error("API Error");
+            const data = await response.json();
+            
+            const priceUSD_Ounce = data.price;
+            const priceBHD_Gram24 = (priceUSD_Ounce / 31.1034768) * 0.377;
+            
+            livePrices[24] = parseFloat(priceBHD_Gram24.toFixed(3));
+            livePrices[22] = parseFloat((priceBHD_Gram24 * (22/24)).toFixed(3));
+            livePrices[21] = parseFloat((priceBHD_Gram24 * (21/24)).toFixed(3));
+            livePrices[18] = parseFloat((priceBHD_Gram24 * (18/24)).toFixed(3));
+
+            const dateTimeStr = getFormattedDateTime();
+            const successMsg = translations[goldData.currentLang].statusSuccess + ` (${dateTimeStr})`;
+            setStatus(successMsg, 'success');
+            
             updateSelectedPrice();
-            const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
-            if (isManual) {
-                document.getElementById('marketPriceDisplay').focus();
+            updateBullionMarketPriceField();
+        } catch(e) {
+            const dateTimeStr = getFormattedDateTime();
+            const failMsg = translations[goldData.currentLang].statusFail + ` (${dateTimeStr})`;
+            setStatus(failMsg, 'fail');
+            updateSelectedPrice();
+            updateBullionMarketPriceField();
+        } finally {
+            setLoadingState(false);
+        }
+    }
+
+    function setStatus(text, type) {
+        const statusWrapper = document.getElementById('statusWrapper');
+        const statusText = document.getElementById('statusText');
+        statusText.innerText = text;
+        statusWrapper.style.borderColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
+        statusWrapper.style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
+    }
+
+    function setLoadingState(isLoading) {
+        const btn = document.getElementById('btnRefresh');
+        btn.disabled = isLoading;
+        btn.innerText = isLoading ? "..." : translations[goldData.currentLang].btnRefresh;
+    }
+
+    function updateSelectedPrice() {
+        const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
+        const displayInput = document.getElementById('marketPriceDisplay');
+        
+        if (!isManual) {
+            const carat = document.getElementById('carat').value;
+            displayInput.value = livePrices[carat] || 0;
+            displayInput.readOnly = true;
+            displayInput.style.backgroundColor = "var(--bg-readonly)";
+        } else {
+            displayInput.readOnly = false;
+            displayInput.style.backgroundColor = "var(--bg-card)";
+        }
+    }
+
+    function updateBullionMarketPriceField() {
+        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
+        const field = document.getElementById('bullion-market-price');
+        if (source === 'auto') {
+            field.value = livePrices[24] || 31.2;
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
+        } else {
+            field.readOnly = false;
+            field.style.backgroundColor = 'var(--bg-card)';
+            if (bullionManualPrice) {
+                field.value = bullionManualPrice;
             }
         }
+        calculateBullionMetrics();
+    }
 
-        function syncWeight() {
-            const weightVal = document.getElementById('totalWeight').value;
-            const lang = goldData.currentLang;
-            const unit = lang === 'ar' ? "غرام" : (lang === 'en' ? "Grams" : "ग्राम");
-            document.getElementById('adoptedWeightDisplay').value = weightVal ? weightVal + " " + unit : "";
+    function toggleBullionPriceSource() {
+        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
+        const field = document.getElementById('bullion-market-price');
+        if (source === 'auto') {
+            field.value = livePrices[24] || 31.2;
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
+            document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
+        } else {
+            field.readOnly = false;
+            field.style.backgroundColor = 'var(--bg-card)';
+            bullionManualPrice = parseFloat(field.value) || 31.2;
+            document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
+        }
+        calculateBullionMetrics();
+    }
+
+    function togglePriceSource() {
+        updateSelectedPrice();
+        const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
+        if (isManual) {
+            document.getElementById('marketPriceDisplay').focus();
+        }
+    }
+
+    function syncWeight() {
+        const weightVal = document.getElementById('totalWeight').value;
+        const lang = goldData.currentLang;
+        const unit = lang === 'ar' ? "غرام" : (lang === 'en' ? "Grams" : "ग्राम");
+        document.getElementById('adoptedWeightDisplay').value = weightVal ? weightVal + " " + unit : "";
+    }
+
+    function calculateProfit() {
+        const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+        const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+        const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+
+        if (marketPrice <= 0 || weight <= 0 || totalPrice <= 0) {
+            alert(goldData.currentLang === 'ar' ? "الرجاء تعبئة بيانات السعر والوزن والسعر المعروض أولاً بشكل صحيح." : (goldData.currentLang === 'en' ? "Please fill weight, market price and total offered price properly." : "कृपया वजन, बाजार मूल्य और कुल प्रस्तावित मूल्य को सही ढंग से भरें।"));
+            return;
         }
 
-        function calculateProfit() {
-            const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
-            const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
-            const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+        const goldValue = marketPrice * weight;
+        const pricePerGramStore = totalPrice / weight;
+        const totalProfit = totalPrice - goldValue;
+        const profitPerGram = totalProfit / weight;
 
-            if (marketPrice <= 0 || weight <= 0 || totalPrice <= 0) {
-                alert(goldData.currentLang === 'ar' ? "الرجاء تعبئة بيانات السعر والوزن والسعر المعروض أولاً بشكل صحيح." : (goldData.currentLang === 'en' ? "Please fill weight, market price and total offered price properly." : "कृपया वजन, बाजार मूल्य और कुल प्रस्तावित मूल्य को सही ढंग से भरें।"));
-                return;
-            }
-
-            const goldValue = marketPrice * weight;
-            const pricePerGramStore = totalPrice / weight;
-            const totalProfit = totalPrice - goldValue;
-            const profitPerGram = totalProfit / weight;
-
-            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
-            document.getElementById('pricePerGramStore').innerHTML = `${pricePerGramStore.toFixed(3)} <span class="currency">${currency}</span>`;
-            
-            const profitBox = document.getElementById('profitOnly');
-            if(profitPerGram < 0) {
-                profitBox.style.color = 'var(--success)';
-                const discountText = goldData.currentLang === 'ar' ? '(خصم/عرض)' : (goldData.currentLang === 'en' ? '(Discount/Offer)' : '(छूट/ऑफर)');
-                profitBox.innerHTML = `${Math.abs(profitPerGram).toFixed(3)} <span class="currency">${currency} ${discountText}</span>`;
-            } else {
-                profitBox.style.color = 'var(--text-main)';
-                profitBox.innerHTML = `${profitPerGram.toFixed(3)} <span class="currency">${currency}</span>`;
-            }
-
-            document.getElementById('box1_1').classList.add('active');
-            document.getElementById('box1_2').classList.add('active');
-
-            document.getElementById('saveContainer').style.display = 'block';
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+        document.getElementById('pricePerGramStore').innerHTML = `${pricePerGramStore.toFixed(3)} <span class="currency">${currency}</span>`;
+        
+        const profitBox = document.getElementById('profitOnly');
+        if(profitPerGram < 0) {
+            profitBox.style.color = 'var(--success)';
+            const discountText = goldData.currentLang === 'ar' ? '(خصم/عرض)' : (goldData.currentLang === 'en' ? '(Discount/Offer)' : '(छूट/ऑफर)');
+            profitBox.innerHTML = `${Math.abs(profitPerGram).toFixed(3)} <span class="currency">${currency} ${discountText}</span>`;
+        } else {
+            profitBox.style.color = 'var(--text-main)';
+            profitBox.innerHTML = `${profitPerGram.toFixed(3)} <span class="currency">${currency}</span>`;
         }
 
-        function calculateCustomPrice() {
-            const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
-            const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
-            const customProfit = parseFloat(document.getElementById('customProfit').value) || 0;
+        document.getElementById('box1_1').classList.add('active');
+        document.getElementById('box1_2').classList.add('active');
 
-            if (marketPrice <= 0 || weight <= 0) {
-                alert(goldData.currentLang === 'ar' ? "الرجاء تحديد الوزن الكلي وسعر غرام السوق." : (goldData.currentLang === 'en' ? "Please specify total weight and market price per gram." : "कृपया कुल वजन और प्रति ग्राम बाजार मूल्य निर्दिष्ट करें।"));
-                return;
-            }
+        document.getElementById('saveContainer').style.display = 'block';
+    }
 
-            const targetGramPrice = marketPrice + customProfit;
-            const totalCost = targetGramPrice * weight;
-            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+    function calculateCustomPrice() {
+        const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+        const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+        const customProfit = parseFloat(document.getElementById('customProfit').value) || 0;
 
-            document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
-            document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
-
-            document.getElementById('box2_1').classList.add('active');
-            document.getElementById('box2_2').classList.add('active');
+        if (marketPrice <= 0 || weight <= 0) {
+            alert(goldData.currentLang === 'ar' ? "الرجاء تحديد الوزن الكلي وسعر غرام السوق." : (goldData.currentLang === 'en' ? "Please specify total weight and market price per gram." : "कृपया कुल वजन और प्रति ग्राम बाजार मूल्य निर्दिष्ट करें।"));
+            return;
         }
 
-        function saveToComparison() {
-            const shopName = document.getElementById('shopNameInput').value.trim() || (goldData.currentLang === 'ar' ? "محل غير مسمى" : (goldData.currentLang === 'en' ? "Unnamed Shop" : "अनाम दुकान"));
-            const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
-            const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
-            const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+        const targetGramPrice = marketPrice + customProfit;
+        const totalCost = targetGramPrice * weight;
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
 
-            const goldValue = marketPrice * weight;
-            const pricePerGramStore = totalPrice / weight;
-            const profitPerGram = (totalPrice - goldValue) / weight;
+        document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
+        document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
 
-            if(editingShopId) {
-                const idx = goldData.savedShops.findIndex(s => s.id === editingShopId);
-                if(idx !== -1) {
-                    goldData.savedShops[idx].name = shopName;
-                    goldData.savedShops[idx].weight = weight;
-                    goldData.savedShops[idx].totalPrice = totalPrice;
-                    goldData.savedShops[idx].pricePerGram = pricePerGramStore;
-                    goldData.savedShops[idx].profitPerGram = profitPerGram;
-                    goldData.savedShops[idx].images = { ...attachedImages };
-                    goldData.savedShops[idx].gps = resolvedGPS;
-                }
-                editingShopId = null;
-                document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnSaveShop;
-            } else {
-                const newShop = {
-                    id: Date.now(),
-                    name: shopName,
-                    weight: weight,
-                    totalPrice: totalPrice,
-                    pricePerGram: pricePerGramStore,
-                    profitPerGram: profitPerGram,
-                    images: { ...attachedImages },
-                    gps: resolvedGPS
-                };
-                goldData.savedShops.push(newShop);
+        document.getElementById('box2_1').classList.add('active');
+        document.getElementById('box2_2').classList.add('active');
+    }
+
+    function saveToComparison() {
+        const shopName = document.getElementById('shopNameInput').value.trim() || (goldData.currentLang === 'ar' ? "محل غير مسمى" : (goldData.currentLang === 'en' ? "Unnamed Shop" : "अनाम दुकान"));
+        const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+        const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+        const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+
+        const goldValue = marketPrice * weight;
+        const pricePerGramStore = totalPrice / weight;
+        const profitPerGram = (totalPrice - goldValue) / weight;
+
+        if(editingShopId) {
+            const idx = goldData.savedShops.findIndex(s => s.id === editingShopId);
+            if(idx !== -1) {
+                goldData.savedShops[idx].name = shopName;
+                goldData.savedShops[idx].weight = weight;
+                goldData.savedShops[idx].totalPrice = totalPrice;
+                goldData.savedShops[idx].pricePerGram = pricePerGramStore;
+                goldData.savedShops[idx].profitPerGram = profitPerGram;
+                goldData.savedShops[idx].images = { ...attachedImages };
+                goldData.savedShops[idx].gps = resolvedGPS;
+            }
+            editingShopId = null;
+            document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnSaveShop;
+        } else {
+            const newShop = {
+                id: Date.now(),
+                name: shopName,
+                weight: weight,
+                totalPrice: totalPrice,
+                pricePerGram: pricePerGramStore,
+                profitPerGram: profitPerGram,
+                images: { ...attachedImages },
+                gps: resolvedGPS
+            };
+            goldData.savedShops.push(newShop);
+        }
+
+        document.getElementById('shopNameInput').value = '';
+        removeAttachedImage(1);
+        removeAttachedImage(2);
+        resolvedGPS = null;
+        const gpsBtn = document.getElementById('btnGps');
+        gpsBtn.classList.remove('active');
+        gpsBtn.innerHTML = `📍 <span id="gpsBtnText">${translations[goldData.currentLang].gpsBtnText}</span>`;
+
+        saveLocalData();
+        renderComparisonTable();
+    }
+
+    function renderComparisonTable() {
+        const tbody = document.getElementById('comparisonTableBody');
+        tbody.innerHTML = '';
+
+        const section = document.getElementById('comparisonSection');
+        if(goldData.savedShops.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+        section.style.display = 'block';
+
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+
+        goldData.savedShops.forEach(shop => {
+            let photosHTML = `<span style="color:#aaa;">-</span>`;
+            if(shop.images && (shop.images[1] || shop.images[2])) {
+                photosHTML = `<div class="table-images-container">`;
+                if(shop.images[1]) photosHTML += `<img class="table-img" src="${shop.images[1]}" onclick="openLightbox('${shop.images[1]}')">`;
+                if(shop.images[2]) photosHTML += `<img class="table-img" src="${shop.images[2]}" onclick="openLightbox('${shop.images[2]}')">`;
+                photosHTML += `</div>`;
             }
 
-            document.getElementById('shopNameInput').value = '';
-            removeAttachedImage(1);
-            removeAttachedImage(2);
-            resolvedGPS = null;
-            const gpsBtn = document.getElementById('btnGps');
-            gpsBtn.classList.remove('active');
-            gpsBtn.innerHTML = `📍 <span id="gpsBtnText">${translations[goldData.currentLang].gpsBtnText}</span>`;
+            let gpsHTML = `<span style="color:#aaa;">-</span>`;
+            if(shop.gps) {
+                gpsHTML = `<a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${shop.gps.lat},${shop.gps.lng}" target="_blank" title="خرائط Google">📍</a>`;
+            }
 
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:bold;">${shop.name}</td>
+                    <td>${photosHTML}</td>
+                    <td>${shop.weight.toFixed(2)}</td>
+                    <td style="font-weight:bold; color:var(--primary-hover);">${shop.totalPrice.toFixed(3)} ${currency}</td>
+                    <td>${shop.pricePerGram.toFixed(3)}</td>
+                    <td style="font-weight:bold; color:${shop.profitPerGram < 0 ? 'var(--success)' : 'var(--text-main)'};">${shop.profitPerGram.toFixed(3)}</td>
+                    <td>${gpsHTML}</td>
+                    <td>
+                        <button class="btn-action-row btn-edit-row" onclick="editShopRow(${shop.id})">✏️</button>
+                        <button class="btn-action-row btn-delete-row" onclick="deleteShopRow(${shop.id})">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteShopRow(id) {
+        if(confirm(translations[goldData.currentLang].promptDelRow)) {
+            goldData.savedShops = goldData.savedShops.filter(s => s.id !== id);
             saveLocalData();
             renderComparisonTable();
         }
+    }
 
-        function renderComparisonTable() {
-            const tbody = document.getElementById('comparisonTableBody');
-            tbody.innerHTML = '';
+    function editShopRow(id) {
+        const shop = goldData.savedShops.find(s => s.id === id);
+        if(!shop) return;
 
-            const section = document.getElementById('comparisonSection');
-            if(goldData.savedShops.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
-            section.style.display = 'block';
+        editingShopId = shop.id;
+        document.getElementById('shopNameInput').value = shop.name;
+        document.getElementById('totalWeight').value = shop.weight;
+        document.getElementById('totalPrice').value = shop.totalPrice;
+        
+        syncWeight();
+        calculateProfit();
 
-            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
-
-            goldData.savedShops.forEach(shop => {
-                let photosHTML = `<span style="color:#aaa;">-</span>`;
-                if(shop.images && (shop.images[1] || shop.images[2])) {
-                    photosHTML = `<div class="table-images-container">`;
-                    if(shop.images[1]) photosHTML += `<img class="table-img" src="${shop.images[1]}" onclick="openLightbox('${shop.images[1]}')">`;
-                    if(shop.images[2]) photosHTML += `<img class="table-img" src="${shop.images[2]}" onclick="openLightbox('${shop.images[2]}')">`;
-                    photosHTML += `</div>`;
-                }
-
-                let gpsHTML = `<span style="color:#aaa;">-</span>`;
-                if(shop.gps) {
-                    gpsHTML = `<a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${shop.gps.lat},${shop.gps.lng}" target="_blank" title="خرائط Google">📍</a>`;
-                }
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight:bold;">${shop.name}</td>
-                        <td>${photosHTML}</td>
-                        <td>${shop.weight.toFixed(2)}</td>
-                        <td style="font-weight:bold; color:var(--primary-hover);">${shop.totalPrice.toFixed(3)} ${currency}</td>
-                        <td>${shop.pricePerGram.toFixed(3)}</td>
-                        <td style="font-weight:bold; color:${shop.profitPerGram < 0 ? 'var(--success)' : 'var(--text-main)'};">${shop.profitPerGram.toFixed(3)}</td>
-                        <td>${gpsHTML}</td>
-                        <td>
-                            <button class="btn-action-row btn-edit-row" onclick="editShopRow(${shop.id})">✏️</button>
-                            <button class="btn-action-row btn-delete-row" onclick="deleteShopRow(${shop.id})">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
+        if(shop.images && shop.images[1]) {
+            attachImageToPreview(1, shop.images[1]);
+        }
+        if(shop.images && shop.images[2]) {
+            attachImageToPreview(2, shop.images[2]);
         }
 
-        function deleteShopRow(id) {
-            if(confirm(translations[goldData.currentLang].promptDelRow)) {
-                goldData.savedShops = goldData.savedShops.filter(s => s.id !== id);
-                saveLocalData();
-                renderComparisonTable();
-            }
+        if(shop.gps) {
+            resolvedGPS = shop.gps;
+            const gpsBtn = document.getElementById('btnGps');
+            gpsBtn.classList.add('active');
+            document.getElementById('gpsBtnText').innerText = translations[goldData.currentLang].gpsSuccess;
         }
 
-        function editShopRow(id) {
-            const shop = goldData.savedShops.find(s => s.id === id);
-            if(!shop) return;
+        document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnUpdateShop;
+        document.getElementById('saveContainer').scrollIntoView({ behavior: 'smooth' });
+    }
 
-            editingShopId = shop.id;
-            document.getElementById('shopNameInput').value = shop.name;
-            document.getElementById('totalWeight').value = shop.weight;
-            document.getElementById('totalPrice').value = shop.totalPrice;
-            
-            syncWeight();
-            calculateProfit();
-
-            if(shop.images && shop.images[1]) {
-                attachImageToPreview(1, shop.images[1]);
-            }
-            if(shop.images && shop.images[2]) {
-                attachImageToPreview(2, shop.images[2]);
-            }
-
-            if(shop.gps) {
-                resolvedGPS = shop.gps;
-                const gpsBtn = document.getElementById('btnGps');
-                gpsBtn.classList.add('active');
-                document.getElementById('gpsBtnText').innerText = translations[goldData.currentLang].gpsSuccess;
-            }
-
-            document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnUpdateShop;
-            document.getElementById('saveContainer').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function clearAllShops() {
-            if(confirm(translations[goldData.currentLang].promptClearAll)) {
-                goldData.savedShops = [];
-                saveLocalData();
-                renderComparisonTable();
-            }
-        }
-
-        function changeSortOrder() {
-            const sortVal = document.getElementById('sortSelect').value;
-            if(sortVal === 'profitAsc') {
-                goldData.savedShops.sort((a,b) => a.profitPerGram - b.profitPerGram);
-            } else if (sortVal === 'priceAsc') {
-                goldData.savedShops.sort((a,b) => a.totalPrice - b.totalPrice);
-            } else {
-                goldData.savedShops.sort((a,b) => a.id - b.id);
-            }
+    function clearAllShops() {
+        if(confirm(translations[goldData.currentLang].promptClearAll)) {
+            goldData.savedShops = [];
+            saveLocalData();
             renderComparisonTable();
         }
+    }
 
-        function getGPSLocation() {
-            const gpsBtn = document.getElementById('btnGps');
-            const gpsBtnTxt = document.getElementById('gpsBtnText');
-            
-            if (navigator.geolocation) {
-                gpsBtnTxt.innerText = "...";
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        resolvedGPS = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        gpsBtn.classList.add('active');
-                        gpsBtnTxt.innerText = translations[goldData.currentLang].gpsSuccess;
-                    },
-                    () => {
-                        alert(translations[goldData.currentLang].gpsFail);
-                        gpsBtnTxt.innerText = translations[goldData.currentLang].gpsBtnText;
-                    }
-                );
-            } else {
-                alert("Geolocation is not supported by your browser.");
-            }
+    function changeSortOrder() {
+        const sortVal = document.getElementById('sortSelect').value;
+        if(sortVal === 'profitAsc') {
+            goldData.savedShops.sort((a,b) => a.profitPerGram - b.profitPerGram);
+        } else if (sortVal === 'priceAsc') {
+            goldData.savedShops.sort((a,b) => a.totalPrice - b.totalPrice);
+        } else {
+            goldData.savedShops.sort((a,b) => a.id - b.id);
         }
+        renderComparisonTable();
+    }
 
-        function handleFileImport(event, index) {
-            const file = event.target.files[0];
-            if(!file) return;
-            processImageFile(file, index);
+    function getGPSLocation() {
+        const gpsBtn = document.getElementById('btnGps');
+        const gpsBtnTxt = document.getElementById('gpsBtnText');
+        
+        if (navigator.geolocation) {
+            gpsBtnTxt.innerText = "...";
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolvedGPS = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    gpsBtn.classList.add('active');
+                    gpsBtnTxt.innerText = translations[goldData.currentLang].gpsSuccess;
+                },
+                () => {
+                    alert(translations[goldData.currentLang].gpsFail);
+                    gpsBtnTxt.innerText = translations[goldData.currentLang].gpsBtnText;
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
         }
+    }
 
-        function processImageFile(file, index) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.getElementById('hiddenCompressCanvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    const maxW = 320;
-                    const scale = maxW / img.width;
-                    canvas.width = maxW;
-                    canvas.height = img.height * scale;
+    function handleFileImport(event, index) {
+        const file = event.target.files[0];
+        if(!file) return;
+        processImageFile(file, index);
+    }
 
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
-                    attachImageToPreview(index, compressedDataUrl);
-                };
-                img.src = e.target.result;
+    function processImageFile(file, index) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.getElementById('hiddenCompressCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                const maxW = 320;
+                const scale = maxW / img.width;
+                canvas.width = maxW;
+                canvas.height = img.height * scale;
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+                attachImageToPreview(index, compressedDataUrl);
             };
-            reader.readAsDataURL(file);
-        }
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
-        function attachImageToPreview(index, dataUrl) {
-            attachedImages[index] = dataUrl;
-            document.getElementById(`imgPreviewEl${index}`).src = dataUrl;
-            document.getElementById(`imgPreviewWrapper${index}`).style.display = 'flex';
-        }
+    function attachImageToPreview(index, dataUrl) {
+        attachedImages[index] = dataUrl;
+        document.getElementById(`imgPreviewEl${index}`).src = dataUrl;
+        document.getElementById(`imgPreviewWrapper${index}`).style.display = 'flex';
+    }
 
-        function removeAttachedImage(index) {
-            attachedImages[index] = null;
-            document.getElementById(`imgPreviewEl${index}`).src = '';
-            document.getElementById(`imgPreviewWrapper${index}`).style.display = 'none';
-            document.getElementById(`imageFileInput${index}`).value = '';
-        }
+    function removeAttachedImage(index) {
+        attachedImages[index] = null;
+        document.getElementById(`imgPreviewEl${index}`).src = '';
+        document.getElementById(`imgPreviewWrapper${index}`).style.display = 'none';
+        document.getElementById(`imageFileInput${index}`).value = '';
+    }
 
-        async function openLiveCamera(index) {
-            activeCamBlock = index;
-            const modal = document.getElementById('cameraModal');
-            const video = document.getElementById('videoFeed');
-            modal.style.display = 'flex';
+    async function openLiveCamera(index) {
+        activeCamBlock = index;
+        const modal = document.getElementById('cameraModal');
+        const video = document.getElementById('videoFeed');
+        modal.style.display = 'flex';
 
-            try {
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment' },
-                    audio: false
-                });
-                video.srcObject = localStream;
-            } catch(e) {
-                alert("Could not access camera. Please allow permission or upload a file.");
-                closeLiveCamera();
-            }
-        }
-
-        function closeLiveCamera() {
-            const modal = document.getElementById('cameraModal');
-            modal.style.display = 'none';
-            if(localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-        }
-
-        function capturePhotoFromFeed() {
-            const video = document.getElementById('videoFeed');
-            const canvas = document.getElementById('hiddenCompressCanvas');
-            const ctx = canvas.getContext('2d');
-
-            const scale = 320 / video.videoWidth;
-            canvas.width = 320;
-            canvas.height = video.videoHeight * scale;
-
-            ctx.translate(canvas.width, 0);
-            ctx.scale(-1, 1);
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            attachImageToPreview(activeCamBlock, dataUrl);
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+                audio: false
+            });
+            video.srcObject = localStream;
+        } catch(e) {
+            alert("Could not access camera. Please allow permission or upload a file.");
             closeLiveCamera();
         }
+    }
 
-        function openLightbox(src) {
-            const modal = document.getElementById('lightboxModal');
-            document.getElementById('lightboxImageEl').src = src;
-            modal.style.display = 'flex';
+    function closeLiveCamera() {
+        const modal = document.getElementById('cameraModal');
+        modal.style.display = 'none';
+        if(localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+            localStream = null;
         }
+    }
 
-        function closeLightbox() {
-            document.getElementById('lightboxModal').style.display = 'none';
-        }
+    function capturePhotoFromFeed() {
+        const video = document.getElementById('videoFeed');
+        const canvas = document.getElementById('hiddenCompressCanvas');
+        const ctx = canvas.getContext('2d');
 
-        function setFontSize(scale, btn) {
-            goldData.fontSize = scale;
-            document.documentElement.style.setProperty('--font-scale', scale);
-            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            saveLocalData();
-        }
+        const scale = 320 / video.videoWidth;
+        canvas.width = 320;
+        canvas.height = video.videoHeight * scale;
 
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            
-            goldData.theme = targetTheme;
-            const isDark = targetTheme === 'dark';
-            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
-            document.getElementById('themeText').innerText = isDark ? translations[goldData.currentLang].themeDay : translations[goldData.currentLang].themeNight;
-            saveLocalData();
-        }
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            goldData.currentLang = lang;
-            
-            const t = translations[lang];
-            
-            document.getElementById('devTag').innerText = t.devTag;
-            document.getElementById('mainTitle').innerText = t.title;
-            document.getElementById('btnRefresh').innerText = t.btnRefresh;
-            document.getElementById('lblPriceSource').innerText = t.lblPriceSource;
-            document.getElementById('optAuto').innerText = t.optAuto;
-            document.getElementById('optManual').innerText = t.optManual;
-            document.getElementById('lblCarat').innerText = t.lblCarat;
-            document.getElementById('carat24').innerText = t.carat24;
-            document.getElementById('carat22').innerText = t.carat22;
-            document.getElementById('carat21').innerText = t.carat21;
-            document.getElementById('carat18').innerText = t.carat18;
-            document.getElementById('lblMarketPrice').innerText = t.lblMarketPrice;
-            document.getElementById('lblTotalWeight').innerText = t.lblTotalWeight;
-            document.getElementById('totalWeight').placeholder = t.phTotalWeight;
-            document.getElementById('lblTotalPrice').innerText = t.lblTotalPrice;
-            document.getElementById('totalPrice').placeholder = t.phTotalPrice;
-            document.getElementById('secTitle1').innerText = t.secTitle1;
-            document.getElementById('btnCalc1').innerText = t.btnCalc1;
-            document.getElementById('resBox1Title').innerText = t.resBox1Title;
-            document.getElementById('resBox2Title').innerText = t.resBox2Title;
-            document.getElementById('secTitle2').innerText = t.secTitle2;
-            document.getElementById('lblCustomProfit').innerText = t.lblCustomProfit;
-            document.getElementById('customProfit').placeholder = t.phCustomProfit;
-            document.getElementById('lblAdoptedWeight').innerText = t.lblAdoptedWeight;
-            document.getElementById('adoptedWeightDisplay').placeholder = t.phAdoptedWeight;
-            document.getElementById('btnCalc2').innerText = t.btnCalc2;
-            document.getElementById('resBox3Title').innerText = t.resBox3Title;
-            document.getElementById('resBox4Title').innerText = t.resBox4Title;
-            document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
-            document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
-            document.getElementById('btnSaveShop').innerText = editingShopId ? t.btnUpdateShop : t.btnSaveShop;
-            document.getElementById('secTitleComparison').innerText = t.secTitleComparison;
-            document.getElementById('btnClearAll').innerText = t.btnClearAll;
-            document.getElementById('lblAddPhoto').innerText = t.lblAddPhoto;
-            document.getElementById('lblPic1').innerText = t.lblPic1;
-            document.getElementById('lblPic2').innerText = t.lblPic2;
-            document.getElementById('lblAddLocation').innerText = t.lblAddLocation;
-            document.getElementById('gpsBtnText').innerText = resolvedGPS ? t.gpsSuccess : t.gpsBtnText;
-            document.getElementById('modalCamTitle').innerText = t.modalCamTitle;
-            document.getElementById('btnTxtTake').innerText = t.btnTxtTake;
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        attachImageToPreview(activeCamBlock, dataUrl);
+        closeLiveCamera();
+    }
 
-            document.getElementById('thShop').innerText = t.thShop;
-            document.getElementById('thPhoto').innerText = t.thPhoto;
-            document.getElementById('thWeight').innerText = t.thWeight;
-            document.getElementById('thTotalPrice').innerText = t.thTotalPrice;
-            document.getElementById('thPricePerGram').innerText = t.thPricePerGram;
-            document.getElementById('thProfit').innerText = t.thProfit;
-            document.getElementById('thLocation').innerText = t.thLocation;
-            document.getElementById('thDelete').innerText = t.thDelete;
+    function openLightbox(src) {
+        const modal = document.getElementById('lightboxModal');
+        document.getElementById('lightboxImageEl').src = src;
+        modal.style.display = 'flex';
+    }
 
-            document.getElementById('lblSort').innerText = t.lblSort;
-            document.getElementById('optSortNone').innerText = t.optSortNone;
-            document.getElementById('optSortProfitAsc').innerText = t.optSortProfitAsc;
-            document.getElementById('optSortPriceAsc').innerText = t.optSortPriceAsc;
-            document.getElementById('btnExportTxt').innerText = t.btnExportTxt;
-            document.getElementById('btnImportTxt').innerText = t.btnImportTxt;
-            document.getElementById('footerInfo').innerText = t.footerInfo;
-            document.getElementById('footerCopyrights').innerText = t.footerCopyrights;
+    function closeLightbox() {
+        document.getElementById('lightboxModal').style.display = 'none';
+    }
 
-            document.getElementById('menu-calc').innerText = t.menuCalc;
-            document.getElementById('menu-bullion').innerText = t.menuBullion;
+    function setFontSize(scale, btn) {
+        goldData.fontSize = scale;
+        document.documentElement.style.setProperty('--font-scale', scale);
+        document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        saveLocalData();
+    }
 
-            document.getElementById('bullionMainTitle').innerText = t.bullionMainTitle;
-            document.getElementById('lblBullionLivePriceHelp').innerText = t.lblBullionLivePriceHelp;
-            document.getElementById('bullionOptAuto').innerText = t.bullionOptAuto;
-            document.getElementById('bullionOptManual').innerText = t.bullionOptManual;
-            document.getElementById('btnUpdateBullionProfits').innerText = t.btnUpdateProfits;
-            document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
-            document.getElementById('bullion-market-price').placeholder = t.phBullionMarketPrice;
-            document.getElementById('lblTotalInvested').innerText = t.lblTotalInvested;
-            document.getElementById('lblTotalWeightB').innerText = t.lblTotalWeightB;
-            document.getElementById('lblAvgGramPrice').innerText = t.lblAvgGramPrice;
-            document.getElementById('lblNetProfitLoss').innerText = t.lblNetProfitLoss;
-            document.getElementById('bullionFormTitle').innerText = t.bullionFormTitle;
-            document.getElementById('lblBullionPriceInput').innerText = t.lblBullionPriceInput;
-            document.getElementById('bullion-price').placeholder = t.phBullionPrice;
-            document.getElementById('lblBullionWeightInput').innerText = t.lblBullionWeightInput;
-            document.getElementById('bullion-weight').placeholder = t.phBullionWeight;
-            document.getElementById('lblBullionDateInput').innerText = t.lblBullionDateInput;
-            document.getElementById('btn-save-bullion').innerText = t.btnSaveBullion;
-            document.getElementById('btn-cancel-edit').innerText = t.btnCancelEdit;
-            document.getElementById('bullionTableTitle').innerText = t.bullionTableTitle;
-            document.getElementById('thBDate').innerText = t.thBDate;
-            document.getElementById('thBWeight').innerText = t.thBWeight;
-            document.getElementById('thBPrice').innerText = t.thBPrice;
-            document.getElementById('thBPerGram').innerText = t.thBPerGram;
-            document.getElementById('thBProfit').innerText = t.thBProfit;
-            document.getElementById('thBActions').innerText = t.thBActions;
-            
-            document.getElementById('btnRefreshBullionGold').innerText = t.btnRefreshBullionGold;
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', targetTheme);
+        
+        goldData.theme = targetTheme;
+        const isDark = targetTheme === 'dark';
+        document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
+        document.getElementById('themeText').innerText = isDark ? translations[goldData.currentLang].themeDay : translations[goldData.currentLang].themeNight;
+        saveLocalData();
+    }
 
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    function changeLanguage() {
+        const lang = document.getElementById('langSelect').value;
+        goldData.currentLang = lang;
+        
+        const t = translations[lang];
+        
+        document.getElementById('devTag').innerText = t.devTag;
+        document.getElementById('mainTitle').innerText = t.title;
+        document.getElementById('btnRefresh').innerText = t.btnRefresh;
+        document.getElementById('lblPriceSource').innerText = t.lblPriceSource;
+        document.getElementById('optAuto').innerText = t.optAuto;
+        document.getElementById('optManual').innerText = t.optManual;
+        document.getElementById('lblCarat').innerText = t.lblCarat;
+        document.getElementById('carat24').innerText = t.carat24;
+        document.getElementById('carat22').innerText = t.carat22;
+        document.getElementById('carat21').innerText = t.carat21;
+        document.getElementById('carat18').innerText = t.carat18;
+        document.getElementById('lblMarketPrice').innerText = t.lblMarketPrice;
+        document.getElementById('lblTotalWeight').innerText = t.lblTotalWeight;
+        document.getElementById('totalWeight').placeholder = t.phTotalWeight;
+        document.getElementById('lblTotalPrice').innerText = t.lblTotalPrice;
+        document.getElementById('totalPrice').placeholder = t.phTotalPrice;
+        document.getElementById('secTitle1').innerText = t.secTitle1;
+        document.getElementById('btnCalc1').innerText = t.btnCalc1;
+        document.getElementById('resBox1Title').innerText = t.resBox1Title;
+        document.getElementById('resBox2Title').innerText = t.resBox2Title;
+        document.getElementById('secTitle2').innerText = t.secTitle2;
+        document.getElementById('lblCustomProfit').innerText = t.lblCustomProfit;
+        document.getElementById('customProfit').placeholder = t.phCustomProfit;
+        document.getElementById('lblAdoptedWeight').innerText = t.lblAdoptedWeight;
+        document.getElementById('adoptedWeightDisplay').placeholder = t.phAdoptedWeight;
+        document.getElementById('btnCalc2').innerText = t.btnCalc2;
+        document.getElementById('resBox3Title').innerText = t.resBox3Title;
+        document.getElementById('resBox4Title').innerText = t.resBox4Title;
+        document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
+        document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
+        document.getElementById('btnSaveShop').innerText = editingShopId ? t.btnUpdateShop : t.btnSaveShop;
+        document.getElementById('secTitleComparison').innerText = t.secTitleComparison;
+        document.getElementById('btnClearAll').innerText = t.btnClearAll;
+        document.getElementById('lblAddPhoto').innerText = t.lblAddPhoto;
+        document.getElementById('lblPic1').innerText = t.lblPic1;
+        document.getElementById('lblPic2').innerText = t.lblPic2;
+        document.getElementById('lblAddLocation').innerText = t.lblAddLocation;
+        document.getElementById('gpsBtnText').innerText = resolvedGPS ? t.gpsSuccess : t.gpsBtnText;
+        document.getElementById('modalCamTitle').innerText = t.modalCamTitle;
+        document.getElementById('btnTxtTake').innerText = t.btnTxtTake;
 
-            saveLocalData();
-            updateSelectedPrice();
-            renderComparisonTable();
-            renderBullionTable();
-            syncWeight();
-            
-            const activeSection = document.querySelector('.page-section.active');
-            if (activeSection) {
-                const pageTitle = activeSection.id === 'calculator-page' ? t.title : t.bullionMainTitle;
-                document.getElementById('page-title').innerText = pageTitle;
-            }
-        }
+        document.getElementById('thShop').innerText = t.thShop;
+        document.getElementById('thPhoto').innerText = t.thPhoto;
+        document.getElementById('thWeight').innerText = t.thWeight;
+        document.getElementById('thTotalPrice').innerText = t.thTotalPrice;
+        document.getElementById('thPricePerGram').innerText = t.thPricePerGram;
+        document.getElementById('thProfit').innerText = t.thProfit;
+        document.getElementById('thLocation').innerText = t.thLocation;
+        document.getElementById('thDelete').innerText = t.thDelete;
 
-        function exportBackupData() {
-            const fullBackup = {
-                goldData: goldData,
-                bullionTransactions: bullionTransactions,
-                bullionManualPrice: bullionManualPrice
-            };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `Gold_Backup_2026.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-        }
+        document.getElementById('lblSort').innerText = t.lblSort;
+        document.getElementById('optSortNone').innerText = t.optSortNone;
+        document.getElementById('optSortProfitAsc').innerText = t.optSortProfitAsc;
+        document.getElementById('optSortPriceAsc').innerText = t.optSortPriceAsc;
+        document.getElementById('btnExportTxt').innerText = t.btnExportTxt;
+        document.getElementById('btnImportTxt').innerText = t.btnImportTxt;
+        document.getElementById('footerInfo').innerText = t.footerInfo;
+        document.getElementById('footerCopyrights').innerText = t.footerCopyrights;
 
-        function importBackupData(event) {
-            const file = event.target.files[0];
-            if(!file) return;
+        document.getElementById('menu-calc').innerText = t.menuCalc;
+        document.getElementById('menu-bullion').innerText = t.menuBullion;
+        document.getElementById('menu-tradingview').innerText = t.menuTradingview;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if(parsed.goldData) {
-                        goldData = parsed.goldData;
-                        bullionTransactions = parsed.bullionTransactions || [];
-                        if (parsed.bullionManualPrice) {
-                            bullionManualPrice = parsed.bullionManualPrice;
-                        }
-                        saveLocalData();
-                        
-                        document.getElementById('langSelect').value = goldData.currentLang;
-                        changeLanguage();
-                        
-                        if(goldData.theme === 'dark') {
-                            document.documentElement.setAttribute('data-theme', 'dark');
-                            document.getElementById('themeIcon').innerText = '☀️';
-                            document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay;
-                        } else {
-                            document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight;
-                        }
-                        
-                        setFontSize(goldData.fontSize, null);
-                        renderComparisonTable();
-                        renderBullionTable();
-                        updateBullionMarketPriceField();
-                        calculateBullionMetrics();
-                        alert("✅ " + (goldData.currentLang === 'ar' ? "تم استيراد كافة البيانات بنجاح" : (goldData.currentLang === 'en' ? "All data imported successfully" : "सभी डेटा सफलतापूर्वक आयात किए गए")));
-                    } else {
-                        alert(goldData.currentLang === 'ar' ? "الملف المرفق غير صالح." : (goldData.currentLang === 'en' ? "Invalid file." : "अमान्य फ़ाइल।"));
-                    }
-                } catch(err) {
-                    alert(goldData.currentLang === 'ar' ? "خطأ أثناء معالجة الملف." : (goldData.currentLang === 'en' ? "Error processing file." : "फ़ाइल संसाधित करने में त्रुटि।"));
-                }
-            };
-            reader.readAsText(file);
-        }
+        document.getElementById('bullionMainTitle').innerText = t.bullionMainTitle;
+        document.getElementById('lblBullionLivePriceHelp').innerText = t.lblBullionLivePriceHelp;
+        document.getElementById('bullionOptAuto').innerText = t.bullionOptAuto;
+        document.getElementById('bullionOptManual').innerText = t.bullionOptManual;
+        document.getElementById('btnUpdateBullionProfits').innerText = t.btnUpdateProfits;
+        document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
+        document.getElementById('bullion-market-price').placeholder = t.phBullionMarketPrice;
+        document.getElementById('lblTotalInvested').innerText = t.lblTotalInvested;
+        document.getElementById('lblTotalWeightB').innerText = t.lblTotalWeightB;
+        document.getElementById('lblAvgGramPrice').innerText = t.lblAvgGramPrice;
+        document.getElementById('lblNetProfitLoss').innerText = t.lblNetProfitLoss;
+        document.getElementById('bullionFormTitle').innerText = t.bullionFormTitle;
+        document.getElementById('lblBullionPriceInput').innerText = t.lblBullionPriceInput;
+        document.getElementById('bullion-price').placeholder = t.phBullionPrice;
+        document.getElementById('lblBullionWeightInput').innerText = t.lblBullionWeightInput;
+        document.getElementById('bullion-weight').placeholder = t.phBullionWeight;
+        document.getElementById('lblBullionDateInput').innerText = t.lblBullionDateInput;
+        document.getElementById('btn-save-bullion').innerText = t.btnSaveBullion;
+        document.getElementById('btn-cancel-edit').innerText = t.btnCancelEdit;
+        document.getElementById('bullionTableTitle').innerText = t.bullionTableTitle;
+        document.getElementById('thBDate').innerText = t.thBDate;
+        document.getElementById('thBWeight').innerText = t.thBWeight;
+        document.getElementById('thBPrice').innerText = t.thBPrice;
+        document.getElementById('thBPerGram').innerText = t.thBPerGram;
+        document.getElementById('thBProfit').innerText = t.thBProfit;
+        document.getElementById('thBActions').innerText = t.thBActions;
+        
+        document.getElementById('btnRefreshBullionGold').innerText = t.btnRefreshBullionGold;
 
-        function saveLocalData() {
-            localStorage.setItem('goldData_Muharraqi', JSON.stringify(goldData));
-            localStorage.setItem('bullionTransactions_Muharraqi', JSON.stringify(bullionTransactions));
-            localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
-        }
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
-        }
-
-        function switchTab(sectionId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-
+        saveLocalData();
+        updateSelectedPrice();
+        renderComparisonTable();
+        renderBullionTable();
+        syncWeight();
+        
+        const activeSection = document.querySelector('.page-section.active');
+        if (activeSection) {
             let pageTitle = "";
-            if (sectionId === 'calculator-page') {
-                pageTitle = translations[goldData.currentLang].title;
-            } else if (sectionId === 'bullion-page') {
-                pageTitle = translations[goldData.currentLang].bullionMainTitle;
-            }
+            if (activeSection.id === 'calculator-page') pageTitle = t.title;
+            else if (activeSection.id === 'bullion-page') pageTitle = t.bullionMainTitle;
+            else if (activeSection.id === 'tradingview-page') pageTitle = "📊 TradingView (XAUUSD)";
             document.getElementById('page-title').innerText = pageTitle;
-
-            document.querySelectorAll('.sidebar ul li').forEach(li => {
-                li.classList.remove('active');
-            });
-            if (sectionId === 'calculator-page') {
-                document.getElementById('menu-calc').classList.add('active');
-            } else {
-                document.getElementById('menu-bullion').classList.add('active');
-                renderBullionTable();
-                updateBullionMarketPriceField();
-                calculateBullionMetrics();
-            }
-
-            toggleSidebar();
         }
+    }
 
-        function saveBullionTransaction() {
-            const price = parseFloat(document.getElementById('bullion-price').value);
-            const weight = parseFloat(document.getElementById('bullion-weight').value);
-            const date = document.getElementById('bullion-date').value;
-            const editIndex = parseInt(document.getElementById('bullion-edit-index').value);
+    function exportBackupData() {
+        const fullBackup = {
+            goldData: goldData,
+            bullionTransactions: bullionTransactions,
+            bullionManualPrice: bullionManualPrice
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `Gold_Backup_2026.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+    }
 
-            if (!price || !weight || !date) {
-                alert(translations[goldData.currentLang].alertFillBullion);
-                return;
-            }
+    function importBackupData(event) {
+        const file = event.target.files[0];
+        if(!file) return;
 
-            const transaction = { price, weight, date };
-
-            if (editIndex === -1) {
-                bullionTransactions.push(transaction);
-            } else {
-                bullionTransactions[editIndex] = transaction;
-                resetBullionForm();
-            }
-
-            saveLocalData();
-            renderBullionTable();
-            calculateBullionMetrics();
-
-            document.getElementById('bullion-price').value = '';
-            document.getElementById('bullion-weight').value = '';
-            document.getElementById('bullion-date').valueAsDate = new Date();
-        }
-
-        function renderBullionTable() {
-            const tbody = document.getElementById('bullion-table-body');
-            tbody.innerHTML = '';
-            const t = translations[goldData.currentLang];
-            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
-
-            if (bullionTransactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #999;">${t.noTransactions}</td></tr>`;
-                return;
-            }
-
-            const marketPrice = parseFloat(document.getElementById('bullion-market-price').value) || 0;
-
-            bullionTransactions.forEach((txn, index) => {
-                const perGramPrice = (txn.price / txn.weight).toFixed(3);
-                const currentValue = txn.weight * marketPrice;
-                const profitLoss = currentValue - txn.price;
-                let profitLossHTML = '';
-                
-                if (profitLoss > 0.001) {
-                    profitLossHTML = `<span class="profit-badge positive">+${profitLoss.toFixed(3)} ${currency} 🟢📈</span>`;
-                } else if (profitLoss < -0.001) {
-                    profitLossHTML = `<span class="profit-badge negative">${profitLoss.toFixed(3)} ${currency} 🔴📉</span>`;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if(parsed.goldData) {
+                    goldData = parsed.goldData;
+                    bullionTransactions = parsed.bullionTransactions || [];
+                    if (parsed.bullionManualPrice) {
+                        bullionManualPrice = parsed.bullionManualPrice;
+                    }
+                    saveLocalData();
+                    
+                    document.getElementById('langSelect').value = goldData.currentLang;
+                    changeLanguage();
+                    
+                    if(goldData.theme === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        document.getElementById('themeIcon').innerText = '☀️';
+                        document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay;
+                    } else {
+                        document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight;
+                    }
+                    
+                    setFontSize(goldData.fontSize, null);
+                    renderComparisonTable();
+                    renderBullionTable();
+                    updateBullionMarketPriceField();
+                    calculateBullionMetrics();
+                    alert("✅ " + (goldData.currentLang === 'ar' ? "تم استيراد كافة البيانات بنجاح" : (goldData.currentLang === 'en' ? "All data imported successfully" : "सभी डेटा सफलतापूर्वक आयात किए गए")));
                 } else {
-                    profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
+                    alert(goldData.currentLang === 'ar' ? "الملف المرفق غير صالح." : (goldData.currentLang === 'en' ? "Invalid file." : "अमान्य फ़ाइल।"));
                 }
+            } catch(err) {
+                alert(goldData.currentLang === 'ar' ? "خطأ أثناء معالجة الملف." : (goldData.currentLang === 'en' ? "Error processing file." : "फ़ाइल संसाधित करने में त्रुटि।"));
+            }
+        };
+        reader.readAsText(file);
+    }
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight:bold;">${txn.date}</td>
-                        <td>${txn.weight.toFixed(2)}</td>
-                        <td style="font-weight:bold; color:var(--primary-hover);">${txn.price.toFixed(3)} ${currency}</td>
-                        <td>${perGramPrice} ${currency}</td>
-                        <td>${profitLossHTML}</td>
-                        <td>
-                            <button class="btn-action-row btn-edit-row" onclick="editBullion(${index})">✏️</button>
-                            <button class="btn-action-row btn-delete-row" onclick="deleteBullion(${index})">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
+    function saveLocalData() {
+        localStorage.setItem('goldData_Muharraqi', JSON.stringify(goldData));
+        localStorage.setItem('bullionTransactions_Muharraqi', JSON.stringify(bullionTransactions));
+        localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+    }
+
+    function switchTab(sectionId) {
+        document.querySelectorAll('.page-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+
+        let pageTitle = "";
+        const t = translations[goldData.currentLang];
+        if (sectionId === 'calculator-page') {
+            pageTitle = t.title;
+        } else if (sectionId === 'bullion-page') {
+            pageTitle = t.bullionMainTitle;
+        } else if (sectionId === 'tradingview-page') {
+            pageTitle = "📊 TradingView (XAUUSD)";
         }
+        document.getElementById('page-title').innerText = pageTitle;
 
-        function editBullion(index) {
-            const txn = bullionTransactions[index];
-            const t = translations[goldData.currentLang];
-            document.getElementById('bullion-price').value = txn.price;
-            document.getElementById('bullion-weight').value = txn.weight;
-            document.getElementById('bullion-date').value = txn.date;
-            
-            document.getElementById('bullion-edit-index').value = index;
-            document.getElementById('bullionFormTitle').innerText = t.bullionEditTitle;
-            document.getElementById('btn-save-bullion').innerText = t.bullionUpdateBtn;
-            document.getElementById('btn-cancel-edit').style.display = 'inline-block';
-            
-            document.getElementById('bullionFormTitle').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function resetBullionForm() {
-            const t = translations[goldData.currentLang];
-            document.getElementById('bullion-edit-index').value = "-1";
-            document.getElementById('bullionFormTitle').innerText = t.bullionAddTitle;
-            document.getElementById('btn-save-bullion').innerText = t.bullionSaveBtn;
-            document.getElementById('btn-cancel-edit').style.display = 'none';
-            document.getElementById('bullion-price').value = '';
-            document.getElementById('bullion-weight').value = '';
-            document.getElementById('bullion-date').valueAsDate = new Date();
-        }
-
-        function deleteBullion(index) {
-            const t = translations[goldData.currentLang];
-            if (confirm(t.alertDeleteBullion)) {
-                bullionTransactions.splice(index, 1);
-                saveLocalData();
-                renderBullionTable();
-                calculateBullionMetrics();
-            }
-        }
-
-        function updateAndSaveBullionProfits() {
-            calculateBullionMetrics();
-            saveLocalData();
-            
-            const btn = document.getElementById('btnUpdateBullionProfits');
-            const dateTimeStr = getFormattedDateTime();
-            const t = translations[goldData.currentLang];
-            
-            btn.innerText = `${t.updatedSuccess} (${dateTimeStr})`;
-            setTimeout(() => {
-                btn.innerText = t.btnUpdateProfits;
-            }, 2500);
-        }
-
-        function calculateBullionMetrics() {
-            let totalInvested = 0;
-            let totalWeight = 0;
-            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
-
-            bullionTransactions.forEach(txn => {
-                totalInvested += txn.price;
-                totalWeight += txn.weight;
-            });
-
-            const avgPrice = totalWeight > 0 ? (totalInvested / totalWeight) : 0;
-
-            document.getElementById('total-invested').innerText = `${totalInvested.toFixed(3)} ${currency}`;
-            const weightUnit = goldData.currentLang === 'ar' ? 'غرام' : (goldData.currentLang === 'en' ? 'Grams' : 'ग्राम');
-            document.getElementById('total-weight-b').innerText = `${totalWeight.toFixed(2)} ${weightUnit}`;
-            document.getElementById('avg-price-per-gram').innerText = `${avgPrice.toFixed(3)} ${currency}`;
-
-            const marketPrice = parseFloat(document.getElementById('bullion-market-price').value) || 0;
-            const currentTotalValue = totalWeight * marketPrice;
-            const profitLoss = currentTotalValue - totalInvested;
-
-            const profitLossCard = document.getElementById('profit-loss-card');
-            const profitLossVal = document.getElementById('profit-loss-val');
-
-            profitLossCard.classList.remove('profit', 'loss');
-            if (profitLoss > 0.001) {
-                profitLossCard.classList.add('profit');
-                const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
-                profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency}`;
-            } else if (profitLoss < -0.001) {
-                profitLossCard.classList.add('loss');
-                const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
-                profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency}`;
-            } else {
-                profitLossVal.innerText = `0.000 ${currency}`;
-            }
-
-            const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
-            if (source === 'manual') {
-                bullionManualPrice = marketPrice;
-                localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
-            }
-
-            renderBullionTable();
-        }
-
-        window.onload = function() {
-            const stored = localStorage.getItem('goldData_Muharraqi');
-            const storedBullions = localStorage.getItem('bullionTransactions_Muharraqi');
-            const storedManualPrice = localStorage.getItem('bullionManualPrice_Muharraqi');
-
-            if(stored) {
-                try {
-                    goldData = JSON.parse(stored);
-                    if(!goldData.savedShops) goldData.savedShops = [];
-                } catch(e){}
-            }
-
-            if(storedBullions) {
-                try {
-                    bullionTransactions = JSON.parse(storedBullions);
-                } catch(e){}
-            }
-
-            if(storedManualPrice) {
-                try {
-                    bullionManualPrice = JSON.parse(storedManualPrice);
-                } catch(e){}
-            }
-
-            document.getElementById('langSelect').value = goldData.currentLang;
-            changeLanguage();
-
-            if(goldData.theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                document.getElementById('themeIcon').innerText = '☀️';
-                document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay;
-            } else {
-                document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight;
-            }
-
-            setFontSize(goldData.fontSize, null);
-            document.getElementById('bullion-date').valueAsDate = new Date();
-
-            const autoRadio = document.querySelector('input[name="bullionPriceSource"][value="auto"]');
-            const manualRadio = document.querySelector('input[name="bullionPriceSource"][value="manual"]');
-            if (autoRadio) autoRadio.checked = true;
-            if (manualRadio) manualRadio.checked = false;
-
-            fetchGoldPrices();
-            renderComparisonTable();
+        document.querySelectorAll('.sidebar ul li').forEach(li => {
+            li.classList.remove('active');
+        });
+        if (sectionId === 'calculator-page') {
+            document.getElementById('menu-calc').classList.add('active');
+        } else if (sectionId === 'bullion-page') {
+            document.getElementById('menu-bullion').classList.add('active');
             renderBullionTable();
             updateBullionMarketPriceField();
             calculateBullionMetrics();
-        };
-    </script>
+        } else if (sectionId === 'tradingview-page') {
+            document.getElementById('menu-tradingview').classList.add('active');
+        }
+
+        toggleSidebar();
+    }
+
+    function saveBullionTransaction() {
+        const price = parseFloat(document.getElementById('bullion-price').value);
+        const weight = parseFloat(document.getElementById('bullion-weight').value);
+        const date = document.getElementById('bullion-date').value;
+        const editIndex = parseInt(document.getElementById('bullion-edit-index').value);
+
+        if (!price || !weight || !date) {
+            alert(translations[goldData.currentLang].alertFillBullion);
+            return;
+        }
+
+        const transaction = { price, weight, date };
+
+        if (editIndex === -1) {
+            bullionTransactions.push(transaction);
+        } else {
+            bullionTransactions[editIndex] = transaction;
+            resetBullionForm();
+        }
+
+        saveLocalData();
+        renderBullionTable();
+        calculateBullionMetrics();
+
+        document.getElementById('bullion-price').value = '';
+        document.getElementById('bullion-weight').value = '';
+        document.getElementById('bullion-date').valueAsDate = new Date();
+    }
+
+    function renderBullionTable() {
+        const tbody = document.getElementById('bullion-table-body');
+        tbody.innerHTML = '';
+        const t = translations[goldData.currentLang];
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+
+        if (bullionTransactions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #999;">${t.noTransactions}</td></tr>`;
+            return;
+        }
+
+        const marketPrice = parseFloat(document.getElementById('bullion-market-price').value) || 0;
+
+        bullionTransactions.forEach((txn, index) => {
+            const perGramPrice = (txn.price / txn.weight).toFixed(3);
+            const currentValue = txn.weight * marketPrice;
+            const profitLoss = currentValue - txn.price;
+            let profitLossHTML = '';
+            
+            if (profitLoss > 0.001) {
+                profitLossHTML = `<span class="profit-badge positive">+${profitLoss.toFixed(3)} ${currency} 🟢📈</span>`;
+            } else if (profitLoss < -0.001) {
+                profitLossHTML = `<span class="profit-badge negative">${profitLoss.toFixed(3)} ${currency} 🔴📉</span>`;
+            } else {
+                profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
+            }
+
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:bold;">${txn.date}</td>
+                    <td>${txn.weight.toFixed(2)}</td>
+                    <td style="font-weight:bold; color:var(--primary-hover);">${txn.price.toFixed(3)} ${currency}</td>
+                    <td>${perGramPrice} ${currency}</td>
+                    <td>${profitLossHTML}</td>
+                    <td>
+                        <button class="btn-action-row btn-edit-row" onclick="editBullion(${index})">✏️</button>
+                        <button class="btn-action-row btn-delete-row" onclick="deleteBullion(${index})">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function editBullion(index) {
+        const txn = bullionTransactions[index];
+        const t = translations[goldData.currentLang];
+        document.getElementById('bullion-price').value = txn.price;
+        document.getElementById('bullion-weight').value = txn.weight;
+        document.getElementById('bullion-date').value = txn.date;
+        
+        document.getElementById('bullion-edit-index').value = index;
+        document.getElementById('bullionFormTitle').innerText = t.bullionEditTitle;
+        document.getElementById('btn-save-bullion').innerText = t.bullionUpdateBtn;
+        document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+        
+        document.getElementById('bullionFormTitle').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetBullionForm() {
+        const t = translations[goldData.currentLang];
+        document.getElementById('bullion-edit-index').value = "-1";
+        document.getElementById('bullionFormTitle').innerText = t.bullionAddTitle;
+        document.getElementById('btn-save-bullion').innerText = t.bullionSaveBtn;
+        document.getElementById('btn-cancel-edit').style.display = 'none';
+        document.getElementById('bullion-price').value = '';
+        document.getElementById('bullion-weight').value = '';
+        document.getElementById('bullion-date').valueAsDate = new Date();
+    }
+
+    function deleteBullion(index) {
+        const t = translations[goldData.currentLang];
+        if (confirm(t.alertDeleteBullion)) {
+            bullionTransactions.splice(index, 1);
+            saveLocalData();
+            renderBullionTable();
+            calculateBullionMetrics();
+        }
+    }
+
+    function updateAndSaveBullionProfits() {
+        calculateBullionMetrics();
+        saveLocalData();
+        
+        const btn = document.getElementById('btnUpdateBullionProfits');
+        const dateTimeStr = getFormattedDateTime();
+        const t = translations[goldData.currentLang];
+        
+        btn.innerText = `${t.updatedSuccess} (${dateTimeStr})`;
+        setTimeout(() => {
+            btn.innerText = t.btnUpdateProfits;
+        }, 2500);
+    }
+
+    function calculateBullionMetrics() {
+        let totalInvested = 0;
+        let totalWeight = 0;
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+
+        bullionTransactions.forEach(txn => {
+            totalInvested += txn.price;
+            totalWeight += txn.weight;
+        });
+
+        const avgPrice = totalWeight > 0 ? (totalInvested / totalWeight) : 0;
+
+        document.getElementById('total-invested').innerText = `${totalInvested.toFixed(3)} ${currency}`;
+        const weightUnit = goldData.currentLang === 'ar' ? 'غرام' : (goldData.currentLang === 'en' ? 'Grams' : 'ग्राम');
+        document.getElementById('total-weight-b').innerText = `${totalWeight.toFixed(2)} ${weightUnit}`;
+        document.getElementById('avg-price-per-gram').innerText = `${avgPrice.toFixed(3)} ${currency}`;
+
+        const marketPrice = parseFloat(document.getElementById('bullion-market-price').value) || 0;
+        const currentTotalValue = totalWeight * marketPrice;
+        const profitLoss = currentTotalValue - totalInvested;
+
+        const profitLossCard = document.getElementById('profit-loss-card');
+        const profitLossVal = document.getElementById('profit-loss-val');
+
+        profitLossCard.classList.remove('profit', 'loss');
+        if (profitLoss > 0.001) {
+            profitLossCard.classList.add('profit');
+            const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
+            profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency}`;
+        } else if (profitLoss < -0.001) {
+            profitLossCard.classList.add('loss');
+            const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
+            profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency}`;
+        } else {
+            profitLossVal.innerText = `0.000 ${currency}`;
+        }
+
+        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
+        if (source === 'manual') {
+            bullionManualPrice = marketPrice;
+            localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
+        }
+
+        renderBullionTable();
+    }
+
+    window.onload = function() {
+        const stored = localStorage.getItem('goldData_Muharraqi');
+        const storedBullions = localStorage.getItem('bullionTransactions_Muharraqi');
+        const storedManualPrice = localStorage.getItem('bullionManualPrice_Muharraqi');
+
+        if(stored) {
+            try {
+                goldData = JSON.parse(stored);
+                if(!goldData.savedShops) goldData.savedShops = [];
+            } catch(e){}
+        }
+
+        if(storedBullions) {
+            try {
+                bullionTransactions = JSON.parse(storedBullions);
+            } catch(e){}
+        }
+
+        if(storedManualPrice) {
+            try {
+                bullionManualPrice = JSON.parse(storedManualPrice);
+            } catch(e){}
+        }
+
+        document.getElementById('langSelect').value = goldData.currentLang;
+        changeLanguage();
+
+        if(goldData.theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeIcon').innerText = '☀️';
+            document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay;
+        } else {
+            document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight;
+        }
+
+        setFontSize(goldData.fontSize, null);
+        document.getElementById('bullion-date').valueAsDate = new Date();
+
+        const autoRadio = document.querySelector('input[name="bullionPriceSource"][value="auto"]');
+        const manualRadio = document.querySelector('input[name="bullionPriceSource"][value="manual"]');
+        if (autoRadio) autoRadio.checked = true;
+        if (manualRadio) manualRadio.checked = false;
+
+        fetchGoldPrices();
+        renderComparisonTable();
+        renderBullionTable();
+        updateBullionMarketPriceField();
+        calculateBullionMetrics();
+    };
+</script>
 </body>
 </html>

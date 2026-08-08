@@ -286,6 +286,7 @@
             padding: 10px 15px;
             border-radius: 8px;
             border: 1px dashed var(--primary);
+            flex-wrap: wrap;
         }
         .radio-group {
             display: flex;
@@ -297,6 +298,27 @@
             font-size: calc(14px * var(--font-scale));
         }
         .radio-group input { width: auto; cursor: pointer; }
+        .date-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .date-input-group input[type="date"] {
+            flex: 2;
+        }
+        .date-input-group button {
+            flex: 1;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .date-input-group button:hover { background-color: var(--primary-hover); }
         .btn-calc {
             width: 100%;
             padding: 14px;
@@ -650,6 +672,7 @@
             background: var(--bg-body);
             border-radius: 8px;
             border: 1px dashed var(--primary);
+            flex-wrap: wrap;
         }
         .bullion-price-source label {
             margin: 0;
@@ -761,6 +784,21 @@
         [data-theme="dark"] .carat-selector-group .carat-option.active {
             color: #1a1a1a;
         }
+        .hidden { display: none !important; }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -829,6 +867,14 @@
                         <input type="radio" name="priceSource" value="manual" onchange="togglePriceSource()">
                         <span id="optManual">يدوي (أكتبه بنفسي) ✍️</span>
                     </label>
+                    <label class="radio-group">
+                        <input type="radio" name="priceSource" value="historical" onchange="togglePriceSource()">
+                        <span id="optHistorical">سعر تاريخي (من API) 📅</span>
+                    </label>
+                </div>
+                <div id="historicalDateContainer" class="date-input-group hidden">
+                    <input type="date" id="historicalDate" value="2025-01-01">
+                    <button id="btnFetchHistorical" onclick="fetchHistoricalPrice('calculator')">جلب السعر 📥</button>
                 </div>
             </div>
 
@@ -1006,6 +1052,14 @@
                         <input type="radio" name="bullionPriceSource" value="manual" onchange="toggleBullionPriceSource()"> 
                         <span id="bullionOptManual">يدوي (أكتب السعر بنفسي)</span>
                     </label>
+                    <label>
+                        <input type="radio" name="bullionPriceSource" value="historical" onchange="toggleBullionPriceSource()"> 
+                        <span id="bullionOptHistorical">سعر تاريخي (من API) 📅</span>
+                    </label>
+                </div>
+                <div id="bullionHistoricalDateContainer" class="date-input-group hidden">
+                    <input type="date" id="bullionHistoricalDate" value="2025-01-01">
+                    <button id="btnFetchBullionHistorical" onclick="fetchHistoricalPrice('bullion')">جلب السعر 📥</button>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
@@ -1095,6 +1149,14 @@
                         <input type="radio" name="jewelryPriceSource" value="manual" onchange="toggleJewelryPriceSource()"> 
                         <span id="jewelryOptManual">يدوي (أكتب السعر بنفسي)</span>
                     </label>
+                    <label>
+                        <input type="radio" name="jewelryPriceSource" value="historical" onchange="toggleJewelryPriceSource()"> 
+                        <span id="jewelryOptHistorical">سعر تاريخي (من API) 📅</span>
+                    </label>
+                </div>
+                <div id="jewelryHistoricalDateContainer" class="date-input-group hidden">
+                    <input type="date" id="jewelryHistoricalDate" value="2025-01-01">
+                    <button id="btnFetchJewelryHistorical" onclick="fetchHistoricalPrice('jewelry')">جلب السعر 📥</button>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
@@ -1222,6 +1284,14 @@
 <canvas id="hiddenCompressCanvas" style="display:none;"></canvas>
 
 <script>
+    // ============================================================
+    // CONFIGURATION
+    // ============================================================
+    const GOLD_API_KEY = 'goldapi-4ce604c6334baceaab771f5a376ef4b4-io';
+
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
     function getFormattedDateTime() {
         const now = new Date();
         const lang = goldData.currentLang;
@@ -1234,7 +1304,6 @@
         }
     }
 
-    // دالة لحساب سعر العيار بناءً على سعر 24
     function getCaratPrice(carat, basePrice24) {
         const caratMap = {
             '18': 18/24,
@@ -1246,6 +1315,126 @@
         return basePrice24 * (caratMap[carat] || 1);
     }
 
+    // ============================================================
+    // HISTORICAL PRICE FETCH (المسار الصحيح)
+    // ============================================================
+    async function fetchHistoricalPrice(section) {
+        let dateField, priceField, btn;
+        const lang = goldData.currentLang;
+
+        if (section === 'calculator') {
+            dateField = document.getElementById('historicalDate');
+            priceField = document.getElementById('marketPriceDisplay');
+            btn = document.getElementById('btnFetchHistorical');
+        } else if (section === 'bullion') {
+            dateField = document.getElementById('bullionHistoricalDate');
+            priceField = document.getElementById('bullion-market-price');
+            btn = document.getElementById('btnFetchBullionHistorical');
+        } else if (section === 'jewelry') {
+            dateField = document.getElementById('jewelryHistoricalDate');
+            priceField = document.getElementById('jewelry-market-price');
+            btn = document.getElementById('btnFetchJewelryHistorical');
+        }
+
+        if (!dateField || !priceField) return;
+
+        const dateStr = dateField.value;
+        if (!dateStr) {
+            alert('الرجاء اختيار تاريخ');
+            return;
+        }
+
+        const originalText = btn.innerText;
+        btn.innerHTML = '<span class="loading-spinner"></span> جاري التحميل...';
+        btn.disabled = true;
+
+        try {
+            const url = `https://www.goldapi.io/api/XAU/USD/${dateStr}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'x-access-token': GOLD_API_KEY,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data && data.price) {
+                const priceUSD = parseFloat(data.price);
+                const priceBHD = (priceUSD / 31.1034768) * 0.377;
+                const roundedPrice = parseFloat(priceBHD.toFixed(3));
+
+                // ===== التعديل الأساسي: تحديث أسعار جميع الأعيرة في قسم الحاسبة =====
+                if (section === 'calculator') {
+                    // تخزين سعر 24 كقاعدة
+                    livePrices[24] = roundedPrice;
+                    // حساب أسعار جميع الأعيرة
+                    livePrices[22] = roundedPrice * (22/24);
+                    livePrices[21] = roundedPrice * (21/24);
+                    livePrices[18] = roundedPrice * (18/24);
+                    
+                    // عرض السعر حسب العيار المختار
+                    const selectedCarat = document.getElementById('carat').value;
+                    const displayPrice = livePrices[selectedCarat] || roundedPrice;
+                    priceField.value = parseFloat(displayPrice.toFixed(3));
+                    priceField.readOnly = true;
+                    priceField.style.backgroundColor = 'var(--bg-readonly)';
+                    
+                    // تحديث حالة النجاح
+                    const statusMsg = `✅ تم جلب السعر التاريخي (${dateStr}): سعر 24 = ${roundedPrice} د.ب`;
+                    setStatus(statusMsg, 'success');
+                } else {
+                    // للسبائك والملبوس: نخزن السعر كـ 24 ونترك الباقي للدوال الأخرى
+                    if (section === 'bullion') {
+                        bullionHistoricalPrice = roundedPrice;
+                    } else if (section === 'jewelry') {
+                        jewelryHistoricalPrice = roundedPrice;
+                    }
+                    priceField.value = roundedPrice;
+                    priceField.readOnly = true;
+                    priceField.style.backgroundColor = 'var(--bg-readonly)';
+                    
+                    if (section === 'bullion') {
+                        calculateBullionMetrics();
+                    } else if (section === 'jewelry') {
+                        calculateJewelryMetrics();
+                    }
+                }
+            } else {
+                throw new Error('No price data returned');
+            }
+        } catch (e) {
+            console.error('Historical price fetch error:', e);
+            alert('❌ فشل جلب السعر التاريخي. يرجى التأكد من التاريخ والمفتاح.\n' + e.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function getPriceSourceType(prefix) {
+        const radio = document.querySelector(`input[name="${prefix}PriceSource"]:checked`);
+        return radio ? radio.value : 'auto';
+    }
+
+    function getManualPrice(prefix) {
+        const field = document.getElementById(`${prefix}-market-price`);
+        return field ? parseFloat(field.value) || 0 : 0;
+    }
+
+    function getHistoricalDate(prefix) {
+        const field = document.getElementById(`${prefix}HistoricalDate`);
+        return field ? field.value : null;
+    }
+
+    // ============================================================
+    // TRANSLATIONS
+    // ============================================================
     const translations = {
         ar: {
             devTag: "تم عمل الموقع بواسطة Muharraqi",
@@ -1261,6 +1450,8 @@
             lblPriceSource: "طريقة جلب سعر الذهب:",
             optAuto: "تلقائي (من الإنترنت المباشر) 🌐",
             optManual: "يدوي (أكتبه بنفسي) ✍️",
+            optHistorical: "سعر تاريخي (من API) 📅",
+            btnFetchHistorical: "جلب السعر 📥",
             lblCarat: "اختر عيار الذهب:",
             carat24: "عيار 24",
             carat22: "عيار 22",
@@ -1324,6 +1515,7 @@
             lblBullionLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
             bullionOptAuto: "تلقائي (من سعر الذهب الرئيسي)",
             bullionOptManual: "يدوي (أكتب السعر بنفسي)",
+            bullionOptHistorical: "سعر تاريخي (من API) 📅",
             btnUpdateProfits: "تحديث الأرباح 🔄",
             bullionHelp: "* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).",
             phBullionMarketPrice: "سعر الغرام الحالي بالدينار...",
@@ -1360,6 +1552,7 @@
             lblJewelryLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
             jewelryOptAuto: "تلقائي (من سعر الذهب الرئيسي)",
             jewelryOptManual: "يدوي (أكتب السعر بنفسي)",
+            jewelryOptHistorical: "سعر تاريخي (من API) 📅",
             btnUpdateJewelryProfits: "تحديث الأرباح 🔄",
             jewelryHelp: "* السعر التلقائي مقترن بسعر غرام الذهب من القسم الرئيسي (عيار 24).",
             lblJewelryTotalInvested: "إجمالي الاستثمار",
@@ -1406,6 +1599,8 @@
             lblPriceSource: "Price Fetching Method:",
             optAuto: "Automatic (Live Online API) 🌐",
             optManual: "Manual (Enter myself) ✍️",
+            optHistorical: "Historical (from API) 📅",
+            btnFetchHistorical: "Fetch Price 📥",
             lblCarat: "Select Gold Carat:",
             carat24: "24 Carat",
             carat22: "22 Carat",
@@ -1469,6 +1664,7 @@
             lblBullionLivePriceHelp: "💡 To update profits and losses, please confirm the current market gold gram price:",
             bullionOptAuto: "Auto (from main gold price)",
             bullionOptManual: "Manual (enter price myself)",
+            bullionOptHistorical: "Historical (from API) 📅",
             btnUpdateProfits: "Update Profits 🔄",
             bullionHelp: "* Auto price is linked to the main gold gram price (24 carat).",
             phBullionMarketPrice: "Current gram price in BHD...",
@@ -1504,6 +1700,7 @@
             lblJewelryLivePriceHelp: "💡 To update profits and losses, please confirm the current market gold gram price:",
             jewelryOptAuto: "Auto (from main gold price)",
             jewelryOptManual: "Manual (enter price myself)",
+            jewelryOptHistorical: "Historical (from API) 📅",
             btnUpdateJewelryProfits: "Update Profits 🔄",
             jewelryHelp: "* Auto price is linked to the main gold gram price (24 carat).",
             lblJewelryTotalInvested: "Total Invested",
@@ -1550,6 +1747,8 @@
             lblPriceSource: "मूल्य प्राप्त करने की विधि:",
             optAuto: "स्वचालित (सीधे इंटरनेट से) 🌐",
             optManual: "मैनुअल (स्वयं दर्ज करें) ✍️",
+            optHistorical: "ऐतिहासिक (API से) 📅",
+            btnFetchHistorical: "मूल्य प्राप्त करें 📥",
             lblCarat: "सोने का कैरेट चुनें:",
             carat24: "24 कैरेट",
             carat22: "22 कैरेट",
@@ -1613,6 +1812,7 @@
             lblBullionLivePriceHelp: "💡 लाभ और हानि को अपडेट करने के लिए, कृपया वर्तमान बाजार सोने के ग्राम मूल्य की पुष्टि करें:",
             bullionOptAuto: "स्वचालित (मुख्य सोने की कीमत से)",
             bullionOptManual: "मैनुअल (स्वयं मूल्य दर्ज करें)",
+            bullionOptHistorical: "ऐतिहासिक (API से) 📅",
             btnUpdateProfits: "लाभ अपडेट करें 🔄",
             bullionHelp: "* स्वचालित मूल्य मुख्य सोने के ग्राम मूल्य (24 कैरेट) से जुड़ा है।",
             phBullionMarketPrice: "वर्तमान ग्राम मूल्य (BHD)...",
@@ -1648,6 +1848,7 @@
             lblJewelryLivePriceHelp: "💡 लाभ और हानि को अपडेट करने के लिए, कृपया वर्तमान बाजार सोने के ग्राम मूल्य की पुष्टि करें:",
             jewelryOptAuto: "स्वचालित (मुख्य सोने की कीमत से)",
             jewelryOptManual: "मैनुअल (स्वयं मूल्य दर्ज करें)",
+            jewelryOptHistorical: "ऐतिहासिक (API से) 📅",
             btnUpdateJewelryProfits: "लाभ अपडेट करें 🔄",
             jewelryHelp: "* स्वचालित मूल्य मुख्य सोने के ग्राम मूल्य (24 कैरेट) से जुड़ा है।",
             lblJewelryTotalInvested: "कुल निवेश",
@@ -1682,6 +1883,9 @@
         }
     };
 
+    // ============================================================
+    // GLOBAL STATE
+    // ============================================================
     let goldData = {
         currentLang: 'ar',
         fontSize: 1.0,
@@ -1699,18 +1903,115 @@
     let livePrices = { 24: 31.2, 22: 28.6, 21: 27.3, 18: 23.4 };
     let bullionManualPrice = 28.5;
     let jewelryManualPrice = 28.5;
+    let bullionHistoricalPrice = null;
+    let jewelryHistoricalPrice = null;
 
-    // Jewelry carat selection
-    function selectJewelryCarat(carat, element) {
-        document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
-            el.classList.remove('active');
-        });
-        element.classList.add('active');
-        document.getElementById('jewelry-selected-carat').value = carat;
-        // Recalculate metrics when carat changes
+    // ============================================================
+    // PRICE SOURCE TOGGLES
+    // ============================================================
+    function togglePriceSource() {
+        const source = document.querySelector('input[name="priceSource"]:checked').value;
+        const displayInput = document.getElementById('marketPriceDisplay');
+        const historicalContainer = document.getElementById('historicalDateContainer');
+        
+        if (source === 'historical') {
+            historicalContainer.classList.remove('hidden');
+            displayInput.readOnly = true;
+            displayInput.style.backgroundColor = 'var(--bg-readonly)';
+            const dateField = document.getElementById('historicalDate');
+            if (dateField.value) {
+                fetchHistoricalPrice('calculator');
+            }
+        } else {
+            historicalContainer.classList.add('hidden');
+            if (source === 'auto') {
+                const carat = document.getElementById('carat').value;
+                displayInput.value = livePrices[carat] || 0;
+                displayInput.readOnly = true;
+                displayInput.style.backgroundColor = 'var(--bg-readonly)';
+            } else if (source === 'manual') {
+                displayInput.readOnly = false;
+                displayInput.style.backgroundColor = 'var(--bg-card)';
+                displayInput.focus();
+            }
+        }
+    }
+
+    function toggleBullionPriceSource() {
+        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
+        const field = document.getElementById('bullion-market-price');
+        const historicalContainer = document.getElementById('bullionHistoricalDateContainer');
+        const t = translations[goldData.currentLang];
+        
+        if (source === 'historical') {
+            historicalContainer.classList.remove('hidden');
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
+            document.getElementById('bullionPriceHelp').innerText = '📅 السعر بناءً على التاريخ المحدد';
+            const dateField = document.getElementById('bullionHistoricalDate');
+            if (dateField.value && !bullionHistoricalPrice) {
+                fetchHistoricalPrice('bullion');
+            } else if (bullionHistoricalPrice) {
+                field.value = bullionHistoricalPrice.toFixed(3);
+            }
+        } else {
+            historicalContainer.classList.add('hidden');
+            if (source === 'auto') {
+                field.value = livePrices[24] || 31.2;
+                field.readOnly = true;
+                field.style.backgroundColor = 'var(--bg-readonly)';
+                document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
+            } else if (source === 'manual') {
+                field.readOnly = false;
+                field.style.backgroundColor = 'var(--bg-card)';
+                if (bullionManualPrice) {
+                    field.value = bullionManualPrice;
+                }
+                document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
+            }
+        }
+        calculateBullionMetrics();
+    }
+
+    function toggleJewelryPriceSource() {
+        const source = document.querySelector('input[name="jewelryPriceSource"]:checked').value;
+        const field = document.getElementById('jewelry-market-price');
+        const historicalContainer = document.getElementById('jewelryHistoricalDateContainer');
+        const t = translations[goldData.currentLang];
+        
+        if (source === 'historical') {
+            historicalContainer.classList.remove('hidden');
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
+            document.getElementById('jewelryPriceHelp').innerText = '📅 السعر بناءً على التاريخ المحدد';
+            const dateField = document.getElementById('jewelryHistoricalDate');
+            if (dateField.value && !jewelryHistoricalPrice) {
+                fetchHistoricalPrice('jewelry');
+            } else if (jewelryHistoricalPrice) {
+                field.value = jewelryHistoricalPrice.toFixed(3);
+            }
+        } else {
+            historicalContainer.classList.add('hidden');
+            if (source === 'auto') {
+                field.value = livePrices[24] || 31.2;
+                field.readOnly = true;
+                field.style.backgroundColor = 'var(--bg-readonly)';
+                document.getElementById('jewelryPriceHelp').innerText = t.jewelryHelp;
+            } else if (source === 'manual') {
+                field.readOnly = false;
+                field.style.backgroundColor = 'var(--bg-card)';
+                if (jewelryManualPrice) {
+                    field.value = jewelryManualPrice;
+                }
+                document.getElementById('jewelryPriceHelp').innerText = t.jewelryHelp;
+            }
+        }
         calculateJewelryMetrics();
     }
 
+    // ============================================================
+    // GOLD PRICE FETCH (Live)
+    // ============================================================
     async function fetchGoldPrices() {
         setLoadingState(true);
         try {
@@ -1760,17 +2061,26 @@
     }
 
     function updateSelectedPrice() {
-        const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
+        const source = document.querySelector('input[name="priceSource"]:checked').value;
         const displayInput = document.getElementById('marketPriceDisplay');
         
-        if (!isManual) {
+        if (source === 'auto') {
             const carat = document.getElementById('carat').value;
             displayInput.value = livePrices[carat] || 0;
             displayInput.readOnly = true;
             displayInput.style.backgroundColor = "var(--bg-readonly)";
-        } else {
+        } else if (source === 'manual') {
             displayInput.readOnly = false;
             displayInput.style.backgroundColor = "var(--bg-card)";
+        } else if (source === 'historical') {
+            // التاريخي يتم التعامل معه في دالة fetchHistoricalPrice
+            displayInput.readOnly = true;
+            displayInput.style.backgroundColor = "var(--bg-readonly)";
+            // إذا كان هناك سعر مخزن، نعرضه
+            const carat = document.getElementById('carat').value;
+            if (livePrices[carat]) {
+                displayInput.value = livePrices[carat];
+            }
         }
     }
 
@@ -1781,12 +2091,18 @@
             field.value = livePrices[24] || 31.2;
             field.readOnly = true;
             field.style.backgroundColor = 'var(--bg-readonly)';
-        } else {
+        } else if (source === 'manual') {
             field.readOnly = false;
             field.style.backgroundColor = 'var(--bg-card)';
             if (bullionManualPrice) {
                 field.value = bullionManualPrice;
             }
+        } else if (source === 'historical') {
+            if (bullionHistoricalPrice) {
+                field.value = bullionHistoricalPrice.toFixed(3);
+            }
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
         }
         calculateBullionMetrics();
     }
@@ -1798,58 +2114,37 @@
             field.value = livePrices[24] || 31.2;
             field.readOnly = true;
             field.style.backgroundColor = 'var(--bg-readonly)';
-        } else {
+        } else if (source === 'manual') {
             field.readOnly = false;
             field.style.backgroundColor = 'var(--bg-card)';
             if (jewelryManualPrice) {
                 field.value = jewelryManualPrice;
             }
+        } else if (source === 'historical') {
+            if (jewelryHistoricalPrice) {
+                field.value = jewelryHistoricalPrice.toFixed(3);
+            }
+            field.readOnly = true;
+            field.style.backgroundColor = 'var(--bg-readonly)';
         }
         calculateJewelryMetrics();
     }
 
-    function toggleBullionPriceSource() {
-        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
-        const field = document.getElementById('bullion-market-price');
-        if (source === 'auto') {
-            field.value = livePrices[24] || 31.2;
-            field.readOnly = true;
-            field.style.backgroundColor = 'var(--bg-readonly)';
-            document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
-        } else {
-            field.readOnly = false;
-            field.style.backgroundColor = 'var(--bg-card)';
-            bullionManualPrice = parseFloat(field.value) || 31.2;
-            document.getElementById('bullionPriceHelp').innerText = translations[goldData.currentLang].bullionHelp;
-        }
-        calculateBullionMetrics();
-    }
-
-    function toggleJewelryPriceSource() {
-        const source = document.querySelector('input[name="jewelryPriceSource"]:checked').value;
-        const field = document.getElementById('jewelry-market-price');
-        if (source === 'auto') {
-            field.value = livePrices[24] || 31.2;
-            field.readOnly = true;
-            field.style.backgroundColor = 'var(--bg-readonly)';
-            document.getElementById('jewelryPriceHelp').innerText = translations[goldData.currentLang].jewelryHelp;
-        } else {
-            field.readOnly = false;
-            field.style.backgroundColor = 'var(--bg-card)';
-            jewelryManualPrice = parseFloat(field.value) || 31.2;
-            document.getElementById('jewelryPriceHelp').innerText = translations[goldData.currentLang].jewelryHelp;
-        }
+    // ============================================================
+    // JEWELRY CARAT SELECTION
+    // ============================================================
+    function selectJewelryCarat(carat, element) {
+        document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
+            el.classList.remove('active');
+        });
+        element.classList.add('active');
+        document.getElementById('jewelry-selected-carat').value = carat;
         calculateJewelryMetrics();
     }
 
-    function togglePriceSource() {
-        updateSelectedPrice();
-        const isManual = document.querySelector('input[name="priceSource"]:checked').value === 'manual';
-        if (isManual) {
-            document.getElementById('marketPriceDisplay').focus();
-        }
-    }
-
+    // ============================================================
+    // SYNC WEIGHT
+    // ============================================================
     function syncWeight() {
         const weightVal = document.getElementById('totalWeight').value;
         const lang = goldData.currentLang;
@@ -1857,6 +2152,9 @@
         document.getElementById('adoptedWeightDisplay').value = weightVal ? weightVal + " " + unit : "";
     }
 
+    // ============================================================
+    // CALCULATOR FUNCTIONS
+    // ============================================================
     function calculateProfit() {
         const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
         const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
@@ -1912,6 +2210,9 @@
         document.getElementById('box2_2').classList.add('active');
     }
 
+    // ============================================================
+    // SHOP COMPARISON FUNCTIONS
+    // ============================================================
     function saveToComparison() {
         const shopName = document.getElementById('shopNameInput').value.trim() || (goldData.currentLang === 'ar' ? "محل غير مسمى" : (goldData.currentLang === 'en' ? "Unnamed Shop" : "अनाम दुकान"));
         const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
@@ -2089,6 +2390,9 @@
         }
     }
 
+    // ============================================================
+    // IMAGE HANDLING
+    // ============================================================
     function handleFileImport(event, index) {
         const file = event.target.files[0];
         if(!file) return;
@@ -2130,6 +2434,9 @@
         document.getElementById(`imageFileInput${index}`).value = '';
     }
 
+    // ============================================================
+    // CAMERA FUNCTIONS
+    // ============================================================
     async function openLiveCamera(index) {
         activeCamBlock = index;
         const modal = document.getElementById('cameraModal');
@@ -2185,6 +2492,9 @@
         document.getElementById('lightboxModal').style.display = 'none';
     }
 
+    // ============================================================
+    // UI SETTINGS (Font, Theme, Language)
+    // ============================================================
     function setFontSize(scale, btn) {
         goldData.fontSize = scale;
         document.documentElement.style.setProperty('--font-scale', scale);
@@ -2217,6 +2527,8 @@
         document.getElementById('lblPriceSource').innerText = t.lblPriceSource;
         document.getElementById('optAuto').innerText = t.optAuto;
         document.getElementById('optManual').innerText = t.optManual;
+        document.getElementById('optHistorical').innerText = t.optHistorical;
+        document.getElementById('btnFetchHistorical').innerText = t.btnFetchHistorical;
         document.getElementById('lblCarat').innerText = t.lblCarat;
         document.getElementById('carat24').innerText = t.carat24;
         document.getElementById('carat22').innerText = t.carat22;
@@ -2280,6 +2592,7 @@
         document.getElementById('lblBullionLivePriceHelp').innerText = t.lblBullionLivePriceHelp;
         document.getElementById('bullionOptAuto').innerText = t.bullionOptAuto;
         document.getElementById('bullionOptManual').innerText = t.bullionOptManual;
+        document.getElementById('bullionOptHistorical').innerText = t.bullionOptHistorical;
         document.getElementById('btnUpdateBullionProfits').innerText = t.btnUpdateProfits;
         document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
         document.getElementById('bullion-market-price').placeholder = t.phBullionMarketPrice;
@@ -2303,12 +2616,14 @@
         document.getElementById('thBProfit').innerText = t.thBProfit;
         document.getElementById('thBActions').innerText = t.thBActions;
         document.getElementById('btnRefreshBullionGold').innerText = t.btnRefreshBullionGold;
+        document.getElementById('btnFetchBullionHistorical').innerText = t.btnFetchHistorical;
 
         // Jewelry translations
         document.getElementById('jewelryMainTitle').innerText = t.jewelryMainTitle;
         document.getElementById('lblJewelryLivePriceHelp').innerText = t.lblJewelryLivePriceHelp;
         document.getElementById('jewelryOptAuto').innerText = t.jewelryOptAuto;
         document.getElementById('jewelryOptManual').innerText = t.jewelryOptManual;
+        document.getElementById('jewelryOptHistorical').innerText = t.jewelryOptHistorical;
         document.getElementById('btnUpdateJewelryProfits').innerText = t.btnUpdateJewelryProfits;
         document.getElementById('jewelryPriceHelp').innerText = t.jewelryHelp;
         document.getElementById('jewelry-market-price').placeholder = t.phBullionMarketPrice;
@@ -2334,6 +2649,7 @@
         document.getElementById('thJProfit').innerText = t.thJProfit;
         document.getElementById('thJActions').innerText = t.thJActions;
         document.getElementById('btnRefreshJewelryGold').innerText = t.btnRefreshJewelryGold;
+        document.getElementById('btnFetchJewelryHistorical').innerText = t.btnFetchHistorical;
 
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -2356,13 +2672,18 @@
         }
     }
 
+    // ============================================================
+    // DATA PERSISTENCE
+    // ============================================================
     function exportBackupData() {
         const fullBackup = {
             goldData: goldData,
             bullionTransactions: bullionTransactions,
             jewelryTransactions: jewelryTransactions,
             bullionManualPrice: bullionManualPrice,
-            jewelryManualPrice: jewelryManualPrice
+            jewelryManualPrice: jewelryManualPrice,
+            bullionHistoricalPrice: bullionHistoricalPrice,
+            jewelryHistoricalPrice: jewelryHistoricalPrice
         };
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
         const dlAnchor = document.createElement('a');
@@ -2390,6 +2711,12 @@
                     }
                     if (parsed.jewelryManualPrice) {
                         jewelryManualPrice = parsed.jewelryManualPrice;
+                    }
+                    if (parsed.bullionHistoricalPrice) {
+                        bullionHistoricalPrice = parsed.bullionHistoricalPrice;
+                    }
+                    if (parsed.jewelryHistoricalPrice) {
+                        jewelryHistoricalPrice = parsed.jewelryHistoricalPrice;
                     }
                     saveLocalData();
                     
@@ -2429,8 +2756,13 @@
         localStorage.setItem('jewelryTransactions_Muharraqi', JSON.stringify(jewelryTransactions));
         localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
         localStorage.setItem('jewelryManualPrice_Muharraqi', JSON.stringify(jewelryManualPrice));
+        localStorage.setItem('bullionHistoricalPrice_Muharraqi', JSON.stringify(bullionHistoricalPrice));
+        localStorage.setItem('jewelryHistoricalPrice_Muharraqi', JSON.stringify(jewelryHistoricalPrice));
     }
 
+    // ============================================================
+    // SIDEBAR / TAB NAVIGATION
+    // ============================================================
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -2479,7 +2811,9 @@
         toggleSidebar();
     }
 
-    // ==================== Bullion Functions ====================
+    // ============================================================
+    // BULLION FUNCTIONS
+    // ============================================================
     function saveBullionTransaction() {
         const price = parseFloat(document.getElementById('bullion-price').value);
         const weight = parseFloat(document.getElementById('bullion-weight').value);
@@ -2639,8 +2973,8 @@
             profitLossVal.innerText = `0.000 ${currency}`;
         }
 
-        const source = document.querySelector('input[name="bullionPriceSource"]:checked').value;
-        if (source === 'manual') {
+        const source = document.querySelector('input[name="bullionPriceSource"]:checked');
+        if (source && source.value === 'manual') {
             bullionManualPrice = marketPrice;
             localStorage.setItem('bullionManualPrice_Muharraqi', JSON.stringify(bullionManualPrice));
         }
@@ -2648,7 +2982,9 @@
         renderBullionTable();
     }
 
-    // ==================== Jewelry Functions ====================
+    // ============================================================
+    // JEWELRY FUNCTIONS
+    // ============================================================
     function saveJewelryTransaction() {
         const price = parseFloat(document.getElementById('jewelry-price').value);
         const weight = parseFloat(document.getElementById('jewelry-weight').value);
@@ -2690,12 +3026,10 @@
             return;
         }
 
-        // الحصول على سعر 24 من الحقل
         const basePrice24 = parseFloat(document.getElementById('jewelry-market-price').value) || 0;
 
         jewelryTransactions.forEach((txn, index) => {
             const perGramPrice = (txn.price / txn.weight).toFixed(3);
-            // استخدام سعر العيار الصحيح
             const caratPrice = getCaratPrice(txn.carat, basePrice24);
             const currentValue = txn.weight * caratPrice;
             const profitLoss = currentValue - txn.price;
@@ -2735,7 +3069,6 @@
         document.getElementById('jewelry-weight').value = txn.weight;
         document.getElementById('jewelry-date').value = txn.date;
         
-        // Select the carat
         document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
             el.classList.remove('active');
             if (el.dataset.carat === txn.carat) {
@@ -2761,7 +3094,6 @@
         document.getElementById('jewelry-price').value = '';
         document.getElementById('jewelry-weight').value = '';
         document.getElementById('jewelry-date').valueAsDate = new Date();
-        // Reset carat to 21
         document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
             el.classList.remove('active');
             if (el.dataset.carat === '21') {
@@ -2812,10 +3144,8 @@
         document.getElementById('jewelry-total-weight').innerText = `${totalWeight.toFixed(2)} ${weightUnit}`;
         document.getElementById('jewelry-avg-price-per-gram').innerText = `${avgPrice.toFixed(3)} ${currency}`;
 
-        // الحصول على سعر 24 من الحقل
         const basePrice24 = parseFloat(document.getElementById('jewelry-market-price').value) || 0;
         
-        // حساب القيمة الإجمالية بناءً على العيار المختار لكل صفقة
         let totalCurrentValue = 0;
         jewelryTransactions.forEach(txn => {
             const caratPrice = getCaratPrice(txn.carat, basePrice24);
@@ -2840,8 +3170,8 @@
             profitLossVal.innerText = `0.000 ${currency}`;
         }
 
-        const source = document.querySelector('input[name="jewelryPriceSource"]:checked').value;
-        if (source === 'manual') {
+        const source = document.querySelector('input[name="jewelryPriceSource"]:checked');
+        if (source && source.value === 'manual') {
             jewelryManualPrice = basePrice24;
             localStorage.setItem('jewelryManualPrice_Muharraqi', JSON.stringify(jewelryManualPrice));
         }
@@ -2849,12 +3179,17 @@
         renderJewelryTable();
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
     window.onload = function() {
         const stored = localStorage.getItem('goldData_Muharraqi');
         const storedBullions = localStorage.getItem('bullionTransactions_Muharraqi');
         const storedJewelry = localStorage.getItem('jewelryTransactions_Muharraqi');
         const storedManualPrice = localStorage.getItem('bullionManualPrice_Muharraqi');
         const storedJewelryManualPrice = localStorage.getItem('jewelryManualPrice_Muharraqi');
+        const storedBullionHist = localStorage.getItem('bullionHistoricalPrice_Muharraqi');
+        const storedJewelryHist = localStorage.getItem('jewelryHistoricalPrice_Muharraqi');
 
         if(stored) {
             try {
@@ -2887,6 +3222,18 @@
             } catch(e){}
         }
 
+        if(storedBullionHist) {
+            try {
+                bullionHistoricalPrice = JSON.parse(storedBullionHist);
+            } catch(e){}
+        }
+
+        if(storedJewelryHist) {
+            try {
+                jewelryHistoricalPrice = JSON.parse(storedJewelryHist);
+            } catch(e){}
+        }
+
         document.getElementById('langSelect').value = goldData.currentLang;
         changeLanguage();
 
@@ -2902,15 +3249,21 @@
         document.getElementById('bullion-date').valueAsDate = new Date();
         document.getElementById('jewelry-date').valueAsDate = new Date();
 
-        const autoRadioBullion = document.querySelector('input[name="bullionPriceSource"][value="auto"]');
-        const manualRadioBullion = document.querySelector('input[name="bullionPriceSource"][value="manual"]');
-        if (autoRadioBullion) autoRadioBullion.checked = true;
-        if (manualRadioBullion) manualRadioBullion.checked = false;
+        const defaultDate = '2025-01-01';
+        document.getElementById('historicalDate').value = defaultDate;
+        document.getElementById('bullionHistoricalDate').value = defaultDate;
+        document.getElementById('jewelryHistoricalDate').value = defaultDate;
 
+        const autoRadioCalc = document.querySelector('input[name="priceSource"][value="auto"]');
+        const autoRadioBullion = document.querySelector('input[name="bullionPriceSource"][value="auto"]');
         const autoRadioJewelry = document.querySelector('input[name="jewelryPriceSource"][value="auto"]');
-        const manualRadioJewelry = document.querySelector('input[name="jewelryPriceSource"][value="manual"]');
+        if (autoRadioCalc) autoRadioCalc.checked = true;
+        if (autoRadioBullion) autoRadioBullion.checked = true;
         if (autoRadioJewelry) autoRadioJewelry.checked = true;
-        if (manualRadioJewelry) manualRadioJewelry.checked = false;
+
+        document.getElementById('historicalDateContainer').classList.add('hidden');
+        document.getElementById('bullionHistoricalDateContainer').classList.add('hidden');
+        document.getElementById('jewelryHistoricalDateContainer').classList.add('hidden');
 
         fetchGoldPrices();
         renderComparisonTable();

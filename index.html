@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<!-- ============================================================
-     🔧 معلومات المشروع 🔧
-     الموقع: حاسبة الذهب والسبائك الذكية - البحرين
-     الـ API: https://www.goldapi.io/dashboard
-     البريد الإلكتروني: qwqwqwzx5@gmail.com
-     المفتاح: goldapi-4ce604c6334baceaab771f5a376ef4b4-io
-     ============================================================ -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -2867,6 +2860,15 @@
             const perGramPrice = (txn.price / txn.weight).toFixed(3);
             const currentValue = txn.weight * marketPrice;
             const profitLoss = currentValue - txn.price;
+            
+            // حساب النسبة المئوية للربح/الخسارة
+            let profitPercentage = 0;
+            if (txn.price > 0) {
+                profitPercentage = (profitLoss / txn.price) * 100;
+            }
+            const profitPercentageFormatted = profitPercentage.toFixed(2);
+            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentageFormatted}%)` : '';
+
             let profitLossHTML = '';
             
             if (profitLoss > 0.001) {
@@ -2876,6 +2878,9 @@
             } else {
                 profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
             }
+
+            // إضافة النسبة المئوية
+            profitLossHTML += `<br><span style="font-size: 0.85em; color: var(--text-sub);">${profitPercentageDisplay}</span>`;
 
             tbody.innerHTML += `
                 <tr>
@@ -2971,11 +2976,20 @@
         if (profitLoss > 0.001) {
             profitLossCard.classList.add('profit');
             const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
-            profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency}`;
+            // حساب نسبة الربح/الخسارة الإجمالية
+            let totalProfitPercentage = 0;
+            if (totalInvested > 0) {
+                totalProfitPercentage = (profitLoss / totalInvested) * 100;
+            }
+            profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else if (profitLoss < -0.001) {
             profitLossCard.classList.add('loss');
             const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
-            profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency}`;
+            let totalProfitPercentage = 0;
+            if (totalInvested > 0) {
+                totalProfitPercentage = (profitLoss / totalInvested) * 100;
+            }
+            profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else {
             profitLossVal.innerText = `0.000 ${currency}`;
         }
@@ -3040,6 +3054,15 @@
             const caratPrice = getCaratPrice(txn.carat, basePrice24);
             const currentValue = txn.weight * caratPrice;
             const profitLoss = currentValue - txn.price;
+            
+            // حساب النسبة المئوية للربح/الخسارة
+            let profitPercentage = 0;
+            if (txn.price > 0) {
+                profitPercentage = (profitLoss / txn.price) * 100;
+            }
+            const profitPercentageFormatted = profitPercentage.toFixed(2);
+            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentageFormatted}%)` : '';
+
             let profitLossHTML = '';
             
             if (profitLoss > 0.001) {
@@ -3049,6 +3072,9 @@
             } else {
                 profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
             }
+
+            // إضافة النسبة المئوية
+            profitLossHTML += `<br><span style="font-size: 0.85em; color: var(--text-sub);">${profitPercentageDisplay}</span>`;
 
             const caratLabel = goldData.currentLang === 'ar' ? `عيار ${txn.carat}` : `${txn.carat}K`;
 
@@ -3168,11 +3194,19 @@
         if (profitLoss > 0.001) {
             profitLossCard.classList.add('profit');
             const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
-            profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency}`;
+            let totalProfitPercentage = 0;
+            if (totalInvested > 0) {
+                totalProfitPercentage = (profitLoss / totalInvested) * 100;
+            }
+            profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else if (profitLoss < -0.001) {
             profitLossCard.classList.add('loss');
             const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
-            profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency}`;
+            let totalProfitPercentage = 0;
+            if (totalInvested > 0) {
+                totalProfitPercentage = (profitLoss / totalInvested) * 100;
+            }
+            profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else {
             profitLossVal.innerText = `0.000 ${currency}`;
         }

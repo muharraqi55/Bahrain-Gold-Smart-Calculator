@@ -55,6 +55,24 @@
             top: 0;
             z-index: 999;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .menu-btn {
             font-size: 26px;
@@ -215,6 +233,25 @@
             cursor: pointer;
             font-size: 14px;
             width: auto;
+        }
+        .tradingview-nav-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: calc(14px * var(--font-scale));
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .tradingview-nav-btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.03);
         }
         h2 {
             text-align: center;
@@ -715,24 +752,6 @@
             background-color: rgba(239, 83, 80, 0.2);
         }
 
-        .tradingview-nav-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: calc(14px * var(--font-scale));
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        .tradingview-nav-btn:hover {
-            background-color: var(--primary-hover);
-            transform: scale(1.03);
-        }
         .tradingview-embed-container {
             width: 100%;
             height: 80vh;
@@ -799,16 +818,72 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .header-left, .header-center, .header-right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .header-center {
+                order: 3;
+            }
+            .header-right {
+                order: 2;
+            }
+            header h1 {
+                font-size: calc(14px * var(--font-scale));
+                text-align: center;
+            }
+            .top-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .results-container {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <h1 id="page-title">🇧🇭 حاسبة الذهب الذكية - البحرين</h1>
-    <button class="tradingview-nav-btn" onclick="switchTab('tradingview-page')">
-        📊 TradingView
-    </button>
+    <div class="header-left">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <h1 id="page-title">🇧🇭 حاسبة الذهب الذكية - البحرين</h1>
+    </div>
+    
+    <div class="header-center">
+        <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+            <option value="ar">العربية 🇸🇦</option>
+            <option value="en">English 🇬🇧</option>
+            <option value="hi">हिंदी 🇮🇳</option>
+        </select>
+
+        <div class="font-sizer-container">
+            <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
+            <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
+            <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
+        </div>
+
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+            <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
+        </button>
+    </div>
+
+    <div class="header-right">
+        <button class="tradingview-nav-btn" onclick="switchTab('tradingview-page')">
+            📊 TradingView
+        </button>
+    </div>
 </header>
 
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
@@ -828,26 +903,6 @@
     <div id="calculator-page" class="page-section active">
         <div class="calculator-card">
             <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
-            
-            <div class="top-controls">
-                <select id="langSelect" class="lang-select" onchange="changeLanguage()">
-                    <option value="ar">العربية 🇸🇦</option>
-                    <option value="en">English 🇬🇧</option>
-                    <option value="hi">हिंदी 🇮🇳</option>
-                </select>
-
-                <div class="controls-right">
-                    <div class="font-sizer-container">
-                        <button class="font-btn" onclick="setFontSize(0.85, this)">A-</button>
-                        <button class="font-btn active" onclick="setFontSize(1, this)">A</button>
-                        <button class="font-btn" onclick="setFontSize(1.2, this)">A+</button>
-                    </div>
-
-                    <button class="theme-toggle-btn" onclick="toggleTheme()">
-                        <span id="themeIcon">🌙</span> <span id="themeText">الوضع الليلي</span>
-                    </button>
-                </div>
-            </div>
 
             <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
             
@@ -2169,6 +2224,17 @@
         const pricePerGramStore = totalPrice / weight;
         const totalProfit = totalPrice - goldValue;
         const profitPerGram = totalProfit / weight;
+
+        // ✅ التحقق من منطقية السعر - سعر الغرام في المحل أقل من سعر السوق
+        if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
+            const diff = (marketPrice - pricePerGramStore).toFixed(3);
+            const warningMsg = goldData.currentLang === 'ar' 
+                ? `⚠️ تنبيه: سعر الغرام في المحل (${pricePerGramStore.toFixed(3)} د.ب) أقل من سعر السوق (${marketPrice.toFixed(3)} د.ب) بفارق ${diff} د.ب. هذا قد يشير إلى خطأ في الإدخال أو وجود خصم استثنائي.`
+                : (goldData.currentLang === 'en' 
+                    ? `⚠️ Warning: Shop price per gram (${pricePerGramStore.toFixed(3)} BHD) is lower than market price (${marketPrice.toFixed(3)} BHD) by ${diff} BHD. This may indicate input error or exceptional discount.`
+                    : `⚠️ चेतावनी: दुकान की प्रति ग्राम कीमत (${pricePerGramStore.toFixed(3)} BHD) बाजार मूल्य (${marketPrice.toFixed(3)} BHD) से ${diff} BHD कम है। यह इनपुट त्रुटि या असाधारण छूट का संकेत हो सकता है।`);
+            alert(warningMsg);
+        }
 
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
         document.getElementById('pricePerGramStore').innerHTML = `${pricePerGramStore.toFixed(3)} <span class="currency">${currency}</span>`;

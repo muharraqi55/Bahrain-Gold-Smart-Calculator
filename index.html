@@ -2240,13 +2240,30 @@
         document.getElementById('pricePerGramStore').innerHTML = `${pricePerGramStore.toFixed(3)} <span class="currency">${currency}</span>`;
         
         const profitBox = document.getElementById('profitOnly');
+        const profitBoxParent = document.getElementById('box1_2');
+        
+        // ✅ إظهار القيمة مع الإشارة واللون المناسب - أحمر للخسارة، أخضر للربح
         if(profitPerGram < 0) {
+            // 🔴 خسارة - عرض بالسالب مع لون أحمر
+            profitBox.style.color = 'var(--danger)';
+            profitBoxParent.style.backgroundColor = 'rgba(198, 40, 40, 0.08)';
+            profitBoxParent.style.borderColor = 'var(--danger)';
+            const lossText = goldData.currentLang === 'ar' ? '🔴 المحل خسران' : (goldData.currentLang === 'en' ? '🔴 Shop is losing' : '🔴 दुकान घाटे में है');
+            profitBox.innerHTML = `<span style="color: var(--danger); font-weight: bold;">${profitPerGram.toFixed(3)} <span class="currency">${currency}</span><br><span style="font-size: 0.7em; color: var(--danger);">${lossText}</span></span>`;
+        } else if(profitPerGram > 0) {
+            // 🟢 ربح - عرض باللون الأخضر مع علامة +
             profitBox.style.color = 'var(--success)';
-            const discountText = goldData.currentLang === 'ar' ? '(خصم/عرض)' : (goldData.currentLang === 'en' ? '(Discount/Offer)' : '(छूट/ऑफर)');
-            profitBox.innerHTML = `${Math.abs(profitPerGram).toFixed(3)} <span class="currency">${currency} ${discountText}</span>`;
+            profitBoxParent.style.backgroundColor = 'rgba(46, 125, 50, 0.08)';
+            profitBoxParent.style.borderColor = 'var(--success)';
+            const profitText = goldData.currentLang === 'ar' ? '🟢 المحل ربحان' : (goldData.currentLang === 'en' ? '🟢 Shop is profiting' : '🟢 दुकान लाभ में है');
+            profitBox.innerHTML = `<span style="color: var(--success); font-weight: bold;">+${profitPerGram.toFixed(3)} <span class="currency">${currency}</span><br><span style="font-size: 0.7em; color: var(--success);">${profitText}</span></span>`;
         } else {
-            profitBox.style.color = 'var(--text-main)';
-            profitBox.innerHTML = `${profitPerGram.toFixed(3)} <span class="currency">${currency}</span>`;
+            // ⚪ صفر - عرض محايد
+            profitBox.style.color = 'var(--text-sub)';
+            profitBoxParent.style.backgroundColor = 'var(--bg-body)';
+            profitBoxParent.style.borderColor = 'var(--border-color)';
+            const neutralText = goldData.currentLang === 'ar' ? '⚪ لا ربح ولا خسارة' : (goldData.currentLang === 'en' ? '⚪ No profit or loss' : '⚪ न लाभ न हानि');
+            profitBox.innerHTML = `<span style="color: var(--text-sub);">0.00 <span class="currency">${currency}</span><br><span style="font-size: 0.7em; color: var(--text-sub);">${neutralText}</span></span>`;
         }
 
         document.getElementById('box1_1').classList.add('active');
@@ -2362,7 +2379,7 @@
                     <td>${shop.weight.toFixed(2)}</td>
                     <td style="font-weight:bold; color:var(--primary-hover);">${shop.totalPrice.toFixed(3)} ${currency}</td>
                     <td>${shop.pricePerGram.toFixed(3)}</td>
-                    <td style="font-weight:bold; color:${shop.profitPerGram < 0 ? 'var(--success)' : 'var(--text-main)'};">${shop.profitPerGram.toFixed(3)}</td>
+                    <td style="font-weight:bold; color:${shop.profitPerGram < 0 ? 'var(--danger)' : 'var(--success)'};">${shop.profitPerGram < 0 ? shop.profitPerGram.toFixed(3) : '+' + shop.profitPerGram.toFixed(3)}</td>
                     <td>${gpsHTML}</td>
                     <td>
                         <button class="btn-action-row btn-edit-row" onclick="editShopRow(${shop.id})">✏️</button>

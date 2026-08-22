@@ -315,6 +315,11 @@
             transition: all 0.3s;
         }
         select:focus, input:focus { outline: none; border-color: var(--primary); }
+        input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: var(--bg-readonly);
+        }
         .price-source-container {
             display: flex;
             gap: 20px;
@@ -370,6 +375,10 @@
             margin-top: 10px;
         }
         .btn-calc:hover { background-color: var(--primary-hover); }
+        .btn-calc:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .results-container {
             display: flex;
             gap: 15px;
@@ -1027,11 +1036,39 @@
             </div>
 
             <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
+            
+            <!-- ====== إضافة قائمة الحد الأدنى للربح ====== -->
             <div class="form-group">
-                <label id="lblCustomProfit" for="customProfit">حدد الفائدة والمصنعية للغرام الواحد (د.ب) - القيمة سالبة تلقائياً للخصم:</label>
-                <input type="number" id="customProfit" min="0" step="any" placeholder="مثال: 4 (سيتم خصم 4 د.ب)" 
+                <label id="lblMinProfit" for="minProfitSelect">الحد الأدنى للربح المطلوب (د.ب):</label>
+                <select id="minProfitSelect" class="form-control" onchange="updateDiscountFieldStatus()">
+                    <option value="1">1 د.ب</option>
+                    <option value="2">2 د.ب</option>
+                    <option value="3">3 د.ب</option>
+                    <option value="4" selected>4 د.ب (الافتراضي)</option>
+                    <option value="5">5 د.ب</option>
+                    <option value="6">6 د.ب</option>
+                    <option value="7">7 د.ب</option>
+                    <option value="8">8 د.ب</option>
+                </select>
+                <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
+                    💡 اختر الحد الأدنى للربح الذي يجب أن يبقى للمحل بعد الخصم
+                </small>
+            </div>
+            
+            <div class="form-group">
+                <label id="lblCustomProfit" for="customProfit">حدد قيمة الخصم للغرام الواحد (د.ب):</label>
+                <input type="number" id="customProfit" min="0" step="any" placeholder="مثال: 1.5 (سيتم خصم 1.5 د.ب)" 
                        onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
                        oninput="if(this.value < 0) this.value = 0;">
+                <div id="discountWarning" style="display:none; background-color: rgba(198, 40, 40, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--danger); font-weight: bold;">
+                    ⛔ لا يمكن الخصم لأن فائدة المحل أقل من <span id="minProfitWarningDisplay">4</span> د.ب.
+                </div>
+                <div id="discountAllowed" style="display:none; background-color: rgba(46, 125, 50, 0.1); border: 1px solid var(--success); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--success); font-weight: bold;">
+                    ✅ يمكنك الخصم، الحد الأقصى المسموح هو <span id="maxDiscountDisplay">0.00</span> د.ب
+                </div>
+                <div id="discountMinWarning" style="display:none; background-color: rgba(255, 165, 0, 0.1); border: 1px solid orange; padding: 10px; border-radius: 8px; margin-top: 8px; color: orange; font-weight: bold;">
+                    ⚠️ الحد الأقصى للخصم هو <span id="maxDiscountWarningDisplay">0.00</span> د.ب. الرجاء إدخال قيمة أقل من أو تساوي هذا المبلغ.
+                </div>
                 <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
                     💡 أدخل رقم <strong>موجب</strong> وسيقوم النظام تلقائياً بخصمه من سعر المحل
                 </small>
@@ -1545,13 +1582,17 @@
             resBox1Title: "سعر الغرام الكلي في المحل",
             resBox2Title: "فائدة ومصنعية المحل (لكل غرام)",
             secTitle2: "ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية",
-            lblCustomProfit: "حدد الفائدة والمصنعية للغرام الواحد (د.ب) - القيمة سالبة تلقائياً للخصم:",
-            phCustomProfit: "مثال: 4 (سيتم خصم 4 د.ب)",
+            lblMinProfit: "الحد الأدنى للربح المطلوب (د.ب):",
+            lblCustomProfit: "حدد قيمة الخصم للغرام الواحد (د.ب):",
+            phCustomProfit: "مثال: 1.5 (سيتم خصم 1.5 د.ب)",
             lblAdoptedWeight: "الوزن الكلي المعتمد (غرام):",
             phAdoptedWeight: "سيتم اعتماده تلقائياً",
             btnCalc2: "احسب التكلفة بعد الخصم",
             resBox3Title: "سعر الغرام بعد الخصم",
             resBox4Title: "المجموع الكلي بعد الخصم",
+            discountWarning: "⛔ لا يمكن الخصم لأن فائدة المحل أقل من ",
+            discountAllowed: "✅ يمكنك الخصم، الحد الأقصى المسموح هو ",
+            discountMinWarning: "⚠️ الحد الأقصى للخصم هو ",
             lblSaveShop: "اسم المحل:",
             shopNamePlaceholder: "أكتب اسم المحل هنا... (مثال: مجوهرات الزين)",
             btnSaveShop: "حفظ العرض في الجدول 💾",
@@ -1694,13 +1735,17 @@
             resBox1Title: "Total Price per Gram at Shop",
             resBox2Title: "Shop Profit & Fees (Per Gram)",
             secTitle2: "Second: Calculate Purchase Price Based on Profit & Fees",
-            lblCustomProfit: "Specify Profit & Fees per Gram (BHD) - Value is automatically negative for discount:",
-            phCustomProfit: "e.g., 4 (will deduct 4 BHD)",
+            lblMinProfit: "Minimum Required Profit (BHD):",
+            lblCustomProfit: "Enter discount amount per gram (BHD):",
+            phCustomProfit: "e.g., 1.5 (will deduct 1.5 BHD)",
             lblAdoptedWeight: "Adopted Weight (Grams):",
             phAdoptedWeight: "Will be adopted automatically",
             btnCalc2: "Calculate Price After Discount",
             resBox3Title: "Price per Gram After Discount",
             resBox4Title: "Total Price After Discount",
+            discountWarning: "⛔ Cannot discount because shop profit is less than ",
+            discountAllowed: "✅ You can discount, maximum allowed is ",
+            discountMinWarning: "⚠️ Maximum discount is ",
             lblSaveShop: "Shop Name:",
             shopNamePlaceholder: "Type the shop's name here... (e.g. Al-Zain Jewellery)",
             btnSaveShop: "Save Offer to Table 💾",
@@ -1842,13 +1887,17 @@
             resBox1Title: "दुकान पर कुल प्रति ग्राम कीमत",
             resBox2Title: "दुकान का लाभ और मेकिंग चार्ज (प्रति ग्राम)",
             secTitle2: "दूसरा: लाभ और मेकिंग चार्ज के आधार पर खरीद मूल्य की गणना",
-            lblCustomProfit: "प्रति ग्राम लाभ और मेकिंग चार्ज निर्दिष्ट करें (BHD) - छूट के लिए मान स्वचालित रूप से ऋणात्मक है:",
-            phCustomProfit: "उदा. 4 (4 BHD काटा जाएगा)",
+            lblMinProfit: "न्यूनतम आवश्यक लाभ (BHD):",
+            lblCustomProfit: "प्रति ग्राम छूट राशि दर्ज करें (BHD):",
+            phCustomProfit: "उदा. 1.5 (1.5 BHD काटा जाएगा)",
             lblAdoptedWeight: "स्वीकृत वजन (ग्राम):",
             phAdoptedWeight: "स्वचालित रूप से अपनाया जाएगा",
             btnCalc2: "छूट के बाद मूल्य की गणना करें",
             resBox3Title: "छूट के बाद प्रति ग्राम मूल्य",
             resBox4Title: "छूट के बाद कुल मूल्य",
+            discountWarning: "⛔ छूट नहीं दी जा सकती क्योंकि दुकान का लाभ ",
+            discountAllowed: "✅ आप छूट दे सकते हैं, अधिकतम अनुमत है ",
+            discountMinWarning: "⚠️ अधिकतम छूट है ",
             lblSaveShop: "दुकान का नाम:",
             shopNamePlaceholder: "दुकान का नाम लिखें... (उदा. अल ज़ैन ज्वैलर्स)",
             btnSaveShop: "ऑफर को टेबल में सहेजें 💾",
@@ -2236,6 +2285,59 @@
     }
 
     // ============================================================
+    // UPDATE DISCOUNT FIELD STATUS
+    // ============================================================
+    function updateDiscountFieldStatus() {
+        const customProfitInput = document.getElementById('customProfit');
+        const discountWarning = document.getElementById('discountWarning');
+        const discountAllowed = document.getElementById('discountAllowed');
+        const discountMinWarning = document.getElementById('discountMinWarning');
+        const maxDiscountDisplay = document.getElementById('maxDiscountDisplay');
+        const maxDiscountWarningDisplay = document.getElementById('maxDiscountWarningDisplay');
+        const minProfitWarningDisplay = document.getElementById('minProfitWarningDisplay');
+        const btnCalc2 = document.getElementById('btnCalc2');
+        const t = translations[goldData.currentLang];
+
+        // الحصول على الحد الأدنى للربح المختار من القائمة
+        const minProfitSelect = document.getElementById('minProfitSelect');
+        const minProfit = parseFloat(minProfitSelect.value) || 4;
+
+        // تحديث النص في رسائل التحذير
+        minProfitWarningDisplay.textContent = minProfit.toFixed(0);
+
+        // التحقق من فائدة المحل
+        if (lastStoreProfitPerGram > minProfit) {
+            // ✅ يسمح بالخصم (فائدة المحل أكبر من الحد الأدنى المطلوب)
+            const maxDiscount = lastStoreProfitPerGram - minProfit;
+            customProfitInput.disabled = false;
+            customProfitInput.style.opacity = '1';
+            customProfitInput.style.cursor = 'text';
+            customProfitInput.placeholder = `مثال: ${maxDiscount.toFixed(3)} (الحد الأقصى)`;
+            discountWarning.style.display = 'none';
+            discountAllowed.style.display = 'block';
+            discountMinWarning.style.display = 'none';
+            maxDiscountDisplay.textContent = maxDiscount.toFixed(3);
+            maxDiscountWarningDisplay.textContent = maxDiscount.toFixed(3);
+            btnCalc2.disabled = false;
+            btnCalc2.style.opacity = '1';
+            btnCalc2.style.cursor = 'pointer';
+        } else {
+            // ❌ يمنع الخصم (فائدة المحل أقل من أو تساوي الحد الأدنى المطلوب)
+            customProfitInput.disabled = true;
+            customProfitInput.style.opacity = '0.6';
+            customProfitInput.style.cursor = 'not-allowed';
+            customProfitInput.value = '';
+            customProfitInput.placeholder = '⛔ غير مسموح بالخصم';
+            discountWarning.style.display = 'block';
+            discountAllowed.style.display = 'none';
+            discountMinWarning.style.display = 'none';
+            btnCalc2.disabled = true;
+            btnCalc2.style.opacity = '0.5';
+            btnCalc2.style.cursor = 'not-allowed';
+        }
+    }
+
+    // ============================================================
     // CALCULATOR FUNCTIONS
     // ============================================================
     function calculateProfit() {
@@ -2257,6 +2359,9 @@
         lastStorePricePerGram = pricePerGramStore;
         lastStoreProfitPerGram = profitPerGram;
         lastTotalWeight = weight;
+
+        // ✅ تحديث حالة حقل الخصم بناءً على فائدة المحل والحد الأدنى المختار
+        updateDiscountFieldStatus();
 
         // ✅ التحقق من منطقية السعر - سعر الغرام في المحل أقل من سعر السوق
         if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
@@ -2306,8 +2411,28 @@
         // ✅ استخدام سعر الغرام من المحل (من القسم الأول)
         const storePricePerGram = lastStorePricePerGram;
         const weight = lastTotalWeight;
+        // ✅ قيمة الخصم التي أدخلها المستخدم
+        const customProfitInput = parseFloat(document.getElementById('customProfit').value) || 0;
+        
+        // الحصول على الحد الأدنى للربح المختار
+        const minProfitSelect = document.getElementById('minProfitSelect');
+        const minProfit = parseFloat(minProfitSelect.value) || 4;
+        
+        // ✅ التحقق من أن الخصم لا يتجاوز الحد الأقصى المسموح
+        const maxAllowedDiscount = lastStoreProfitPerGram - minProfit;
+        
+        if (customProfitInput > maxAllowedDiscount) {
+            const minWarning = translations[goldData.currentLang].discountMinWarning + maxAllowedDiscount.toFixed(3) + ' د.ب';
+            document.getElementById('discountMinWarning').style.display = 'block';
+            document.getElementById('maxDiscountWarningDisplay').textContent = maxAllowedDiscount.toFixed(3);
+            alert(minWarning);
+            document.getElementById('customProfit').value = '';
+            document.getElementById('customProfit').focus();
+            return;
+        }
+        
         // ✅ القيمة سالبة تلقائياً (خصم)
-        const customProfit = -1 * (parseFloat(document.getElementById('customProfit').value) || 0);
+        const customProfit = -1 * customProfitInput;
 
         if (storePricePerGram <= 0 || weight <= 0) {
             alert(goldData.currentLang === 'ar' ? "الرجاء أولاً تحليل السعر المعروض في القسم الأول لتحديد سعر الغرام والوزن." : (goldData.currentLang === 'en' ? "Please first analyze the shop price in the first section to determine price per gram and weight." : "कृपया पहले पहले खंड में दुकान की कीमत का विश्लेषण करें।"));
@@ -2318,8 +2443,47 @@
         const totalCost = targetGramPrice * weight;
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
 
+        // ✅ عرض سعر الغرام بعد الخصم
         document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
         document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
+
+        // ✅ حساب الفائدة الجديدة للمحل بعد الخصم
+        const newShopProfit = lastStoreProfitPerGram - customProfitInput;
+        const profitBox2 = document.getElementById('box2_1');
+        const gramWithProfitEl = document.getElementById('gramWithProfit');
+
+        // ✅ إظهار الفائدة الجديدة للمحل أسفل السعر
+        if (newShopProfit > 0.001) {
+            // المحل ربحان
+            const profitText = goldData.currentLang === 'ar' 
+                ? `🟢 المحل يستفيد +${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
+                : (goldData.currentLang === 'en' 
+                    ? `🟢 Shop profits +${newShopProfit.toFixed(3)} ${currency} per gram` 
+                    : `🟢 दुकान को लाभ +${newShopProfit.toFixed(3)} ${currency} प्रति ग्राम`);
+            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--success); font-weight: normal;">${profitText}</span>`;
+            profitBox2.style.borderColor = 'var(--success)';
+            profitBox2.style.backgroundColor = 'rgba(46, 125, 50, 0.08)';
+        } else if (newShopProfit < -0.001) {
+            // المحل خسران
+            const lossText = goldData.currentLang === 'ar' 
+                ? `🔴 المحل خسران ${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
+                : (goldData.currentLang === 'en' 
+                    ? `🔴 Shop loses ${Math.abs(newShopProfit).toFixed(3)} ${currency} per gram` 
+                    : `🔴 दुकान को हानि ${Math.abs(newShopProfit).toFixed(3)} ${currency} प्रति ग्राम`);
+            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--danger); font-weight: normal;">${lossText}</span>`;
+            profitBox2.style.borderColor = 'var(--danger)';
+            profitBox2.style.backgroundColor = 'rgba(198, 40, 40, 0.08)';
+        } else {
+            // لا ربح ولا خسارة
+            const neutralText = goldData.currentLang === 'ar' 
+                ? '⚪ لا ربح ولا خسارة للمحل' 
+                : (goldData.currentLang === 'en' 
+                    ? '⚪ No profit or loss for shop' 
+                    : '⚪ दुकान को न लाभ न हानि');
+            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--text-sub); font-weight: normal;">${neutralText}</span>`;
+            profitBox2.style.borderColor = 'var(--border-color)';
+            profitBox2.style.backgroundColor = 'var(--bg-body)';
+        }
 
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
@@ -2659,8 +2823,12 @@
         document.getElementById('resBox1Title').innerText = t.resBox1Title;
         document.getElementById('resBox2Title').innerText = t.resBox2Title;
         document.getElementById('secTitle2').innerText = t.secTitle2;
+        document.getElementById('lblMinProfit').innerText = t.lblMinProfit;
         document.getElementById('lblCustomProfit').innerText = t.lblCustomProfit;
         document.getElementById('customProfit').placeholder = t.phCustomProfit;
+        document.getElementById('discountWarning').innerHTML = t.discountWarning + '<span id="minProfitWarningDisplay">4</span> د.ب.';
+        document.getElementById('discountAllowed').innerHTML = t.discountAllowed + '<span id="maxDiscountDisplay">0.00</span> د.ب';
+        document.getElementById('discountMinWarning').innerHTML = t.discountMinWarning + '<span id="maxDiscountWarningDisplay">0.00</span> د.ب';
         document.getElementById('lblAdoptedWeight').innerText = t.lblAdoptedWeight;
         document.getElementById('adoptedWeightDisplay').placeholder = t.phAdoptedWeight;
         document.getElementById('btnCalc2').innerText = t.btnCalc2;
@@ -3415,6 +3583,17 @@
         document.getElementById('historicalDateContainer').classList.add('hidden');
         document.getElementById('bullionHistoricalDateContainer').classList.add('hidden');
         document.getElementById('jewelryHistoricalDateContainer').classList.add('hidden');
+
+        // تعطيل حقل الخصم افتراضياً حتى يتم تحليل القسم الأول
+        document.getElementById('customProfit').disabled = true;
+        document.getElementById('customProfit').style.opacity = '0.6';
+        document.getElementById('customProfit').style.cursor = 'not-allowed';
+        document.getElementById('btnCalc2').disabled = true;
+        document.getElementById('btnCalc2').style.opacity = '0.5';
+        document.getElementById('btnCalc2').style.cursor = 'not-allowed';
+        document.getElementById('discountWarning').style.display = 'block';
+        document.getElementById('discountAllowed').style.display = 'none';
+        document.getElementById('discountMinWarning').style.display = 'none';
 
         fetchGoldPrices();
         renderComparisonTable();

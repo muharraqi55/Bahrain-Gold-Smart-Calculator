@@ -2919,6 +2919,9 @@
         const advancedLabel = document.getElementById('discountAdvancedLabel');
         const disabledMsg = document.getElementById('discountTypeDisabledMsg');
         const container = document.getElementById('discountTypeContainer');
+        const box2_1 = document.getElementById('box2_1');
+        const box2_2 = document.getElementById('box2_2');
+        const summaryBox2 = document.getElementById('summaryBox2');
 
         // إذا كان المحل خسران (فائدة المحل أقل من 0)
         if (lastStoreProfitPerGram < 0) {
@@ -2936,14 +2939,16 @@
             document.getElementById('btnCalcAdvanced').disabled = true;
             document.getElementById('minProfitSelect').disabled = true;
             
-            // إخفاء نتائج القسم الثاني
-            document.getElementById('box2_1').classList.remove('active');
-            document.getElementById('box2_2').classList.remove('active');
+            // ===== إخفاء نتائج القسم الثاني =====
+            // إزالة الـ active class لإخفاء الصناديق
+            box2_1.classList.remove('active');
+            box2_2.classList.remove('active');
+            // إعادة تعيين القيم النصية إلى 0
             document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
             document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
-            
             // إخفاء المستطيل الثاني
-            document.getElementById('summaryBox2').style.display = 'none';
+            summaryBox2.style.display = 'none';
+
         } else {
             // تفعيل الخيارات
             normalRadio.disabled = false;
@@ -3195,8 +3200,18 @@
         // ✅ تحديث حالة حقل الخصم المتقدم
         updateDiscountFieldStatus();
 
-        // ✅ حساب الخصم العادي (مستقل عن فائدة المحل)
-        calculateNormalDiscount();
+        // ✅ حساب الخصم العادي فقط إذا كان المحل ربحان
+        if (lastStoreProfitPerGram >= 0) {
+            calculateNormalDiscount();
+        } else {
+            // إذا كان المحل خسران، نقوم بمسح النتائج
+            const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+            document.getElementById('gramWithProfit').innerHTML = `0.00 <span class="currency">${currency}</span>`;
+            document.getElementById('totalWithProfit').innerHTML = `0.00 <span class="currency">${currency}</span>`;
+            document.getElementById('box2_1').classList.remove('active');
+            document.getElementById('box2_2').classList.remove('active');
+            document.getElementById('summaryBox2').style.display = 'none';
+        }
 
         // ✅ تحديث المستطيل الأول
         updateSummaryBox1(marketPrice, weight, profitPerGram);

@@ -1018,6 +1018,71 @@
             text-align: center;
         }
 
+        /* Summary Boxes - NEW */
+        .summary-box-custom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .summary-box-custom .summary-item {
+            background: var(--bg-body);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .summary-box-custom .summary-item.profit {
+            border-color: var(--success);
+            background-color: rgba(46, 125, 50, 0.08);
+        }
+        .summary-box-custom .summary-item.loss {
+            border-color: var(--danger);
+            background-color: rgba(198, 40, 40, 0.08);
+        }
+        .summary-box-custom .summary-item h4 {
+            margin: 0 0 8px 0;
+            font-size: calc(13px * var(--font-scale));
+            color: var(--text-sub);
+            font-weight: normal;
+        }
+        .summary-box-custom .summary-item .amount {
+            font-size: calc(20px * var(--font-scale));
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .summary-box-custom .summary-item .amount.positive {
+            color: var(--success);
+        }
+        .summary-box-custom .summary-item .amount.negative {
+            color: var(--danger);
+        }
+        .summary-box-custom .summary-item .currency-sm {
+            font-size: calc(13px * var(--font-scale));
+            color: var(--text-sub);
+            margin-inline-start: 3px;
+        }
+        .summary-box-custom .summary-item .status-text {
+            font-size: calc(12px * var(--font-scale));
+            margin-top: 4px;
+            font-weight: bold;
+        }
+        .summary-box-custom .summary-item .status-text.profit-text {
+            color: var(--success);
+        }
+        .summary-box-custom .summary-item .status-text.loss-text {
+            color: var(--danger);
+        }
+
+        .summary-box-custom.single-item {
+            grid-template-columns: 1fr;
+            max-width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -1062,6 +1127,12 @@
             }
             .manual-location-container .input-group input {
                 min-width: auto;
+            }
+            .summary-box-custom {
+                grid-template-columns: 1fr;
+            }
+            .summary-box-custom.single-item {
+                max-width: 100%;
             }
         }
     </style>
@@ -1187,6 +1258,19 @@
                 <div class="result-box" id="box1_2">
                     <h3 id="resBox2Title">فائدة ومصنعية المحل (لكل غرام)</h3>
                     <div class="value" id="profitOnly">0.00 <span class="currency">د.ب</span></div>
+                </div>
+            </div>
+
+            <!-- ====== المستطيل الأول: ملخص الصفقة ====== -->
+            <div id="summaryBox1" class="summary-box-custom" style="display:none;">
+                <div class="summary-item" id="totalGoldValueBox">
+                    <h4 id="summaryTotalGoldTitle">السعر الكلي للذهب بدون المصنعية والفائدة</h4>
+                    <div class="amount" id="totalGoldValueAmount">0.00 <span class="currency-sm">د.ب</span></div>
+                </div>
+                <div class="summary-item" id="totalShopProfitBox">
+                    <h4 id="summaryTotalProfitTitle">ربح المحل الكلي للمصنعية والفائدة</h4>
+                    <div class="amount" id="totalShopProfitAmount">0.00 <span class="currency-sm">د.ب</span></div>
+                    <div class="status-text" id="profitStatusText"></div>
                 </div>
             </div>
 
@@ -1320,6 +1404,15 @@
                 <div class="result-box" id="box2_2">
                     <h3 id="resBox4Title">المجموع الكلي بعد الخصم</h3>
                     <div class="value" id="totalWithProfit">0.00 <span class="currency">د.ب</span></div>
+                </div>
+            </div>
+
+            <!-- ====== المستطيل الثاني: ربح المحل الكلي بعد الخصم ====== -->
+            <div id="summaryBox2" class="summary-box-custom single-item" style="display:none;">
+                <div class="summary-item" id="totalShopProfitAfterBox">
+                    <h4 id="summaryTotalProfitAfterTitle">ربح المحل الكلي بعد الخصم</h4>
+                    <div class="amount" id="totalShopProfitAfterAmount">0.00 <span class="currency-sm">د.ب</span></div>
+                    <div class="status-text" id="profitAfterStatusText"></div>
                 </div>
             </div>
 
@@ -1953,6 +2046,12 @@
             themeDay: "الوضع النهاري",
             themeNight: "الوضع الليلي",
             btnRefreshBullionGold: "تحديث أسعار الذهب 🔄",
+            summaryTotalGoldTitle: "السعر الكلي للذهب بدون المصنعية والفائدة",
+            summaryTotalProfitTitle: "ربح المحل الكلي للمصنعية والفائدة",
+            summaryTotalProfitAfterTitle: "ربح المحل الكلي بعد الخصم",
+            shopProfitStatus: "🟢 المحل ربحان",
+            shopLossStatus: "🔴 المحل خسران",
+            shopNeutralStatus: "⚪ لا ربح ولا خسارة",
             
             bullionMainTitle: "📊 المتوسط السعري للسبائك",
             lblBullionLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
@@ -2118,6 +2217,12 @@
             themeDay: "Day Mode",
             themeNight: "Night Mode",
             btnRefreshBullionGold: "Refresh Gold Prices 🔄",
+            summaryTotalGoldTitle: "Total Gold Price Without Making Charges",
+            summaryTotalProfitTitle: "Total Shop Profit (Making Charges & Fees)",
+            summaryTotalProfitAfterTitle: "Total Shop Profit After Discount",
+            shopProfitStatus: "🟢 Shop is profiting",
+            shopLossStatus: "🔴 Shop is losing",
+            shopNeutralStatus: "⚪ No profit or loss",
             
             bullionMainTitle: "📊 Bullion Average Pricing",
             lblBullionLivePriceHelp: "💡 To update profits and losses, please confirm the current market gold gram price:",
@@ -2282,6 +2387,12 @@
             themeDay: "दिन का मोड",
             themeNight: "रात्रि मोड",
             btnRefreshBullionGold: "सोने की कीमतें रीफ्रेश करें 🔄",
+            summaryTotalGoldTitle: "मेकिंग चार्ज के बिना कुल सोने की कीमत",
+            summaryTotalProfitTitle: "दुकान का कुल लाभ (मेकिंग चार्ज और शुल्क)",
+            summaryTotalProfitAfterTitle: "छूट के बाद दुकान का कुल लाभ",
+            shopProfitStatus: "🟢 दुकान लाभ में है",
+            shopLossStatus: "🔴 दुकान घाटे में है",
+            shopNeutralStatus: "⚪ न लाभ न हानि",
             
             bullionMainTitle: "📊 बुलियन औसत मूल्य निर्धारण",
             lblBullionLivePriceHelp: "💡 लाभ और हानि को अपडेट करने के लिए, कृपया वर्तमान बाजार सोने के ग्राम मूल्य की पुष्टि करें:",
@@ -2636,6 +2747,97 @@
     }
 
     // ============================================================
+    // UPDATE SUMMARY BOX 1
+    // ============================================================
+    function updateSummaryBox1(marketPrice, weight, profitPerGram) {
+        const box = document.getElementById('summaryBox1');
+        const t = translations[goldData.currentLang];
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+        
+        if (marketPrice <= 0 || weight <= 0) {
+            box.style.display = 'none';
+            return;
+        }
+        
+        box.style.display = 'grid';
+        
+        // السعر الكلي بدون مصنعية
+        const totalGoldValue = marketPrice * weight;
+        document.getElementById('totalGoldValueAmount').innerHTML = `${totalGoldValue.toFixed(3)} <span class="currency-sm">${currency}</span>`;
+        document.getElementById('summaryTotalGoldTitle').textContent = t.summaryTotalGoldTitle;
+        document.getElementById('totalGoldValueBox').classList.remove('profit', 'loss');
+        
+        // ربح المحل الكلي
+        const totalShopProfit = profitPerGram * weight;
+        const profitAmountEl = document.getElementById('totalShopProfitAmount');
+        const profitBox = document.getElementById('totalShopProfitBox');
+        const statusTextEl = document.getElementById('profitStatusText');
+        
+        profitAmountEl.innerHTML = `${Math.abs(totalShopProfit).toFixed(3)} <span class="currency-sm">${currency}</span>`;
+        document.getElementById('summaryTotalProfitTitle').textContent = t.summaryTotalProfitTitle;
+        
+        // تحديث اللون والنص حسب القيمة
+        profitBox.classList.remove('profit', 'loss');
+        if (totalShopProfit > 0.001) {
+            profitBox.classList.add('profit');
+            profitAmountEl.className = 'amount positive';
+            statusTextEl.className = 'status-text profit-text';
+            statusTextEl.textContent = t.shopProfitStatus;
+        } else if (totalShopProfit < -0.001) {
+            profitBox.classList.add('loss');
+            profitAmountEl.className = 'amount negative';
+            statusTextEl.className = 'status-text loss-text';
+            statusTextEl.textContent = t.shopLossStatus;
+        } else {
+            profitAmountEl.className = 'amount';
+            statusTextEl.className = 'status-text';
+            statusTextEl.textContent = t.shopNeutralStatus;
+        }
+    }
+
+    // ============================================================
+    // UPDATE SUMMARY BOX 2 (After Discount - Single Item)
+    // ============================================================
+    function updateSummaryBox2(newProfitPerGram, weight) {
+        const box = document.getElementById('summaryBox2');
+        const t = translations[goldData.currentLang];
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+        
+        if (weight <= 0) {
+            box.style.display = 'none';
+            return;
+        }
+        
+        box.style.display = 'grid';
+        
+        // ربح المحل الكلي بعد الخصم
+        const totalProfitAfter = newProfitPerGram * weight;
+        const afterAmountEl = document.getElementById('totalShopProfitAfterAmount');
+        const afterBox = document.getElementById('totalShopProfitAfterBox');
+        const statusTextEl = document.getElementById('profitAfterStatusText');
+        
+        afterAmountEl.innerHTML = `${Math.abs(totalProfitAfter).toFixed(3)} <span class="currency-sm">${currency}</span>`;
+        document.getElementById('summaryTotalProfitAfterTitle').textContent = t.summaryTotalProfitAfterTitle;
+        
+        afterBox.classList.remove('profit', 'loss');
+        if (totalProfitAfter > 0.001) {
+            afterBox.classList.add('profit');
+            afterAmountEl.className = 'amount positive';
+            statusTextEl.className = 'status-text profit-text';
+            statusTextEl.textContent = t.shopProfitStatus;
+        } else if (totalProfitAfter < -0.001) {
+            afterBox.classList.add('loss');
+            afterAmountEl.className = 'amount negative';
+            statusTextEl.className = 'status-text loss-text';
+            statusTextEl.textContent = t.shopLossStatus;
+        } else {
+            afterAmountEl.className = 'amount';
+            statusTextEl.className = 'status-text';
+            statusTextEl.textContent = t.shopNeutralStatus;
+        }
+    }
+
+    // ============================================================
     // TOGGLE DISCOUNT TYPE
     // ============================================================
     function toggleDiscountType() {
@@ -2739,6 +2941,9 @@
             document.getElementById('box2_2').classList.remove('active');
             document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
             document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
+            
+            // إخفاء المستطيل الثاني
+            document.getElementById('summaryBox2').style.display = 'none';
         } else {
             // تفعيل الخيارات
             normalRadio.disabled = false;
@@ -2993,6 +3198,9 @@
         // ✅ حساب الخصم العادي (مستقل عن فائدة المحل)
         calculateNormalDiscount();
 
+        // ✅ تحديث المستطيل الأول
+        updateSummaryBox1(marketPrice, weight, profitPerGram);
+
         // ✅ التحقق من منطقية السعر - سعر الغرام في المحل أقل من سعر السوق
         if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
             const diff = (marketPrice - pricePerGramStore).toFixed(3);
@@ -3089,6 +3297,10 @@
 
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
+        
+        // ✅ تحديث المستطيل الثاني - الخصم العادي (الفائدة الجديدة = الفائدة المختارة)
+        const newProfitPerGram = selectedProfit;
+        updateSummaryBox2(newProfitPerGram, weight);
     }
 
     // ============================================================
@@ -3187,6 +3399,9 @@
 
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
+        
+        // ✅ تحديث المستطيل الثاني - الخصم المتقدم
+        updateSummaryBox2(newShopProfit, weight);
     }
 
     // ============================================================
@@ -3535,6 +3750,11 @@
         document.getElementById('discountWarning').innerHTML = t.discountWarning + '<span id="minProfitWarningDisplay">4</span> د.ب.';
         document.getElementById('discountAllowed').innerHTML = t.discountAllowed + '<span id="maxDiscountDisplay">0.00</span> د.ب';
         document.getElementById('discountMinWarning').innerHTML = t.discountMinWarning + '<span id="maxDiscountWarningDisplay">0.00</span> د.ب';
+        
+        // تحديث ترجمات المستطيلات
+        document.getElementById('summaryTotalGoldTitle').textContent = t.summaryTotalGoldTitle;
+        document.getElementById('summaryTotalProfitTitle').textContent = t.summaryTotalProfitTitle;
+        document.getElementById('summaryTotalProfitAfterTitle').textContent = t.summaryTotalProfitAfterTitle;
         
         document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
         document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
@@ -4307,6 +4527,10 @@
         // إخفاء حاويات GPS
         document.getElementById('mapContainer').style.display = 'none';
         document.getElementById('manualLocationContainer').style.display = 'none';
+
+        // إخفاء حاويات المستطيلات
+        document.getElementById('summaryBox1').style.display = 'none';
+        document.getElementById('summaryBox2').style.display = 'none';
 
         // إخفاء حاوية حفظ البيانات حتى يتم التحليل
         document.getElementById('saveContainer').style.display = 'none';

@@ -320,6 +320,11 @@
             cursor: not-allowed;
             background-color: var(--bg-readonly);
         }
+        select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: var(--bg-readonly);
+        }
         .price-source-container {
             display: flex;
             gap: 20px;
@@ -340,6 +345,9 @@
             font-size: calc(14px * var(--font-scale));
         }
         .radio-group input { width: auto; cursor: pointer; }
+        .radio-group input:disabled {
+            cursor: not-allowed;
+        }
         .date-input-group {
             display: flex;
             gap: 10px;
@@ -481,11 +489,23 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.3s;
+            width: 100%;
         }
         .btn-gps.active {
             border-color: var(--success);
             color: var(--success);
             background-color: rgba(46, 125, 50, 0.1);
+        }
+        .btn-gps.loading {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: rgba(212, 175, 55, 0.1);
+            cursor: wait;
+        }
+        .btn-gps.error {
+            border-color: var(--danger);
+            color: var(--danger);
+            background-color: rgba(198, 40, 40, 0.1);
         }
         .btn-save-shop {
             background-color: var(--success);
@@ -827,6 +847,176 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .discount-type-container {
+            display: flex;
+            gap: 15px;
+            background: var(--bg-body);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .discount-type-container .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-main);
+            font-size: calc(14px * var(--font-scale));
+        }
+        .discount-type-container .radio-group input { width: auto; cursor: pointer; }
+        .discount-type-container .radio-group input:disabled {
+            cursor: not-allowed;
+        }
+        .discount-type-container .radio-group.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* GPS Enhancements */
+        .gps-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        .gps-success {
+            color: var(--success);
+        }
+        .gps-error {
+            color: var(--danger);
+        }
+        .location-info {
+            background: var(--bg-body);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            line-height: 1.8;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .location-info .label {
+            font-weight: bold;
+            color: var(--text-sub);
+        }
+        .location-info .value {
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .location-info .accuracy-high {
+            color: var(--success);
+        }
+        .location-info .accuracy-medium {
+            color: #f39c12;
+        }
+        .location-info .accuracy-low {
+            color: var(--danger);
+        }
+        .map-container {
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 200px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .open-map-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .open-map-btn:hover {
+            background-color: var(--primary-hover);
+        }
+        .manual-location-container {
+            margin-top: 10px;
+            display: none;
+            padding: 15px;
+            background: var(--bg-body);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+        .manual-location-container .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .manual-location-container .input-group input {
+            flex: 1;
+            min-width: 120px;
+        }
+        .manual-location-container .btn-confirm {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+            transition: background 0.3s;
+        }
+        .manual-location-container .btn-confirm:hover {
+            opacity: 0.9;
+        }
+        .gps-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .gps-actions .btn-gps {
+            flex: 2;
+            min-width: 150px;
+        }
+        .gps-actions .btn-gps-secondary {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: calc(14px * var(--font-scale));
+            transition: all 0.3s;
+        }
+        .gps-actions .btn-gps-secondary:hover {
+            border-color: var(--primary);
+            background-color: var(--bg-body);
+        }
+        .gps-status-text {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 5px;
+            text-align: center;
+        }
 
         @media (max-width: 768px) {
             header {
@@ -858,6 +1048,20 @@
             }
             .results-container {
                 flex-direction: column;
+            }
+            .gps-actions {
+                flex-direction: column;
+            }
+            .gps-actions .btn-gps,
+            .gps-actions .btn-gps-secondary {
+                flex: 1;
+                width: 100%;
+            }
+            .manual-location-container .input-group {
+                flex-direction: column;
+            }
+            .manual-location-container .input-group input {
+                min-width: auto;
             }
         }
     </style>
@@ -986,6 +1190,140 @@
                 </div>
             </div>
 
+            <!-- ================= القسم الثاني: حدد كم ستعطي المحل الفائدة والمصنعية لكل غرام ================= -->
+            <div class="section-title" id="secTitle2">ثانياً: حدد كم ستعطي المحل الفائدة والمصنعية لكل غرام</div>
+            
+            <!-- ====== نوع الخصم ====== -->
+            <div class="form-group">
+                <label id="lblDiscountType">نوع الخصم:</label>
+                <div class="discount-type-container" id="discountTypeContainer">
+                    <label class="radio-group" id="discountNormalLabel">
+                        <input type="radio" name="discountType" value="normal" checked onchange="toggleDiscountType()">
+                        <span id="discountNormalText">خصم العادي (المفضل)</span>
+                    </label>
+                    <label class="radio-group" id="discountAdvancedLabel">
+                        <input type="radio" name="discountType" value="advanced" onchange="toggleDiscountType()">
+                        <span id="discountAdvancedText">خصم المتقدم</span>
+                    </label>
+                </div>
+                <div id="discountTypeDisabledMsg" style="display:none; background-color: rgba(198, 40, 40, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--danger); font-weight: bold;">
+                    ⛔ لا يمكن الخصم لأن المحل خسران
+                </div>
+            </div>
+
+            <!-- ====== خيار الخصم العادي (مستقل عن فائدة المحل) ====== -->
+            <div id="discountNormalSection">
+                <div class="form-group">
+                    <label id="lblNormalDiscount" for="normalDiscountSelect">اختر الفائدة الإضافية لكل غرام (د.ب):</label>
+                    <select id="normalDiscountSelect" class="form-control" onchange="calculateNormalDiscount()">
+                        <option value="0.5">0.5 د.ب</option>
+                        <option value="1">1 د.ب</option>
+                        <option value="1.5">1.5 د.ب</option>
+                        <option value="2" selected>2 د.ب</option>
+                        <option value="2.5">2.5 د.ب</option>
+                        <option value="3">3 د.ب</option>
+                        <option value="3.5">3.5 د.ب</option>
+                        <option value="4">4 د.ب</option>
+                        <option value="4.5">4.5 د.ب</option>
+                        <option value="5">5 د.ب</option>
+                        <option value="5.5">5.5 د.ب</option>
+                        <option value="6">6 د.ب</option>
+                        <option value="6.5">6.5 د.ب</option>
+                        <option value="7">7 د.ب</option>
+                        <option value="7.5">7.5 د.ب</option>
+                        <option value="8">8 د.ب</option>
+                        <option value="8.5">8.5 د.ب</option>
+                        <option value="9">9 د.ب</option>
+                        <option value="9.5">9.5 د.ب</option>
+                        <option value="10">10 د.ب</option>
+                        <option value="10.5">10.5 د.ب</option>
+                        <option value="11">11 د.ب</option>
+                        <option value="11.5">11.5 د.ب</option>
+                        <option value="12">12 د.ب</option>
+                        <option value="12.5">12.5 د.ب</option>
+                        <option value="13">13 د.ب</option>
+                        <option value="13.5">13.5 د.ب</option>
+                        <option value="14">14 د.ب</option>
+                        <option value="14.5">14.5 د.ب</option>
+                        <option value="15">15 د.ب</option>
+                        <option value="15.5">15.5 د.ب</option>
+                        <option value="16">16 د.ب</option>
+                        <option value="16.5">16.5 د.ب</option>
+                        <option value="17">17 د.ب</option>
+                        <option value="17.5">17.5 د.ب</option>
+                        <option value="18">18 د.ب</option>
+                        <option value="18.5">18.5 د.ب</option>
+                        <option value="19">19 د.ب</option>
+                        <option value="19.5">19.5 د.ب</option>
+                        <option value="20">20 د.ب</option>
+                    </select>
+                    <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
+                        💡 اختر الفائدة الإضافية التي ستعطيها للمحل لكل غرام (يضاف على سعر السوق)
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label id="lblAdoptedWeightNormal">الوزن الكلي المعتمد (غرام):</label>
+                    <input type="text" id="adoptedWeightDisplayNormal" readonly style="background-color: var(--bg-readonly); color: var(--text-sub);">
+                </div>
+                <button class="btn-calc" id="btnCalcNormal" onclick="calculateNormalDiscount()">احسب التكلفة</button>
+            </div>
+
+            <!-- ====== خيار الخصم المتقدم (نفس النظام القديم) ====== -->
+            <div id="discountAdvancedSection" style="display:none;">
+                <div class="form-group">
+                    <label id="lblMinProfit" for="minProfitSelect">الحد الأدنى للربح المطلوب للمحل (د.ب):</label>
+                    <select id="minProfitSelect" class="form-control" onchange="updateDiscountFieldStatus()">
+                        <option value="1">1 د.ب</option>
+                        <option value="2">2 د.ب</option>
+                        <option value="3">3 د.ب</option>
+                        <option value="4" selected>4 د.ب (الافتراضي)</option>
+                        <option value="5">5 د.ب</option>
+                        <option value="6">6 د.ب</option>
+                        <option value="7">7 د.ب</option>
+                        <option value="8">8 د.ب</option>
+                    </select>
+                    <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
+                        💡 اختر الحد الأدنى للربح المحل بعد الخصم
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="lblCustomProfit" for="customProfit">حدد قيمة الخصم للغرام الواحد (د.ب):</label>
+                    <input type="number" id="customProfit" min="0" step="any" placeholder="مثال: 1.5 (سيتم خصم 1.5 د.ب)" 
+                           onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                           oninput="if(this.value < 0) this.value = 0;">
+                    <div id="discountWarning" style="display:none; background-color: rgba(198, 40, 40, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--danger); font-weight: bold;">
+                        ⛔ لا يمكن الخصم لأن فائدة المحل أقل من <span id="minProfitWarningDisplay">4</span> د.ب.
+                    </div>
+                    <div id="discountAllowed" style="display:none; background-color: rgba(46, 125, 50, 0.1); border: 1px solid var(--success); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--success); font-weight: bold;">
+                        ✅ يمكنك الخصم، الحد الأقصى المسموح هو <span id="maxDiscountDisplay">0.00</span> د.ب
+                    </div>
+                    <div id="discountMinWarning" style="display:none; background-color: rgba(255, 165, 0, 0.1); border: 1px solid orange; padding: 10px; border-radius: 8px; margin-top: 8px; color: orange; font-weight: bold;">
+                        ⚠️ الحد الأقصى للخصم هو <span id="maxDiscountWarningDisplay">0.00</span> د.ب. الرجاء إدخال قيمة أقل من أو تساوي هذا المبلغ.
+                    </div>
+                    <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
+                        💡 أدخل رقم <strong>موجب</strong> وسيقوم النظام تلقائياً بخصمه من سعر المحل
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label id="lblAdoptedWeightAdvanced">الوزن الكلي المعتمد (غرام):</label>
+                    <input type="text" id="adoptedWeightDisplayAdvanced" readonly style="background-color: var(--bg-readonly); color: var(--text-sub);">
+                </div>
+                <button class="btn-calc" id="btnCalcAdvanced" onclick="calculateCustomPrice()">احسب التكلفة بعد الخصم</button>
+            </div>
+
+            <div class="results-container">
+                <div class="result-box" id="box2_1">
+                    <h3 id="resBox3Title">سعر الغرام بعد الخصم</h3>
+                    <div class="value" id="gramWithProfit">0.00 <span class="currency">د.ب</span></div>
+                </div>
+                <div class="result-box" id="box2_2">
+                    <h3 id="resBox4Title">المجموع الكلي بعد الخصم</h3>
+                    <div class="value" id="totalWithProfit">0.00 <span class="currency">د.ب</span></div>
+                </div>
+            </div>
+
+            <!-- ================= القسم الثالث: حفظ بيانات المحل ================= -->
             <div class="save-container" id="saveContainer">
                 <div class="save-flex">
                     <div class="form-group" style="margin-bottom:10px;">
@@ -1024,68 +1362,42 @@
                         </div>
                     </div>
 
+                    <!-- ====== GPS ENHANCED SECTION ====== -->
                     <div class="form-group" style="margin-bottom:15px;">
                         <label id="lblAddLocation">موقع المحل الجغرافي (اختياري):</label>
-                        <button type="button" class="btn-gps" id="btnGps" onclick="getGPSLocation()">
-                            📍 <span id="gpsBtnText">تحديد موقعي الحالي بالـ GPS</span>
-                        </button>
+                        <div class="gps-actions">
+                            <button type="button" class="btn-gps" id="btnGps" onclick="getGPSLocation()">
+                                📍 <span id="gpsBtnText">تحديد موقعي الحالي بالـ GPS</span>
+                            </button>
+                            <button type="button" class="btn-gps-secondary" onclick="toggleManualLocation()">
+                                ✏️ إدخال يدوي
+                            </button>
+                        </div>
+                        <div id="gpsStatusText" class="gps-status-text"></div>
+                        
+                        <!-- حاوية الموقع اليدوي -->
+                        <div class="manual-location-container" id="manualLocationContainer">
+                            <label style="font-size:13px; margin-bottom:5px;">أدخل الإحداثيات يدوياً:</label>
+                            <div class="input-group">
+                                <input type="text" id="manualLat" placeholder="خط العرض (مثال: 26.2285)">
+                                <input type="text" id="manualLng" placeholder="خط الطول (مثال: 50.5860)">
+                            </div>
+                            <button class="btn-confirm" onclick="setManualLocation()">✅ تأكيد الموقع اليدوي</button>
+                        </div>
+
+                        <!-- حاوية عرض الخريطة -->
+                        <div id="mapContainer" class="map-container" style="display:none;">
+                            <iframe id="locationMap" width="100%" height="100%" frameborder="0" style="border:0;" 
+                                    allowfullscreen="" loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+
+                        <!-- حاوية معلومات الموقع -->
+                        <div id="locationInfoContainer"></div>
                     </div>
 
                     <button class="btn-save-shop" id="btnSaveShop" onclick="saveToComparison()">حفظ العرض في الجدول 💾</button>
-                </div>
-            </div>
-
-            <div class="section-title" id="secTitle2">ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية</div>
-            
-            <!-- ====== إضافة قائمة الحد الأدنى للربح ====== -->
-            <div class="form-group">
-                <label id="lblMinProfit" for="minProfitSelect">الحد الأدنى للربح المطلوب للمحل (د.ب):</label>
-                <select id="minProfitSelect" class="form-control" onchange="updateDiscountFieldStatus()">
-                    <option value="1">1 د.ب</option>
-                    <option value="2">2 د.ب</option>
-                    <option value="3">3 د.ب</option>
-                    <option value="4" selected>4 د.ب (الافتراضي)</option>
-                    <option value="5">5 د.ب</option>
-                    <option value="6">6 د.ب</option>
-                    <option value="7">7 د.ب</option>
-                    <option value="8">8 د.ب</option>
-                </select>
-                <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
-                    💡 اختر الحد الأدنى للربح المحل بعد الخصم
-                </small>
-            </div>
-            
-            <div class="form-group">
-                <label id="lblCustomProfit" for="customProfit">حدد قيمة الخصم للغرام الواحد (د.ب):</label>
-                <input type="number" id="customProfit" min="0" step="any" placeholder="مثال: 1.5 (سيتم خصم 1.5 د.ب)" 
-                       onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
-                       oninput="if(this.value < 0) this.value = 0;">
-                <div id="discountWarning" style="display:none; background-color: rgba(198, 40, 40, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--danger); font-weight: bold;">
-                    ⛔ لا يمكن الخصم لأن فائدة المحل أقل من <span id="minProfitWarningDisplay">4</span> د.ب.
-                </div>
-                <div id="discountAllowed" style="display:none; background-color: rgba(46, 125, 50, 0.1); border: 1px solid var(--success); padding: 10px; border-radius: 8px; margin-top: 8px; color: var(--success); font-weight: bold;">
-                    ✅ يمكنك الخصم، الحد الأقصى المسموح هو <span id="maxDiscountDisplay">0.00</span> د.ب
-                </div>
-                <div id="discountMinWarning" style="display:none; background-color: rgba(255, 165, 0, 0.1); border: 1px solid orange; padding: 10px; border-radius: 8px; margin-top: 8px; color: orange; font-weight: bold;">
-                    ⚠️ الحد الأقصى للخصم هو <span id="maxDiscountWarningDisplay">0.00</span> د.ب. الرجاء إدخال قيمة أقل من أو تساوي هذا المبلغ.
-                </div>
-                <small style="display:block; color:var(--text-sub); font-size:0.8em; margin-top:5px;">
-                    💡 أدخل رقم <strong>موجب</strong> وسيقوم النظام تلقائياً بخصمه من سعر المحل
-                </small>
-            </div>
-            <div class="form-group">
-                <label id="lblAdoptedWeight">الوزن الكلي المعتمد (غرام):</label>
-                <input type="text" id="adoptedWeightDisplay" readonly style="background-color: var(--bg-readonly); color: var(--text-sub);">
-            </div>
-            <button class="btn-calc" id="btnCalc2" onclick="calculateCustomPrice()">احسب التكلفة بعد الخصم</button>
-            <div class="results-container">
-                <div class="result-box" id="box2_1">
-                    <h3 id="resBox3Title">سعر الغرام بعد الخصم</h3>
-                    <div class="value" id="gramWithProfit">0.00 <span class="currency">د.ب</span></div>
-                </div>
-                <div class="result-box" id="box2_2">
-                    <h3 id="resBox4Title">المجموع الكلي بعد الخصم</h3>
-                    <div class="value" id="totalWithProfit">0.00 <span class="currency">د.ب</span></div>
                 </div>
             </div>
 
@@ -1581,13 +1893,19 @@
             btnCalc1: "تحليل السعر المعروض",
             resBox1Title: "سعر الغرام الكلي في المحل",
             resBox2Title: "فائدة ومصنعية المحل (لكل غرام)",
-            secTitle2: "ثانياً: حساب سعر الشراء بناءً على الفائدة والمصنعية",
+            secTitle2: "ثانياً: حدد كم ستعطي المحل الفائدة والمصنعية لكل غرام",
+            lblDiscountType: "نوع الخصم:",
+            discountNormal: "خصم العادي (المفضل)",
+            discountAdvanced: "خصم المتقدم",
+            discountDisabled: "⛔ لا يمكن الخصم لأن المحل خسران",
+            lblNormalDiscount: "اختر الفائدة الإضافية لكل غرام (د.ب):",
             lblMinProfit: "الحد الأدنى للربح المطلوب للمحل (د.ب):",
             lblCustomProfit: "حدد قيمة الخصم للغرام الواحد (د.ب):",
             phCustomProfit: "مثال: 1.5 (سيتم خصم 1.5 د.ب)",
             lblAdoptedWeight: "الوزن الكلي المعتمد (غرام):",
             phAdoptedWeight: "سيتم اعتماده تلقائياً",
-            btnCalc2: "احسب التكلفة بعد الخصم",
+            btnCalcNormal: "احسب التكلفة",
+            btnCalcAdvanced: "احسب التكلفة بعد الخصم",
             resBox3Title: "سعر الغرام بعد الخصم",
             resBox4Title: "المجموع الكلي بعد الخصم",
             discountWarning: "⛔ لا يمكن الخصم لأن فائدة المحل أقل من ",
@@ -1622,6 +1940,12 @@
             gpsBtnText: "تحديد موقعي الحالي بالـ GPS",
             gpsSuccess: "تم تحديد موقعك الجغرافي بنجاح! 📍",
             gpsFail: "فشل الحصول على الموقع الجغرافي.",
+            gpsAccuracyHigh: "دقة عالية",
+            gpsAccuracyMedium: "دقة متوسطة",
+            gpsAccuracyLow: "دقة منخفضة",
+            gpsLoading: "جاري تحديد الموقع...",
+            gpsManual: "تم التحديد يدوياً",
+            gpsWaiting: "في انتظار الموقع...",
             modalCamTitle: "الكاميرا الحية داخل التطبيق",
             btnTxtTake: "التقاط الآن",
             promptDelRow: "هل أنت متأكد من رغبتك في حذف هذا العرض من جدول المقارنات؟",
@@ -1734,13 +2058,19 @@
             btnCalc1: "Analyze Shop Price",
             resBox1Title: "Total Price per Gram at Shop",
             resBox2Title: "Shop Profit & Fees (Per Gram)",
-            secTitle2: "Second: Calculate Purchase Price Based on Profit & Fees",
+            secTitle2: "Second: Specify how much profit and fees you will give the shop per gram",
+            lblDiscountType: "Discount Type:",
+            discountNormal: "Normal Discount (Preferred)",
+            discountAdvanced: "Advanced Discount",
+            discountDisabled: "⛔ Cannot discount because shop is losing",
+            lblNormalDiscount: "Select additional profit per gram (BHD):",
             lblMinProfit: "Minimum Required Profit for Shop (BHD):",
             lblCustomProfit: "Enter discount amount per gram (BHD):",
             phCustomProfit: "e.g., 1.5 (will deduct 1.5 BHD)",
             lblAdoptedWeight: "Adopted Weight (Grams):",
             phAdoptedWeight: "Will be adopted automatically",
-            btnCalc2: "Calculate Price After Discount",
+            btnCalcNormal: "Calculate Cost",
+            btnCalcAdvanced: "Calculate Price After Discount",
             resBox3Title: "Price per Gram After Discount",
             resBox4Title: "Total Price After Discount",
             discountWarning: "⛔ Cannot discount because shop profit is less than ",
@@ -1775,6 +2105,12 @@
             gpsBtnText: "Set current location via GPS",
             gpsSuccess: "Geographical location resolved successfully! 📍",
             gpsFail: "Unable to retrieve GPS coordinates.",
+            gpsAccuracyHigh: "High accuracy",
+            gpsAccuracyMedium: "Medium accuracy",
+            gpsAccuracyLow: "Low accuracy",
+            gpsLoading: "Locating...",
+            gpsManual: "Set manually",
+            gpsWaiting: "Waiting for location...",
             modalCamTitle: "Live In-App Camera Access",
             btnTxtTake: "Capture Now",
             promptDelRow: "Are you sure you want to delete this offer from the matrix?",
@@ -1886,13 +2222,19 @@
             btnCalc1: "दुकान की कीमत का विश्लेषण",
             resBox1Title: "दुकान पर कुल प्रति ग्राम कीमत",
             resBox2Title: "दुकान का लाभ और मेकिंग चार्ज (प्रति ग्राम)",
-            secTitle2: "दूसरा: लाभ और मेकिंग चार्ज के आधार पर खरीद मूल्य की गणना",
+            secTitle2: "दूसरा: निर्दिष्ट करें कि आप दुकान को प्रति ग्राम कितना लाभ और मेकिंग चार्ज देंगे",
+            lblDiscountType: "छूट का प्रकार:",
+            discountNormal: "सामान्य छूट (पसंदीदा)",
+            discountAdvanced: "उन्नत छूट",
+            discountDisabled: "⛔ छूट नहीं दी जा सकती क्योंकि दुकान घाटे में है",
+            lblNormalDiscount: "प्रति ग्राम अतिरिक्त लाभ चुनें (BHD):",
             lblMinProfit: "दुकान के लिए न्यूनतम आवश्यक लाभ (BHD):",
             lblCustomProfit: "प्रति ग्राम छूट राशि दर्ज करें (BHD):",
             phCustomProfit: "उदा. 1.5 (1.5 BHD काटा जाएगा)",
             lblAdoptedWeight: "स्वीकृत वजन (ग्राम):",
             phAdoptedWeight: "स्वचालित रूप से अपनाया जाएगा",
-            btnCalc2: "छूट के बाद मूल्य की गणना करें",
+            btnCalcNormal: "लागत की गणना करें",
+            btnCalcAdvanced: "छूट के बाद मूल्य की गणना करें",
             resBox3Title: "छूट के बाद प्रति ग्राम मूल्य",
             resBox4Title: "छूट के बाद कुल मूल्य",
             discountWarning: "⛔ छूट नहीं दी जा सकती क्योंकि दुकान का लाभ ",
@@ -1927,6 +2269,12 @@
             gpsBtnText: "जीपीएस द्वारा वर्तमान स्थान सेट करें",
             gpsSuccess: "भौगोलिक स्थान सफलतापूर्वक हल किया गया! 📍",
             gpsFail: "जीपीएस समन्वय पुनर्प्राप्त करने में असमर्थ।",
+            gpsAccuracyHigh: "उच्च सटीकता",
+            gpsAccuracyMedium: "मध्यम सटीकता",
+            gpsAccuracyLow: "कम सटीकता",
+            gpsLoading: "स्थान खोजा जा रहा है...",
+            gpsManual: "मैन्युअल रूप से सेट किया गया",
+            gpsWaiting: "स्थान की प्रतीक्षा...",
             modalCamTitle: "लाइव इन-ऐप कैमरा एक्सेस",
             btnTxtTake: "अभी कैप्चर करें",
             promptDelRow: "क्या आप निश्चित रूप से इस ऑफर को तालिका से हटाना चाहते हैं?",
@@ -2032,6 +2380,8 @@
     let jewelryManualPrice = 28.5;
     let bullionHistoricalPrice = null;
     let jewelryHistoricalPrice = null;
+    let watchId = null;
+    let isManualLocation = false;
 
     // متغيرات لتخزين نتائج القسم الأول
     let lastStorePricePerGram = 0;
@@ -2279,13 +2629,33 @@
         const weightVal = document.getElementById('totalWeight').value;
         const lang = goldData.currentLang;
         const unit = lang === 'ar' ? "غرام" : (lang === 'en' ? "Grams" : "ग्राम");
-        document.getElementById('adoptedWeightDisplay').value = weightVal ? weightVal + " " + unit : "";
+        document.getElementById('adoptedWeightDisplayNormal').value = weightVal ? weightVal + " " + unit : "";
+        document.getElementById('adoptedWeightDisplayAdvanced').value = weightVal ? weightVal + " " + unit : "";
         // تخزين الوزن للاستخدام في القسم الثاني
         lastTotalWeight = parseFloat(weightVal) || 0;
     }
 
     // ============================================================
-    // UPDATE DISCOUNT FIELD STATUS
+    // TOGGLE DISCOUNT TYPE
+    // ============================================================
+    function toggleDiscountType() {
+        const discountType = document.querySelector('input[name="discountType"]:checked').value;
+        const normalSection = document.getElementById('discountNormalSection');
+        const advancedSection = document.getElementById('discountAdvancedSection');
+        
+        if (discountType === 'normal') {
+            normalSection.style.display = 'block';
+            advancedSection.style.display = 'none';
+            calculateNormalDiscount();
+        } else {
+            normalSection.style.display = 'none';
+            advancedSection.style.display = 'block';
+            updateDiscountFieldStatus();
+        }
+    }
+
+    // ============================================================
+    // UPDATE DISCOUNT FIELD STATUS (للخصم المتقدم)
     // ============================================================
     function updateDiscountFieldStatus() {
         const customProfitInput = document.getElementById('customProfit');
@@ -2295,7 +2665,7 @@
         const maxDiscountDisplay = document.getElementById('maxDiscountDisplay');
         const maxDiscountWarningDisplay = document.getElementById('maxDiscountWarningDisplay');
         const minProfitWarningDisplay = document.getElementById('minProfitWarningDisplay');
-        const btnCalc2 = document.getElementById('btnCalc2');
+        const btnCalcAdvanced = document.getElementById('btnCalcAdvanced');
         const t = translations[goldData.currentLang];
 
         // الحصول على الحد الأدنى للربح المختار من القائمة
@@ -2318,9 +2688,9 @@
             discountMinWarning.style.display = 'none';
             maxDiscountDisplay.textContent = maxDiscount.toFixed(3);
             maxDiscountWarningDisplay.textContent = maxDiscount.toFixed(3);
-            btnCalc2.disabled = false;
-            btnCalc2.style.opacity = '1';
-            btnCalc2.style.cursor = 'pointer';
+            btnCalcAdvanced.disabled = false;
+            btnCalcAdvanced.style.opacity = '1';
+            btnCalcAdvanced.style.cursor = 'pointer';
         } else {
             // ❌ يمنع الخصم (فائدة المحل أقل من أو تساوي الحد الأدنى المطلوب)
             customProfitInput.disabled = true;
@@ -2331,9 +2701,263 @@
             discountWarning.style.display = 'block';
             discountAllowed.style.display = 'none';
             discountMinWarning.style.display = 'none';
-            btnCalc2.disabled = true;
-            btnCalc2.style.opacity = '0.5';
-            btnCalc2.style.cursor = 'not-allowed';
+            btnCalcAdvanced.disabled = true;
+            btnCalcAdvanced.style.opacity = '0.5';
+            btnCalcAdvanced.style.cursor = 'not-allowed';
+        }
+    }
+
+    // ============================================================
+    // UPDATE DISCOUNT TYPE STATUS (تعطيل/تفعيل حسب ربح المحل)
+    // ============================================================
+    function updateDiscountTypeStatus() {
+        const normalRadio = document.querySelector('input[name="discountType"][value="normal"]');
+        const advancedRadio = document.querySelector('input[name="discountType"][value="advanced"]');
+        const normalLabel = document.getElementById('discountNormalLabel');
+        const advancedLabel = document.getElementById('discountAdvancedLabel');
+        const disabledMsg = document.getElementById('discountTypeDisabledMsg');
+        const container = document.getElementById('discountTypeContainer');
+
+        // إذا كان المحل خسران (فائدة المحل أقل من 0)
+        if (lastStoreProfitPerGram < 0) {
+            // تعطيل كلا الخيارين
+            normalRadio.disabled = true;
+            advancedRadio.disabled = true;
+            normalLabel.classList.add('disabled');
+            advancedLabel.classList.add('disabled');
+            disabledMsg.style.display = 'block';
+            
+            // تعطيل الحقول والأزرار
+            document.getElementById('normalDiscountSelect').disabled = true;
+            document.getElementById('customProfit').disabled = true;
+            document.getElementById('btnCalcNormal').disabled = true;
+            document.getElementById('btnCalcAdvanced').disabled = true;
+            document.getElementById('minProfitSelect').disabled = true;
+            
+            // إخفاء نتائج القسم الثاني
+            document.getElementById('box2_1').classList.remove('active');
+            document.getElementById('box2_2').classList.remove('active');
+            document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
+            document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
+        } else {
+            // تفعيل الخيارات
+            normalRadio.disabled = false;
+            advancedRadio.disabled = false;
+            normalLabel.classList.remove('disabled');
+            advancedLabel.classList.remove('disabled');
+            disabledMsg.style.display = 'none';
+            
+            document.getElementById('normalDiscountSelect').disabled = false;
+            document.getElementById('minProfitSelect').disabled = false;
+            document.getElementById('btnCalcNormal').disabled = false;
+            
+            // تفعيل حسب النوع المختار
+            toggleDiscountType();
+        }
+    }
+
+    // ============================================================
+    // ENHANCED GPS FUNCTIONS
+    // ============================================================
+    function toggleManualLocation() {
+        const container = document.getElementById('manualLocationContainer');
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    function setManualLocation() {
+        const lat = parseFloat(document.getElementById('manualLat').value);
+        const lng = parseFloat(document.getElementById('manualLng').value);
+        
+        if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+            alert('الرجاء إدخال إحداثيات صحيحة');
+            return;
+        }
+        
+        isManualLocation = true;
+        resolvedGPS = { lat, lng, accuracy: 0 };
+        const gpsBtn = document.getElementById('btnGps');
+        gpsBtn.classList.add('active');
+        gpsBtn.classList.remove('loading', 'error');
+        document.getElementById('gpsBtnText').innerText = '📍 ' + translations[goldData.currentLang].gpsManual;
+        document.getElementById('gpsStatusText').innerHTML = '<span class="gps-success">✅ ' + translations[goldData.currentLang].gpsSuccess + '</span>';
+        document.getElementById('manualLocationContainer').style.display = 'none';
+        
+        showLocationOnMap(lat, lng);
+        displayLocationInfo({ lat, lng, accuracy: 0 });
+    }
+
+    function getGPSLocation() {
+        const gpsBtn = document.getElementById('btnGps');
+        const gpsBtnTxt = document.getElementById('gpsBtnText');
+        const gpsStatusText = document.getElementById('gpsStatusText');
+        const t = translations[goldData.currentLang];
+        
+        if (navigator.geolocation) {
+            // إظهار حالة التحميل
+            gpsBtn.classList.add('loading');
+            gpsBtn.classList.remove('active', 'error');
+            gpsBtnTxt.innerHTML = '<span class="gps-loading"></span> ' + t.gpsLoading;
+            gpsStatusText.innerHTML = '⏳ ' + t.gpsWaiting;
+            
+            // خيارات متقدمة للحصول على دقة أفضل
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            };
+            
+            // استخدام watchPosition للحصول على دقة أفضل (يحاول عدة مرات)
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const coords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        altitude: position.coords.altitude,
+                        altitudeAccuracy: position.coords.altitudeAccuracy,
+                        heading: position.coords.heading,
+                        speed: position.coords.speed
+                    };
+                    
+                    resolvedGPS = coords;
+                    isManualLocation = false;
+                    
+                    // تحديث حالة الزر
+                    gpsBtn.classList.remove('loading');
+                    gpsBtn.classList.add('active');
+                    
+                    // عرض رسالة مع دقة الموقع
+                    let accuracyClass = '';
+                    let accuracyText = '';
+                    if (coords.accuracy < 50) {
+                        accuracyClass = 'gps-success';
+                        accuracyText = '✅ ' + t.gpsAccuracyHigh + ' (' + coords.accuracy.toFixed(0) + 'm)';
+                    } else if (coords.accuracy < 150) {
+                        accuracyClass = '';
+                        accuracyText = '📍 ' + t.gpsAccuracyMedium + ' (' + coords.accuracy.toFixed(0) + 'm)';
+                    } else {
+                        accuracyClass = 'gps-error';
+                        accuracyText = '⚠️ ' + t.gpsAccuracyLow + ' (' + coords.accuracy.toFixed(0) + 'm)';
+                    }
+                    
+                    gpsBtnTxt.innerHTML = '📍 ' + accuracyText;
+                    gpsStatusText.innerHTML = '<span class="' + accuracyClass + '">' + accuracyText + '</span>';
+                    
+                    // عرض الموقع على الخريطة
+                    showLocationOnMap(coords.lat, coords.lng);
+                    displayLocationInfo(coords);
+                    
+                    // إيقاف المتابعة بعد الحصول على موقع دقيق
+                    if (coords.accuracy < 50) {
+                        if (watchId) {
+                            navigator.geolocation.clearWatch(watchId);
+                            watchId = null;
+                        }
+                    }
+                },
+                (error) => {
+                    let errorMsg = '';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMsg = '❌ ' + t.gpsFail + ' (تم رفض الصلاحية)';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMsg = '❌ ' + t.gpsFail + ' (الموقع غير متوفر)';
+                            break;
+                        case error.TIMEOUT:
+                            errorMsg = '⏰ انتهت مهلة تحديد الموقع، يرجى المحاولة مرة أخرى';
+                            break;
+                        default:
+                            errorMsg = '❌ ' + t.gpsFail;
+                    }
+                    gpsBtn.classList.remove('loading');
+                    gpsBtn.classList.add('error');
+                    gpsBtnTxt.innerText = '📍 ' + t.gpsBtnText;
+                    gpsStatusText.innerHTML = '<span class="gps-error">' + errorMsg + '</span>';
+                    alert(errorMsg);
+                    
+                    if (watchId) {
+                        navigator.geolocation.clearWatch(watchId);
+                        watchId = null;
+                    }
+                },
+                options
+            );
+        } else {
+            alert("عذراً، متصفحك لا يدعم خاصية تحديد الموقع الجغرافي.");
+        }
+    }
+
+    function showLocationOnMap(lat, lng) {
+        const mapContainer = document.getElementById('mapContainer');
+        const mapIframe = document.getElementById('locationMap');
+        
+        // استخدام الرابط العادي بدون API Key
+        mapIframe.src = `https://www.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
+        mapContainer.style.display = 'block';
+        
+        // إزالة الزر القديم إن وجد
+        const oldBtn = document.querySelector('.open-map-btn');
+        if (oldBtn) oldBtn.remove();
+        
+        // إضافة زر لفتح الخريطة كاملة
+        const openMapBtn = document.createElement('button');
+        openMapBtn.className = 'open-map-btn';
+        openMapBtn.innerText = '🗺️ فتح في خرائط Google';
+        openMapBtn.onclick = () => {
+            window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+        };
+        mapContainer.parentNode.insertBefore(openMapBtn, mapContainer.nextSibling);
+    }
+
+    function displayLocationInfo(coords) {
+        const container = document.getElementById('locationInfoContainer');
+        const t = translations[goldData.currentLang];
+        
+        let accuracyClass = '';
+        let accuracyText = '';
+        if (coords.accuracy < 50) {
+            accuracyClass = 'accuracy-high';
+            accuracyText = t.gpsAccuracyHigh + ' (' + coords.accuracy.toFixed(0) + 'm)';
+        } else if (coords.accuracy < 150) {
+            accuracyClass = 'accuracy-medium';
+            accuracyText = t.gpsAccuracyMedium + ' (' + coords.accuracy.toFixed(0) + 'm)';
+        } else if (coords.accuracy > 0) {
+            accuracyClass = 'accuracy-low';
+            accuracyText = t.gpsAccuracyLow + ' (' + coords.accuracy.toFixed(0) + 'm)';
+        } else {
+            accuracyText = isManualLocation ? '📍 ' + t.gpsManual : '📍 ' + t.gpsWaiting;
+        }
+        
+        const altitudeText = coords.altitude ? `الارتفاع: <span class="value">${coords.altitude.toFixed(1)} متر</span>` : '';
+        const speedText = coords.speed ? `السرعة: <span class="value">${coords.speed.toFixed(1)} م/ث</span>` : '';
+        
+        container.innerHTML = `
+            <div class="location-info">
+                <div><span class="label">📍 الموقع:</span> <span class="value">${coords.lat.toFixed(6)}°, ${coords.lng.toFixed(6)}°</span></div>
+                <div><span class="label">📏 الدقة:</span> <span class="${accuracyClass}">${accuracyText}</span></div>
+                ${altitudeText ? `<div><span class="label">📐 الارتفاع:</span> ${altitudeText}</div>` : ''}
+                ${speedText ? `<div><span class="label">🏃 السرعة:</span> ${speedText}</div>` : ''}
+                <div style="margin-top:5px; font-size:11px; color:var(--text-sub);">
+                    ${isManualLocation ? '✏️ تم الإدخال يدوياً' : '📡 تم التحديد عبر GPS'}
+                </div>
+            </div>
+        `;
+    }
+
+    function stopWatchingLocation() {
+        if (watchId) {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
         }
     }
 
@@ -2360,8 +2984,14 @@
         lastStoreProfitPerGram = profitPerGram;
         lastTotalWeight = weight;
 
-        // ✅ تحديث حالة حقل الخصم بناءً على فائدة المحل والحد الأدنى المختار
+        // ✅ تحديث حالة نوع الخصم
+        updateDiscountTypeStatus();
+
+        // ✅ تحديث حالة حقل الخصم المتقدم
         updateDiscountFieldStatus();
+
+        // ✅ حساب الخصم العادي (مستقل عن فائدة المحل)
+        calculateNormalDiscount();
 
         // ✅ التحقق من منطقية السعر - سعر الغرام في المحل أقل من سعر السوق
         if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
@@ -2404,9 +3034,66 @@
         document.getElementById('box1_1').classList.add('active');
         document.getElementById('box1_2').classList.add('active');
 
+        // ✅ إظهار حاوية حفظ البيانات بعد التحليل
         document.getElementById('saveContainer').style.display = 'block';
     }
 
+    // ============================================================
+    // NORMAL DISCOUNT CALCULATION (مستقل عن فائدة المحل)
+    // ============================================================
+    function calculateNormalDiscount() {
+        const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+        const weight = lastTotalWeight || parseFloat(document.getElementById('totalWeight').value) || 0;
+        const selectedProfit = parseFloat(document.getElementById('normalDiscountSelect').value) || 0;
+
+        if (marketPrice <= 0 || weight <= 0) {
+            // لا نقوم بحساب إذا لم تكن البيانات مكتملة
+            return;
+        }
+
+        // المعادلة: سعر الغرام النهائي = سعر غرام السوق + الفائدة المختارة
+        const targetGramPrice = marketPrice + selectedProfit;
+        const totalCost = targetGramPrice * weight;
+        const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+
+        // عرض النتيجة في نفس صناديق النتائج
+        document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
+        document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
+
+        // ✅ الخصم العادي دائماً ربحان (يضاف على سعر السوق)
+        const profitBox2 = document.getElementById('box2_1');
+        const gramWithProfitEl = document.getElementById('gramWithProfit');
+
+        // إزالة الرسائل السابقة
+        const oldMsg = gramWithProfitEl.querySelector('.profit-msg');
+        if (oldMsg) oldMsg.remove();
+
+        const msgSpan = document.createElement('span');
+        msgSpan.className = 'profit-msg';
+        msgSpan.style.display = 'block';
+        msgSpan.style.fontSize = '0.75em';
+        msgSpan.style.fontWeight = 'normal';
+        msgSpan.style.marginTop = '5px';
+        msgSpan.style.color = 'var(--success)';
+
+        const profitText = goldData.currentLang === 'ar' 
+            ? `🟢 المحل يستفيد +${selectedProfit.toFixed(3)} ${currency} لكل غرام` 
+            : (goldData.currentLang === 'en' 
+                ? `🟢 Shop profits +${selectedProfit.toFixed(3)} ${currency} per gram` 
+                : `🟢 दुकान को लाभ +${selectedProfit.toFixed(3)} ${currency} प्रति ग्राम`);
+        msgSpan.textContent = profitText;
+        gramWithProfitEl.appendChild(msgSpan);
+
+        profitBox2.style.borderColor = 'var(--success)';
+        profitBox2.style.backgroundColor = 'rgba(46, 125, 50, 0.08)';
+
+        document.getElementById('box2_1').classList.add('active');
+        document.getElementById('box2_2').classList.add('active');
+    }
+
+    // ============================================================
+    // ADVANCED DISCOUNT CALCULATION (نفس النظام القديم)
+    // ============================================================
     function calculateCustomPrice() {
         // ✅ استخدام سعر الغرام من المحل (من القسم الأول)
         const storePricePerGram = lastStorePricePerGram;
@@ -2452,38 +3139,51 @@
         const profitBox2 = document.getElementById('box2_1');
         const gramWithProfitEl = document.getElementById('gramWithProfit');
 
+        // إزالة الرسائل السابقة
+        const oldMsg = gramWithProfitEl.querySelector('.profit-msg');
+        if (oldMsg) oldMsg.remove();
+
+        const msgSpan = document.createElement('span');
+        msgSpan.className = 'profit-msg';
+        msgSpan.style.display = 'block';
+        msgSpan.style.fontSize = '0.75em';
+        msgSpan.style.fontWeight = 'normal';
+        msgSpan.style.marginTop = '5px';
+
         // ✅ إظهار الفائدة الجديدة للمحل أسفل السعر
         if (newShopProfit > 0.001) {
-            // المحل ربحان
+            msgSpan.style.color = 'var(--success)';
             const profitText = goldData.currentLang === 'ar' 
                 ? `🟢 المحل يستفيد +${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
                 : (goldData.currentLang === 'en' 
                     ? `🟢 Shop profits +${newShopProfit.toFixed(3)} ${currency} per gram` 
                     : `🟢 दुकान को लाभ +${newShopProfit.toFixed(3)} ${currency} प्रति ग्राम`);
-            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--success); font-weight: normal;">${profitText}</span>`;
+            msgSpan.textContent = profitText;
             profitBox2.style.borderColor = 'var(--success)';
             profitBox2.style.backgroundColor = 'rgba(46, 125, 50, 0.08)';
         } else if (newShopProfit < -0.001) {
-            // المحل خسران
+            msgSpan.style.color = 'var(--danger)';
             const lossText = goldData.currentLang === 'ar' 
                 ? `🔴 المحل خسران ${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
                 : (goldData.currentLang === 'en' 
                     ? `🔴 Shop loses ${Math.abs(newShopProfit).toFixed(3)} ${currency} per gram` 
                     : `🔴 दुकान को हानि ${Math.abs(newShopProfit).toFixed(3)} ${currency} प्रति ग्राम`);
-            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--danger); font-weight: normal;">${lossText}</span>`;
+            msgSpan.textContent = lossText;
             profitBox2.style.borderColor = 'var(--danger)';
             profitBox2.style.backgroundColor = 'rgba(198, 40, 40, 0.08)';
         } else {
-            // لا ربح ولا خسارة
+            msgSpan.style.color = 'var(--text-sub)';
             const neutralText = goldData.currentLang === 'ar' 
                 ? '⚪ لا ربح ولا خسارة للمحل' 
                 : (goldData.currentLang === 'en' 
                     ? '⚪ No profit or loss for shop' 
                     : '⚪ दुकान को न लाभ न हानि');
-            gramWithProfitEl.innerHTML += `<br><span style="font-size: 0.75em; color: var(--text-sub); font-weight: normal;">${neutralText}</span>`;
+            msgSpan.textContent = neutralText;
             profitBox2.style.borderColor = 'var(--border-color)';
             profitBox2.style.backgroundColor = 'var(--bg-body)';
         }
+
+        gramWithProfitEl.appendChild(msgSpan);
 
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
@@ -2534,8 +3234,18 @@
         removeAttachedImage(2);
         resolvedGPS = null;
         const gpsBtn = document.getElementById('btnGps');
-        gpsBtn.classList.remove('active');
+        gpsBtn.classList.remove('active', 'loading', 'error');
         gpsBtn.innerHTML = `📍 <span id="gpsBtnText">${translations[goldData.currentLang].gpsBtnText}</span>`;
+        document.getElementById('gpsStatusText').innerHTML = '';
+        document.getElementById('locationInfoContainer').innerHTML = '';
+        document.getElementById('mapContainer').style.display = 'none';
+        const oldBtn = document.querySelector('.open-map-btn');
+        if (oldBtn) oldBtn.remove();
+        document.getElementById('manualLocationContainer').style.display = 'none';
+        document.getElementById('manualLat').value = '';
+        document.getElementById('manualLng').value = '';
+        isManualLocation = false;
+        stopWatchingLocation();
 
         saveLocalData();
         renderComparisonTable();
@@ -2565,7 +3275,8 @@
 
             let gpsHTML = `<span style="color:#aaa;">-</span>`;
             if(shop.gps) {
-                gpsHTML = `<a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${shop.gps.lat},${shop.gps.lng}" target="_blank" title="خرائط Google">📍</a>`;
+                const accuracyText = shop.gps.accuracy ? ` (${shop.gps.accuracy.toFixed(0)}m)` : '';
+                gpsHTML = `<a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${shop.gps.lat},${shop.gps.lng}" target="_blank" title="خرائط Google">📍${accuracyText}</a>`;
             }
 
             tbody.innerHTML += `
@@ -2617,7 +3328,11 @@
             resolvedGPS = shop.gps;
             const gpsBtn = document.getElementById('btnGps');
             gpsBtn.classList.add('active');
-            document.getElementById('gpsBtnText').innerText = translations[goldData.currentLang].gpsSuccess;
+            const t = translations[goldData.currentLang];
+            const accuracyText = shop.gps.accuracy ? ` (${shop.gps.accuracy.toFixed(0)}m)` : '';
+            document.getElementById('gpsBtnText').innerText = `📍 ${t.gpsSuccess}${accuracyText}`;
+            showLocationOnMap(shop.gps.lat, shop.gps.lng);
+            displayLocationInfo(shop.gps);
         }
 
         document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnUpdateShop;
@@ -2642,31 +3357,6 @@
             goldData.savedShops.sort((a,b) => a.id - b.id);
         }
         renderComparisonTable();
-    }
-
-    function getGPSLocation() {
-        const gpsBtn = document.getElementById('btnGps');
-        const gpsBtnTxt = document.getElementById('gpsBtnText');
-        
-        if (navigator.geolocation) {
-            gpsBtnTxt.innerText = "...";
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    resolvedGPS = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    gpsBtn.classList.add('active');
-                    gpsBtnTxt.innerText = translations[goldData.currentLang].gpsSuccess;
-                },
-                () => {
-                    alert(translations[goldData.currentLang].gpsFail);
-                    gpsBtnTxt.innerText = translations[goldData.currentLang].gpsBtnText;
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by your browser.");
-        }
     }
 
     // ============================================================
@@ -2823,17 +3513,29 @@
         document.getElementById('resBox1Title').innerText = t.resBox1Title;
         document.getElementById('resBox2Title').innerText = t.resBox2Title;
         document.getElementById('secTitle2').innerText = t.secTitle2;
+        
+        // تحديث ترجمات قسم الخصم
+        document.getElementById('lblDiscountType').innerText = t.lblDiscountType;
+        document.getElementById('discountNormalText').innerText = t.discountNormal;
+        document.getElementById('discountAdvancedText').innerText = t.discountAdvanced;
+        document.getElementById('discountTypeDisabledMsg').innerHTML = t.discountDisabled;
+        document.getElementById('lblNormalDiscount').innerText = t.lblNormalDiscount;
         document.getElementById('lblMinProfit').innerText = t.lblMinProfit;
         document.getElementById('lblCustomProfit').innerText = t.lblCustomProfit;
         document.getElementById('customProfit').placeholder = t.phCustomProfit;
+        document.getElementById('lblAdoptedWeightNormal').innerText = t.lblAdoptedWeight;
+        document.getElementById('lblAdoptedWeightAdvanced').innerText = t.lblAdoptedWeight;
+        document.getElementById('adoptedWeightDisplayNormal').placeholder = t.phAdoptedWeight;
+        document.getElementById('adoptedWeightDisplayAdvanced').placeholder = t.phAdoptedWeight;
+        document.getElementById('btnCalcNormal').innerText = t.btnCalcNormal;
+        document.getElementById('btnCalcAdvanced').innerText = t.btnCalcAdvanced;
+        document.getElementById('resBox3Title').innerText = t.resBox3Title;
+        document.getElementById('resBox4Title').innerText = t.resBox4Title;
+        
         document.getElementById('discountWarning').innerHTML = t.discountWarning + '<span id="minProfitWarningDisplay">4</span> د.ب.';
         document.getElementById('discountAllowed').innerHTML = t.discountAllowed + '<span id="maxDiscountDisplay">0.00</span> د.ب';
         document.getElementById('discountMinWarning').innerHTML = t.discountMinWarning + '<span id="maxDiscountWarningDisplay">0.00</span> د.ب';
-        document.getElementById('lblAdoptedWeight').innerText = t.lblAdoptedWeight;
-        document.getElementById('adoptedWeightDisplay').placeholder = t.phAdoptedWeight;
-        document.getElementById('btnCalc2').innerText = t.btnCalc2;
-        document.getElementById('resBox3Title').innerText = t.resBox3Title;
-        document.getElementById('resBox4Title').innerText = t.resBox4Title;
+        
         document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
         document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
         document.getElementById('btnSaveShop').innerText = editingShopId ? t.btnUpdateShop : t.btnSaveShop;
@@ -3588,12 +4290,26 @@
         document.getElementById('customProfit').disabled = true;
         document.getElementById('customProfit').style.opacity = '0.6';
         document.getElementById('customProfit').style.cursor = 'not-allowed';
-        document.getElementById('btnCalc2').disabled = true;
-        document.getElementById('btnCalc2').style.opacity = '0.5';
-        document.getElementById('btnCalc2').style.cursor = 'not-allowed';
+        document.getElementById('btnCalcAdvanced').disabled = true;
+        document.getElementById('btnCalcAdvanced').style.opacity = '0.5';
+        document.getElementById('btnCalcAdvanced').style.cursor = 'not-allowed';
         document.getElementById('discountWarning').style.display = 'block';
         document.getElementById('discountAllowed').style.display = 'none';
         document.getElementById('discountMinWarning').style.display = 'none';
+
+        // تعطيل خيارات الخصم بشكل افتراضي
+        document.getElementById('discountTypeDisabledMsg').style.display = 'block';
+        document.getElementById('normalDiscountSelect').disabled = true;
+        document.getElementById('btnCalcNormal').disabled = true;
+        document.getElementById('discountNormalLabel').classList.add('disabled');
+        document.getElementById('discountAdvancedLabel').classList.add('disabled');
+
+        // إخفاء حاويات GPS
+        document.getElementById('mapContainer').style.display = 'none';
+        document.getElementById('manualLocationContainer').style.display = 'none';
+
+        // إخفاء حاوية حفظ البيانات حتى يتم التحليل
+        document.getElementById('saveContainer').style.display = 'none';
 
         fetchGoldPrices();
         renderComparisonTable();

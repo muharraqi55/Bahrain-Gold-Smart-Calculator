@@ -1135,6 +1135,67 @@
                 max-width: 100%;
             }
         }
+        /* زر التعليمات */
+        .help-btn {
+            background-color: var(--bg-card);
+            border: 2px solid var(--primary);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: calc(14px * var(--font-scale));
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .help-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: scale(1.03);
+        }
+        .help-modal-content {
+            text-align: right;
+            max-width: 600px;
+        }
+        .help-modal-content h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        .help-modal-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        .help-modal-content ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .help-modal-content ul li:last-child {
+            border-bottom: none;
+        }
+        .help-modal-content .help-images {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .help-modal-content .help-images img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .help-modal-content .help-images img:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -1190,6 +1251,13 @@
 
             <h2 id="mainTitle">🇧🇭 حاسبة الذهب الذكية - البحرين</h2>
             
+            <!-- ===== زر التعليمات الجديد ===== -->
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <button class="help-btn" onclick="openHelpModal()">
+                    📖 <span id="helpBtnText">تعليمات مهمة قبل الشراء</span>
+                </button>
+            </div>
+
             <div id="statusWrapper" class="status-bar">
                 <span id="statusText">جاري تحميل الأسعار...</span>
                 <button id="btnRefresh" class="btn-refresh" onclick="fetchGoldPrices()">تحديث الأسعار 🔄</button>
@@ -1783,6 +1851,27 @@
     </div>
 </div>
 
+<!-- مودال التعليمات -->
+<div id="helpModal" class="modal-overlay">
+    <div class="modal-content help-modal-content">
+        <button class="modal-close" onclick="closeHelpModal()">✕</button>
+        <h3>📖 نصائح مهمة قبل شراء الذهب الملبوس</h3>
+        <ul>
+            <li>🔍 <strong>تأكد من وجود الختم</strong> على القطعة الذهبية، كما هو موضح في الصور أدناه.</li>
+            <li>⚠️ <strong>بعض الأطقم تتكون من أكثر من عيار</strong> من الذهب (مثل 21 و 18)، وهذا يؤثر بشكل كبير على التسعيرة النهائية.</li>
+            <li>📊 استخدم الحاسبة لتحديد سعر الغرام الصحيح بناءً على العيار الفعلي للقطعة.</li>
+            <li>📸 صور الختم كمرجع: انظر إلى الصور التوضيحية أدناه.</li>
+        </ul>
+        <div class="help-images">
+            <img src="https://raw.githubusercontent.com/muharraqi55/Bahrain-Gold-Smart-Calculator/refs/heads/main/img/1.jpg" alt="ختم الذهب 1" onclick="openLightbox(this.src)">
+            <img src="https://raw.githubusercontent.com/muharraqi55/Bahrain-Gold-Smart-Calculator/refs/heads/main/img/2.jpg" alt="ختم الذهب 2" onclick="openLightbox(this.src)">
+            <img src="https://raw.githubusercontent.com/muharraqi55/Bahrain-Gold-Smart-Calculator/refs/heads/main/img/3.jpg" alt="ختم الذهب 3" onclick="openLightbox(this.src)">
+        </div>
+        <p style="font-size: 14px; color: var(--text-sub);">💡 هذه الصور توضح شكل الختم الذي يجب أن تجده على قطعة الذهب الملبوس.</p>
+        <button class="btn-calc" onclick="closeHelpModal()" style="margin-top: 10px;">✔️ فهمت</button>
+    </div>
+</div>
+
 <div id="cameraModal" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" onclick="closeLiveCamera()">✕</button>
@@ -1833,6 +1922,17 @@
             '24': 1
         };
         return basePrice24 * (caratMap[carat] || 1);
+    }
+
+    // ============================================================
+    // HELP MODAL FUNCTIONS
+    // ============================================================
+    function openHelpModal() {
+        document.getElementById('helpModal').style.display = 'flex';
+    }
+
+    function closeHelpModal() {
+        document.getElementById('helpModal').style.display = 'none';
     }
 
     // ============================================================
@@ -2125,7 +2225,8 @@
             jewelryUpdateBtn: "تحديث التعديلات ✅",
             jewelryAddTitle: "إضافة عملية شراء جديدة",
             jewelrySaveBtn: "حفظ العملية 💾",
-            btnRefreshJewelryGold: "تحديث أسعار الذهب 🔄"
+            btnRefreshJewelryGold: "تحديث أسعار الذهب 🔄",
+            helpBtnText: "تعليمات مهمة قبل الشراء"
         },
         en: {
             devTag: "Website developed by Muharraqi",
@@ -2295,7 +2396,8 @@
             jewelryUpdateBtn: "Update Transaction ✅",
             jewelryAddTitle: "Add New Purchase",
             jewelrySaveBtn: "Save Transaction 💾",
-            btnRefreshJewelryGold: "Refresh Gold Prices 🔄"
+            btnRefreshJewelryGold: "Refresh Gold Prices 🔄",
+            helpBtnText: "Important Instructions Before Purchase"
         },
         hi: {
             devTag: "वेबसाइट मुहर्रकी (Muharraqi) द्वारा बनाई गई है",
@@ -2465,7 +2567,8 @@
             jewelryUpdateBtn: "लेनदेन अपडेट करें ✅",
             jewelryAddTitle: "नई खरीद जोड़ें",
             jewelrySaveBtn: "लेनदेन सहेजें 💾",
-            btnRefreshJewelryGold: "सोने की कीमतें रीफ्रेश करें 🔄"
+            btnRefreshJewelryGold: "सोने की कीमतें रीफ्रेश करें 🔄",
+            helpBtnText: "खरीदने से पहले महत्वपूर्ण निर्देश"
         }
     };
 
@@ -3870,6 +3973,9 @@
         document.getElementById('thJActions').innerText = t.thJActions;
         document.getElementById('btnRefreshJewelryGold').innerText = t.btnRefreshJewelryGold;
         document.getElementById('btnFetchJewelryHistorical').innerText = t.btnFetchHistorical;
+
+        // Help button translation
+        document.getElementById('helpBtnText').innerText = t.helpBtnText;
 
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';

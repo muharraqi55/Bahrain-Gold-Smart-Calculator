@@ -1196,6 +1196,116 @@
         .help-modal-content .help-images img:hover {
             transform: scale(1.05);
         }
+
+        /* =============================================
+           FLOATING ACTION BUTTON (FAB) - NEW
+           ============================================= */
+        .fab-container {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+        }
+        .fab-main-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 26px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .fab-main-btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.08);
+        }
+        .fab-main-btn.active {
+            transform: rotate(45deg);
+            background-color: var(--danger);
+        }
+        .fab-menu {
+            position: absolute;
+            bottom: 75px;
+            left: 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 250px;
+            border: 1px solid var(--border-color);
+            animation: fabFadeIn 0.25s ease;
+        }
+        .fab-menu.show {
+            display: flex;
+        }
+        @keyframes fabFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fab-menu-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: right;
+            font-weight: bold;
+            color: var(--text-main);
+            font-size: calc(14px * var(--font-scale));
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .fab-menu-item:hover {
+            background-color: var(--bg-body);
+        }
+        .fab-menu-item.danger {
+            color: var(--danger);
+        }
+        .fab-menu-item.danger:hover {
+            background-color: rgba(198, 40, 40, 0.1);
+        }
+        .fab-menu-header {
+            padding: 8px 12px 4px 12px;
+            font-size: 11px;
+            color: var(--text-sub);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 5px;
+        }
+        .fab-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+        @media (max-width: 768px) {
+            .fab-container {
+                bottom: 15px;
+                left: 15px;
+            }
+            .fab-main-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1890,6 +2000,27 @@
     </div>
 </div>
 
+<!-- ============================================
+     FLOATING ACTION BUTTON - NEW
+     ============================================ -->
+<div class="fab-container" id="fabContainer">
+    <div class="fab-menu" id="fabMenu">
+        <div class="fab-menu-header" id="fabMenuHeader">⚙️ إدارة البيانات</div>
+        <button class="fab-menu-item" onclick="exportBackupData(); closeFabMenu();">
+            📤 <span id="fabExportTxt">حفظ البيانات (نسخة احتياطية)</span>
+        </button>
+        <button class="fab-menu-item" onclick="triggerFabImport();">
+            📥 <span id="fabImportTxt">استرجاع البيانات من نسخة احتياطية</span>
+        </button>
+        <div class="fab-menu-divider"></div>
+        <button class="fab-menu-item danger" onclick="clearAllData(); closeFabMenu();">
+            🗑️ <span id="fabClearTxt">مسح جميع البيانات</span>
+        </button>
+    </div>
+    <button class="fab-main-btn" id="fabMainBtn" onclick="toggleFabMenu()" title="إدارة البيانات">⚙️</button>
+    <input type="file" id="fabImportInput" accept=".json" style="display:none;" onchange="importBackupData(event)">
+</div>
+
 <canvas id="hiddenCompressCanvas" style="display:none;"></canvas>
 
 <script>
@@ -1923,6 +2054,177 @@
         };
         return basePrice24 * (caratMap[carat] || 1);
     }
+
+    // ============================================================
+    // FLOATING ACTION BUTTON (FAB) FUNCTIONS - NEW
+    // ============================================================
+    function toggleFabMenu() {
+        const menu = document.getElementById('fabMenu');
+        const btn = document.getElementById('fabMainBtn');
+        const isOpen = menu.classList.contains('show');
+        if (isOpen) {
+            closeFabMenu();
+        } else {
+            menu.classList.add('show');
+            btn.classList.add('active');
+        }
+    }
+
+    function closeFabMenu() {
+        document.getElementById('fabMenu').classList.remove('show');
+        document.getElementById('fabMainBtn').classList.remove('active');
+    }
+
+    function triggerFabImport() {
+        closeFabMenu();
+        setTimeout(() => {
+            document.getElementById('fabImportInput').click();
+        }, 100);
+    }
+
+    // ============================================================
+    // ✅ CLEAR ALL DATA - يحتفظ بالإعدادات (اللغة، الثيم، حجم الخط)
+    // ============================================================
+    function clearAllData() {
+        const lang = goldData.currentLang;
+        let msg = '';
+        if (lang === 'ar') {
+            msg = '⚠️ هل أنت متأكد من مسح جميع البيانات المدخلة؟\n\nسيتم حذف:\n• جميع عروض المحلات\n• جميع عمليات السبائك\n• جميع عمليات الملبوس\n\n✅ سيتم الاحتفاظ بالإعدادات:\n• اللغة\n• الوضع الليلي/النهاري\n• حجم الخط\n\n⚠️ لا يمكن التراجع عن هذه العملية!\n\nهل تريد المتابعة؟';
+        } else if (lang === 'en') {
+            msg = '⚠️ Are you sure you want to clear all entered data?\n\nThis will delete:\n• All shop offers\n• All bullion transactions\n• All jewelry transactions\n\n✅ Settings will be preserved:\n• Language\n• Dark/Light mode\n• Font size\n\n⚠️ This action cannot be undone!\n\nContinue?';
+        } else {
+            msg = '⚠️ क्या आप सभी दर्ज किए गए डेटा को मिटाना चाहते हैं?\n\nयह हटा देगा:\n• सभी दुकान ऑफ़र\n• सभी बुलियन लेनदेन\n• सभी आभूषण लेनदेन\n\n✅ सेटिंग्स सुरक्षित रहेंगी:\n• भाषा\n• डार्क/लाइट मोड\n• फ़ॉन्ट आकार\n\n⚠️ यह कार्रवाई पूर्ववत नहीं की जा सकती!\n\nजारी रखें?';
+        }
+
+        if (!confirm(msg)) return;
+
+        // تأكيد ثاني للأمان
+        let confirmMsg = '';
+        if (lang === 'ar') confirmMsg = '🔴 تأكيد نهائي: سيتم حذف جميع البيانات المدخلة نهائياً. متأكد؟';
+        else if (lang === 'en') confirmMsg = '🔴 Final confirmation: All entered data will be permanently deleted. Are you sure?';
+        else confirmMsg = '🔴 अंतिम पुष्टि: सभी दर्ज डेटा स्थायी रूप से हटा दिए जाएंगे। क्या आप निश्चित हैं?';
+        
+        if (!confirm(confirmMsg)) return;
+
+        // ✅ الاحتفاظ بالإعدادات الحالية (اللغة، الثيم، حجم الخط)
+        const preservedLang = goldData.currentLang;
+        const preservedTheme = goldData.theme;
+        const preservedFontSize = goldData.fontSize;
+
+        // ✅ مسح البيانات المدخلة فقط (الجدول والعمليات)
+        goldData.savedShops = [];
+        bullionTransactions = [];
+        jewelryTransactions = [];
+        bullionManualPrice = 28.5;
+        jewelryManualPrice = 28.5;
+        bullionHistoricalPrice = null;
+        jewelryHistoricalPrice = null;
+
+        // ✅ إعادة الإعدادات المحفوظة
+        goldData.currentLang = preservedLang;
+        goldData.theme = preservedTheme;
+        goldData.fontSize = preservedFontSize;
+
+        // ✅ حفظ البيانات الجديدة (بدون البيانات المدخلة لكن مع الإعدادات)
+        saveLocalData();
+
+        // إعادة تعيين واجهة المستخدم (بدون إعادة تحميل الصفحة)
+        
+        // 1. مسح جداول المقارنات
+        renderComparisonTable();
+        renderBullionTable();
+        renderJewelryTable();
+        
+        // 2. إعادة حساب الإحصائيات (ستظهر كصفر)
+        calculateBullionMetrics();
+        calculateJewelryMetrics();
+        
+        // 3. إخفاء قسم المقارنة (لأن الجدول فارغ)
+        document.getElementById('comparisonSection').style.display = 'none';
+        
+        // 4. إعادة تعيين النماذج
+        document.getElementById('shopNameInput').value = '';
+        document.getElementById('totalWeight').value = '';
+        document.getElementById('totalPrice').value = '';
+        document.getElementById('bullion-price').value = '';
+        document.getElementById('bullion-weight').value = '';
+        document.getElementById('jewelry-price').value = '';
+        document.getElementById('jewelry-weight').value = '';
+        document.getElementById('adoptedWeightDisplayNormal').value = '';
+        document.getElementById('adoptedWeightDisplayAdvanced').value = '';
+        
+        // 5. إخفاء المستطيلات والحاويات
+        document.getElementById('summaryBox1').style.display = 'none';
+        document.getElementById('summaryBox2').style.display = 'none';
+        document.getElementById('saveContainer').style.display = 'none';
+        document.getElementById('box1_1').classList.remove('active');
+        document.getElementById('box1_2').classList.remove('active');
+        document.getElementById('box2_1').classList.remove('active');
+        document.getElementById('box2_2').classList.remove('active');
+        
+        // 6. إعادة تعيين صفوف النتائج
+        document.getElementById('pricePerGramStore').innerHTML = '0.00 <span class="currency">د.ب</span>';
+        document.getElementById('profitOnly').innerHTML = '0.00 <span class="currency">د.ب</span>';
+        document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
+        document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
+        
+        // 7. إعادة تعيين حالة الخصم
+        document.getElementById('discountTypeDisabledMsg').style.display = 'block';
+        document.getElementById('normalDiscountSelect').disabled = true;
+        document.getElementById('btnCalcNormal').disabled = true;
+        document.getElementById('discountNormalLabel').classList.add('disabled');
+        document.getElementById('discountAdvancedLabel').classList.add('disabled');
+        document.getElementById('customProfit').disabled = true;
+        document.getElementById('customProfit').style.opacity = '0.6';
+        document.getElementById('customProfit').style.cursor = 'not-allowed';
+        document.getElementById('btnCalcAdvanced').disabled = true;
+        document.getElementById('btnCalcAdvanced').style.opacity = '0.5';
+        document.getElementById('btnCalcAdvanced').style.cursor = 'not-allowed';
+        document.getElementById('discountWarning').style.display = 'block';
+        document.getElementById('discountAllowed').style.display = 'none';
+        document.getElementById('discountMinWarning').style.display = 'none';
+        
+        // 8. إعادة تعيين متغيرات الحالة
+        lastStorePricePerGram = 0;
+        lastStoreProfitPerGram = 0;
+        lastTotalWeight = 0;
+        editingShopId = null;
+        document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnSaveShop;
+        
+        // 9. إعادة تعيين صور المرفقات والموقع
+        removeAttachedImage(1);
+        removeAttachedImage(2);
+        resolvedGPS = null;
+        const gpsBtn = document.getElementById('btnGps');
+        gpsBtn.classList.remove('active', 'loading', 'error');
+        gpsBtn.innerHTML = `📍 <span id="gpsBtnText">${translations[goldData.currentLang].gpsBtnText}</span>`;
+        document.getElementById('gpsStatusText').innerHTML = '';
+        document.getElementById('locationInfoContainer').innerHTML = '';
+        document.getElementById('mapContainer').style.display = 'none';
+        const oldBtn = document.querySelector('.open-map-btn');
+        if (oldBtn) oldBtn.remove();
+        document.getElementById('manualLocationContainer').style.display = 'none';
+        document.getElementById('manualLat').value = '';
+        document.getElementById('manualLng').value = '';
+        isManualLocation = false;
+        stopWatchingLocation();
+        
+        // رسالة نجاح
+        let doneMsg = '';
+        if (lang === 'ar') doneMsg = '✅ تم مسح جميع البيانات المدخلة بنجاح.\n✅ تم الاحتفاظ بالإعدادات (اللغة، الثيم، حجم الخط).';
+        else if (lang === 'en') doneMsg = '✅ All entered data cleared successfully.\n✅ Settings preserved (language, theme, font size).';
+        else doneMsg = '✅ सभी दर्ज डेटा सफलतापूर्वक मिटा दिया गया।\n✅ सेटिंग्स सुरक्षित रहीं (भाषा, थीम, फ़ॉन्ट आकार)।';
+        
+        alert(doneMsg);
+    }
+
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', function(e) {
+        const fabContainer = document.getElementById('fabContainer');
+        if (fabContainer && !fabContainer.contains(e.target)) {
+            closeFabMenu();
+        }
+    });
 
     // ============================================================
     // HELP MODAL FUNCTIONS
@@ -1989,27 +2291,21 @@
                 const priceBHD = (priceUSD / 31.1034768) * 0.377;
                 const roundedPrice = parseFloat(priceBHD.toFixed(3));
 
-                // ===== التعديل الأساسي: تحديث أسعار جميع الأعيرة في قسم الحاسبة =====
                 if (section === 'calculator') {
-                    // تخزين سعر 24 كقاعدة
                     livePrices[24] = roundedPrice;
-                    // حساب أسعار جميع الأعيرة
                     livePrices[22] = roundedPrice * (22/24);
                     livePrices[21] = roundedPrice * (21/24);
                     livePrices[18] = roundedPrice * (18/24);
                     
-                    // عرض السعر حسب العيار المختار
                     const selectedCarat = document.getElementById('carat').value;
                     const displayPrice = livePrices[selectedCarat] || roundedPrice;
                     priceField.value = parseFloat(displayPrice.toFixed(3));
                     priceField.readOnly = true;
                     priceField.style.backgroundColor = 'var(--bg-readonly)';
                     
-                    // تحديث حالة النجاح
                     const statusMsg = `✅ تم جلب السعر التاريخي (${dateStr}): سعر 24 = ${roundedPrice} د.ب`;
                     setStatus(statusMsg, 'success');
                 } else {
-                    // للسبائك والملبوس: نخزن السعر كـ 24 ونترك الباقي للدوال الأخرى
                     if (section === 'bullion') {
                         bullionHistoricalPrice = roundedPrice;
                     } else if (section === 'jewelry') {
@@ -2189,7 +2485,6 @@
             bullionSaveBtn: "حفظ العملية 💾",
             updatedSuccess: "✅ تم التحديث والحفظ",
 
-            // Jewelry translations
             jewelryMainTitle: "📊 المتوسط السعري للملبوس",
             lblJewelryLivePriceHelp: "💡 لتحديث الأرباح والخسائر، يرجى تأكيد سعر غرام الذهب الحالي بالسوق:",
             jewelryOptAuto: "تلقائي (من سعر الذهب الرئيسي)",
@@ -2226,7 +2521,12 @@
             jewelryAddTitle: "إضافة عملية شراء جديدة",
             jewelrySaveBtn: "حفظ العملية 💾",
             btnRefreshJewelryGold: "تحديث أسعار الذهب 🔄",
-            helpBtnText: "تعليمات مهمة قبل الشراء"
+            helpBtnText: "تعليمات مهمة قبل الشراء",
+            // ===== FAB Translations =====
+            fabMenuHeader: "⚙️ إدارة البيانات",
+            fabExportTxt: "حفظ البيانات (نسخة احتياطية)",
+            fabImportTxt: "استرجاع البيانات من نسخة احتياطية",
+            fabClearTxt: "مسح جميع البيانات المدخلة"
         },
         en: {
             devTag: "Website developed by Muharraqi",
@@ -2397,7 +2697,12 @@
             jewelryAddTitle: "Add New Purchase",
             jewelrySaveBtn: "Save Transaction 💾",
             btnRefreshJewelryGold: "Refresh Gold Prices 🔄",
-            helpBtnText: "Important Instructions Before Purchase"
+            helpBtnText: "Important Instructions Before Purchase",
+            // ===== FAB Translations =====
+            fabMenuHeader: "⚙️ Data Management",
+            fabExportTxt: "Save Data (Backup)",
+            fabImportTxt: "Restore Data from Backup",
+            fabClearTxt: "Clear All Entered Data"
         },
         hi: {
             devTag: "वेबसाइट मुहर्रकी (Muharraqi) द्वारा बनाई गई है",
@@ -2568,7 +2873,12 @@
             jewelryAddTitle: "नई खरीद जोड़ें",
             jewelrySaveBtn: "लेनदेन सहेजें 💾",
             btnRefreshJewelryGold: "सोने की कीमतें रीफ्रेश करें 🔄",
-            helpBtnText: "खरीदने से पहले महत्वपूर्ण निर्देश"
+            helpBtnText: "खरीदने से पहले महत्वपूर्ण निर्देश",
+            // ===== FAB Translations =====
+            fabMenuHeader: "⚙️ डेटा प्रबंधन",
+            fabExportTxt: "डेटा सहेजें (बैकअप)",
+            fabImportTxt: "बैकअप से डेटा पुनर्स्थापित करें",
+            fabClearTxt: "सभी दर्ज डेटा मिटाएं"
         }
     };
 
@@ -2597,7 +2907,6 @@
     let watchId = null;
     let isManualLocation = false;
 
-    // متغيرات لتخزين نتائج القسم الأول
     let lastStorePricePerGram = 0;
     let lastStoreProfitPerGram = 0;
     let lastTotalWeight = 0;
@@ -2845,7 +3154,6 @@
         const unit = lang === 'ar' ? "غرام" : (lang === 'en' ? "Grams" : "ग्राम");
         document.getElementById('adoptedWeightDisplayNormal').value = weightVal ? weightVal + " " + unit : "";
         document.getElementById('adoptedWeightDisplayAdvanced').value = weightVal ? weightVal + " " + unit : "";
-        // تخزين الوزن للاستخدام في القسم الثاني
         lastTotalWeight = parseFloat(weightVal) || 0;
     }
 
@@ -2864,13 +3172,11 @@
         
         box.style.display = 'grid';
         
-        // السعر الكلي بدون مصنعية
         const totalGoldValue = marketPrice * weight;
         document.getElementById('totalGoldValueAmount').innerHTML = `${totalGoldValue.toFixed(3)} <span class="currency-sm">${currency}</span>`;
         document.getElementById('summaryTotalGoldTitle').textContent = t.summaryTotalGoldTitle;
         document.getElementById('totalGoldValueBox').classList.remove('profit', 'loss');
         
-        // ربح المحل الكلي
         const totalShopProfit = profitPerGram * weight;
         const profitAmountEl = document.getElementById('totalShopProfitAmount');
         const profitBox = document.getElementById('totalShopProfitBox');
@@ -2879,7 +3185,6 @@
         profitAmountEl.innerHTML = `${Math.abs(totalShopProfit).toFixed(3)} <span class="currency-sm">${currency}</span>`;
         document.getElementById('summaryTotalProfitTitle').textContent = t.summaryTotalProfitTitle;
         
-        // تحديث اللون والنص حسب القيمة
         profitBox.classList.remove('profit', 'loss');
         if (totalShopProfit > 0.001) {
             profitBox.classList.add('profit');
@@ -2913,7 +3218,6 @@
         
         box.style.display = 'grid';
         
-        // ربح المحل الكلي بعد الخصم
         const totalProfitAfter = newProfitPerGram * weight;
         const afterAmountEl = document.getElementById('totalShopProfitAfterAmount');
         const afterBox = document.getElementById('totalShopProfitAfterBox');
@@ -2973,16 +3277,12 @@
         const btnCalcAdvanced = document.getElementById('btnCalcAdvanced');
         const t = translations[goldData.currentLang];
 
-        // الحصول على الحد الأدنى للربح المختار من القائمة
         const minProfitSelect = document.getElementById('minProfitSelect');
         const minProfit = parseFloat(minProfitSelect.value) || 4;
 
-        // تحديث النص في رسائل التحذير
         minProfitWarningDisplay.textContent = minProfit.toFixed(0);
 
-        // التحقق من فائدة المحل
         if (lastStoreProfitPerGram > minProfit) {
-            // ✅ يسمح بالخصم (فائدة المحل أكبر من الحد الأدنى المطلوب)
             const maxDiscount = lastStoreProfitPerGram - minProfit;
             customProfitInput.disabled = false;
             customProfitInput.style.opacity = '1';
@@ -2997,7 +3297,6 @@
             btnCalcAdvanced.style.opacity = '1';
             btnCalcAdvanced.style.cursor = 'pointer';
         } else {
-            // ❌ يمنع الخصم (فائدة المحل أقل من أو تساوي الحد الأدنى المطلوب)
             customProfitInput.disabled = true;
             customProfitInput.style.opacity = '0.6';
             customProfitInput.style.cursor = 'not-allowed';
@@ -3026,34 +3325,26 @@
         const box2_2 = document.getElementById('box2_2');
         const summaryBox2 = document.getElementById('summaryBox2');
 
-        // إذا كان المحل خسران (فائدة المحل أقل من 0)
         if (lastStoreProfitPerGram < 0) {
-            // تعطيل كلا الخيارين
             normalRadio.disabled = true;
             advancedRadio.disabled = true;
             normalLabel.classList.add('disabled');
             advancedLabel.classList.add('disabled');
             disabledMsg.style.display = 'block';
             
-            // تعطيل الحقول والأزرار
             document.getElementById('normalDiscountSelect').disabled = true;
             document.getElementById('customProfit').disabled = true;
             document.getElementById('btnCalcNormal').disabled = true;
             document.getElementById('btnCalcAdvanced').disabled = true;
             document.getElementById('minProfitSelect').disabled = true;
             
-            // ===== إخفاء نتائج القسم الثاني =====
-            // إزالة الـ active class لإخفاء الصناديق
             box2_1.classList.remove('active');
             box2_2.classList.remove('active');
-            // إعادة تعيين القيم النصية إلى 0
             document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
             document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
-            // إخفاء المستطيل الثاني
             summaryBox2.style.display = 'none';
 
         } else {
-            // تفعيل الخيارات
             normalRadio.disabled = false;
             advancedRadio.disabled = false;
             normalLabel.classList.remove('disabled');
@@ -3064,7 +3355,6 @@
             document.getElementById('minProfitSelect').disabled = false;
             document.getElementById('btnCalcNormal').disabled = false;
             
-            // تفعيل حسب النوع المختار
             toggleDiscountType();
         }
     }
@@ -3110,20 +3400,17 @@
         const t = translations[goldData.currentLang];
         
         if (navigator.geolocation) {
-            // إظهار حالة التحميل
             gpsBtn.classList.add('loading');
             gpsBtn.classList.remove('active', 'error');
             gpsBtnTxt.innerHTML = '<span class="gps-loading"></span> ' + t.gpsLoading;
             gpsStatusText.innerHTML = '⏳ ' + t.gpsWaiting;
             
-            // خيارات متقدمة للحصول على دقة أفضل
             const options = {
                 enableHighAccuracy: true,
                 timeout: 15000,
                 maximumAge: 0
             };
             
-            // استخدام watchPosition للحصول على دقة أفضل (يحاول عدة مرات)
             if (watchId) {
                 navigator.geolocation.clearWatch(watchId);
                 watchId = null;
@@ -3144,11 +3431,9 @@
                     resolvedGPS = coords;
                     isManualLocation = false;
                     
-                    // تحديث حالة الزر
                     gpsBtn.classList.remove('loading');
                     gpsBtn.classList.add('active');
                     
-                    // عرض رسالة مع دقة الموقع
                     let accuracyClass = '';
                     let accuracyText = '';
                     if (coords.accuracy < 50) {
@@ -3165,11 +3450,9 @@
                     gpsBtnTxt.innerHTML = '📍 ' + accuracyText;
                     gpsStatusText.innerHTML = '<span class="' + accuracyClass + '">' + accuracyText + '</span>';
                     
-                    // عرض الموقع على الخريطة
                     showLocationOnMap(coords.lat, coords.lng);
                     displayLocationInfo(coords);
                     
-                    // إيقاف المتابعة بعد الحصول على موقع دقيق
                     if (coords.accuracy < 50) {
                         if (watchId) {
                             navigator.geolocation.clearWatch(watchId);
@@ -3214,15 +3497,12 @@
         const mapContainer = document.getElementById('mapContainer');
         const mapIframe = document.getElementById('locationMap');
         
-        // استخدام الرابط العادي بدون API Key
         mapIframe.src = `https://www.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
         mapContainer.style.display = 'block';
         
-        // إزالة الزر القديم إن وجد
         const oldBtn = document.querySelector('.open-map-btn');
         if (oldBtn) oldBtn.remove();
         
-        // إضافة زر لفتح الخريطة كاملة
         const openMapBtn = document.createElement('button');
         openMapBtn.className = 'open-map-btn';
         openMapBtn.innerText = '🗺️ فتح في خرائط Google';
@@ -3292,22 +3572,16 @@
         const totalProfit = totalPrice - goldValue;
         const profitPerGram = totalProfit / weight;
 
-        // تخزين النتائج للقسم الثاني
         lastStorePricePerGram = pricePerGramStore;
         lastStoreProfitPerGram = profitPerGram;
         lastTotalWeight = weight;
 
-        // ✅ تحديث حالة نوع الخصم
         updateDiscountTypeStatus();
-
-        // ✅ تحديث حالة حقل الخصم المتقدم
         updateDiscountFieldStatus();
 
-        // ✅ حساب الخصم العادي فقط إذا كان المحل ربحان
         if (lastStoreProfitPerGram >= 0) {
             calculateNormalDiscount();
         } else {
-            // إذا كان المحل خسران، نقوم بمسح النتائج
             const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
             document.getElementById('gramWithProfit').innerHTML = `0.00 <span class="currency">${currency}</span>`;
             document.getElementById('totalWithProfit').innerHTML = `0.00 <span class="currency">${currency}</span>`;
@@ -3316,10 +3590,8 @@
             document.getElementById('summaryBox2').style.display = 'none';
         }
 
-        // ✅ تحديث المستطيل الأول
         updateSummaryBox1(marketPrice, weight, profitPerGram);
 
-        // ✅ التحقق من منطقية السعر - سعر الغرام في المحل أقل من سعر السوق
         if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
             const diff = (marketPrice - pricePerGramStore).toFixed(3);
             const warningMsg = goldData.currentLang === 'ar' 
@@ -3336,7 +3608,6 @@
         const profitBox = document.getElementById('profitOnly');
         const profitBoxParent = document.getElementById('box1_2');
         
-        // ✅ إظهار القيمة مع الإشارة واللون المناسب - أحمر للخسارة، أخضر للربح
         if(profitPerGram < 0) {
             profitBox.style.color = 'var(--danger)';
             profitBoxParent.style.backgroundColor = 'rgba(198, 40, 40, 0.08)';
@@ -3360,7 +3631,6 @@
         document.getElementById('box1_1').classList.add('active');
         document.getElementById('box1_2').classList.add('active');
 
-        // ✅ إظهار حاوية حفظ البيانات بعد التحليل
         document.getElementById('saveContainer').style.display = 'block';
     }
 
@@ -3373,24 +3643,19 @@
         const selectedProfit = parseFloat(document.getElementById('normalDiscountSelect').value) || 0;
 
         if (marketPrice <= 0 || weight <= 0) {
-            // لا نقوم بحساب إذا لم تكن البيانات مكتملة
             return;
         }
 
-        // المعادلة: سعر الغرام النهائي = سعر غرام السوق + الفائدة المختارة
         const targetGramPrice = marketPrice + selectedProfit;
         const totalCost = targetGramPrice * weight;
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
 
-        // عرض النتيجة في نفس صناديق النتائج
         document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
         document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
 
-        // ✅ الخصم العادي دائماً ربحان (يضاف على سعر السوق)
         const profitBox2 = document.getElementById('box2_1');
         const gramWithProfitEl = document.getElementById('gramWithProfit');
 
-        // إزالة الرسائل السابقة
         const oldMsg = gramWithProfitEl.querySelector('.profit-msg');
         if (oldMsg) oldMsg.remove();
 
@@ -3416,7 +3681,6 @@
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
         
-        // ✅ تحديث المستطيل الثاني - الخصم العادي (الفائدة الجديدة = الفائدة المختارة)
         const newProfitPerGram = selectedProfit;
         updateSummaryBox2(newProfitPerGram, weight);
     }
@@ -3425,17 +3689,13 @@
     // ADVANCED DISCOUNT CALCULATION (نفس النظام القديم)
     // ============================================================
     function calculateCustomPrice() {
-        // ✅ استخدام سعر الغرام من المحل (من القسم الأول)
         const storePricePerGram = lastStorePricePerGram;
         const weight = lastTotalWeight;
-        // ✅ قيمة الخصم التي أدخلها المستخدم
         const customProfitInput = parseFloat(document.getElementById('customProfit').value) || 0;
         
-        // الحصول على الحد الأدنى للربح المختار
         const minProfitSelect = document.getElementById('minProfitSelect');
         const minProfit = parseFloat(minProfitSelect.value) || 4;
         
-        // ✅ التحقق من أن الخصم لا يتجاوز الحد الأقصى المسموح
         const maxAllowedDiscount = lastStoreProfitPerGram - minProfit;
         
         if (customProfitInput > maxAllowedDiscount) {
@@ -3448,7 +3708,6 @@
             return;
         }
         
-        // ✅ القيمة سالبة تلقائياً (خصم)
         const customProfit = -1 * customProfitInput;
 
         if (storePricePerGram <= 0 || weight <= 0) {
@@ -3460,16 +3719,13 @@
         const totalCost = targetGramPrice * weight;
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
 
-        // ✅ عرض سعر الغرام بعد الخصم
         document.getElementById('gramWithProfit').innerHTML = `${targetGramPrice.toFixed(3)} <span class="currency">${currency}</span>`;
         document.getElementById('totalWithProfit').innerHTML = `${totalCost.toFixed(3)} <span class="currency">${currency}</span>`;
 
-        // ✅ حساب الفائدة الجديدة للمحل بعد الخصم
         const newShopProfit = lastStoreProfitPerGram - customProfitInput;
         const profitBox2 = document.getElementById('box2_1');
         const gramWithProfitEl = document.getElementById('gramWithProfit');
 
-        // إزالة الرسائل السابقة
         const oldMsg = gramWithProfitEl.querySelector('.profit-msg');
         if (oldMsg) oldMsg.remove();
 
@@ -3480,7 +3736,6 @@
         msgSpan.style.fontWeight = 'normal';
         msgSpan.style.marginTop = '5px';
 
-        // ✅ إظهار الفائدة الجديدة للمحل أسفل السعر
         if (newShopProfit > 0.001) {
             msgSpan.style.color = 'var(--success)';
             const profitText = goldData.currentLang === 'ar' 
@@ -3518,7 +3773,6 @@
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
         
-        // ✅ تحديث المستطيل الثاني - الخصم المتقدم
         updateSummaryBox2(newShopProfit, weight);
     }
 
@@ -3847,7 +4101,6 @@
         document.getElementById('resBox2Title').innerText = t.resBox2Title;
         document.getElementById('secTitle2').innerText = t.secTitle2;
         
-        // تحديث ترجمات قسم الخصم
         document.getElementById('lblDiscountType').innerText = t.lblDiscountType;
         document.getElementById('discountNormalText').innerText = t.discountNormal;
         document.getElementById('discountAdvancedText').innerText = t.discountAdvanced;
@@ -3869,7 +4122,6 @@
         document.getElementById('discountAllowed').innerHTML = t.discountAllowed + '<span id="maxDiscountDisplay">0.00</span> د.ب';
         document.getElementById('discountMinWarning').innerHTML = t.discountMinWarning + '<span id="maxDiscountWarningDisplay">0.00</span> د.ب';
         
-        // تحديث ترجمات المستطيلات
         document.getElementById('summaryTotalGoldTitle').textContent = t.summaryTotalGoldTitle;
         document.getElementById('summaryTotalProfitTitle').textContent = t.summaryTotalProfitTitle;
         document.getElementById('summaryTotalProfitAfterTitle').textContent = t.summaryTotalProfitAfterTitle;
@@ -3910,7 +4162,6 @@
         document.getElementById('menu-jewelry').innerText = t.menuJewelry;
         document.getElementById('menu-tradingview').innerText = t.menuTradingview;
 
-        // Bullion translations
         document.getElementById('bullionMainTitle').innerText = t.bullionMainTitle;
         document.getElementById('lblBullionLivePriceHelp').innerText = t.lblBullionLivePriceHelp;
         document.getElementById('bullionOptAuto').innerText = t.bullionOptAuto;
@@ -3941,7 +4192,6 @@
         document.getElementById('btnRefreshBullionGold').innerText = t.btnRefreshBullionGold;
         document.getElementById('btnFetchBullionHistorical').innerText = t.btnFetchHistorical;
 
-        // Jewelry translations
         document.getElementById('jewelryMainTitle').innerText = t.jewelryMainTitle;
         document.getElementById('lblJewelryLivePriceHelp').innerText = t.lblJewelryLivePriceHelp;
         document.getElementById('jewelryOptAuto').innerText = t.jewelryOptAuto;
@@ -3974,8 +4224,13 @@
         document.getElementById('btnRefreshJewelryGold').innerText = t.btnRefreshJewelryGold;
         document.getElementById('btnFetchJewelryHistorical').innerText = t.btnFetchHistorical;
 
-        // Help button translation
         document.getElementById('helpBtnText').innerText = t.helpBtnText;
+
+        // ===== FAB Translations =====
+        document.getElementById('fabMenuHeader').innerText = t.fabMenuHeader;
+        document.getElementById('fabExportTxt').innerText = t.fabExportTxt;
+        document.getElementById('fabImportTxt').innerText = t.fabImportTxt;
+        document.getElementById('fabClearTxt').innerText = t.fabClearTxt;
 
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -4072,6 +4327,8 @@
             } catch(err) {
                 alert(goldData.currentLang === 'ar' ? "خطأ أثناء معالجة الملف." : (goldData.currentLang === 'en' ? "Error processing file." : "फ़ाइल संसाधित करने में त्रुटि।"));
             }
+            // Reset the input so same file can be selected again
+            event.target.value = '';
         };
         reader.readAsText(file);
     }
@@ -4627,7 +4884,6 @@
         document.getElementById('bullionHistoricalDateContainer').classList.add('hidden');
         document.getElementById('jewelryHistoricalDateContainer').classList.add('hidden');
 
-        // تعطيل حقل الخصم افتراضياً حتى يتم تحليل القسم الأول
         document.getElementById('customProfit').disabled = true;
         document.getElementById('customProfit').style.opacity = '0.6';
         document.getElementById('customProfit').style.cursor = 'not-allowed';
@@ -4638,22 +4894,18 @@
         document.getElementById('discountAllowed').style.display = 'none';
         document.getElementById('discountMinWarning').style.display = 'none';
 
-        // تعطيل خيارات الخصم بشكل افتراضي
         document.getElementById('discountTypeDisabledMsg').style.display = 'block';
         document.getElementById('normalDiscountSelect').disabled = true;
         document.getElementById('btnCalcNormal').disabled = true;
         document.getElementById('discountNormalLabel').classList.add('disabled');
         document.getElementById('discountAdvancedLabel').classList.add('disabled');
 
-        // إخفاء حاويات GPS
         document.getElementById('mapContainer').style.display = 'none';
         document.getElementById('manualLocationContainer').style.display = 'none';
 
-        // إخفاء حاويات المستطيلات
         document.getElementById('summaryBox1').style.display = 'none';
         document.getElementById('summaryBox2').style.display = 'none';
 
-        // إخفاء حاوية حفظ البيانات حتى يتم التحليل
         document.getElementById('saveContainer').style.display = 'none';
 
         fetchGoldPrices();

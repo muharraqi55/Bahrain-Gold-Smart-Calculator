@@ -73,6 +73,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .menu-btn {
             font-size: 26px;
@@ -257,9 +258,94 @@
             text-align: center;
             color: var(--text-main);
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             font-size: calc(24px * var(--font-scale));
         }
+
+        /* ====== Section Actions (Print + PDF Share) ====== */
+        .section-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .section-actions.section-actions-bottom {
+            margin-top: 30px;
+            margin-bottom: 0;
+            padding-top: 20px;
+            border-top: 2px dashed var(--border-color);
+        }
+        .action-icon-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            color: var(--text-main);
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: calc(13px * var(--font-scale));
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.25s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .action-icon-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212,175,55,0.35);
+        }
+        .action-icon-btn:active { transform: translateY(0); }
+        .action-icon-btn.pdf-share {
+            border-color: #25D366;
+        }
+        .action-icon-btn.pdf-share:hover {
+            background: #25D366;
+            border-color: #25D366;
+            box-shadow: 0 4px 12px rgba(37,211,102,0.35);
+        }
+        .action-icon-btn.share-site {
+            border-color: #25D366;
+        }
+        .action-icon-btn.share-site:hover {
+            background: #25D366;
+            border-color: #25D366;
+        }
+
+        /* ====== PDF generation overlay ====== */
+        .pdf-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            flex-direction: column;
+            gap: 20px;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .pdf-overlay.show { display: flex; }
+        .pdf-overlay .pdf-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.2);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        .pdf-overlay p {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .pdf-overlay small { opacity: 0.8; }
+
         .status-bar {
             background-color: var(--bg-status);
             border: 1px solid var(--border-status);
@@ -345,18 +431,14 @@
             font-size: calc(14px * var(--font-scale));
         }
         .radio-group input { width: auto; cursor: pointer; }
-        .radio-group input:disabled {
-            cursor: not-allowed;
-        }
+        .radio-group input:disabled { cursor: not-allowed; }
         .date-input-group {
             display: flex;
             gap: 10px;
             align-items: center;
             margin-top: 5px;
         }
-        .date-input-group input[type="date"] {
-            flex: 2;
-        }
+        .date-input-group input[type="date"] { flex: 2; }
         .date-input-group button {
             flex: 1;
             padding: 12px;
@@ -383,10 +465,7 @@
             margin-top: 10px;
         }
         .btn-calc:hover { background-color: var(--primary-hover); }
-        .btn-calc:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .btn-calc:disabled { opacity: 0.5; cursor: not-allowed; }
         .results-container {
             display: flex;
             gap: 15px;
@@ -491,22 +570,9 @@
             transition: all 0.3s;
             width: 100%;
         }
-        .btn-gps.active {
-            border-color: var(--success);
-            color: var(--success);
-            background-color: rgba(46, 125, 50, 0.1);
-        }
-        .btn-gps.loading {
-            border-color: var(--primary);
-            color: var(--primary);
-            background-color: rgba(212, 175, 55, 0.1);
-            cursor: wait;
-        }
-        .btn-gps.error {
-            border-color: var(--danger);
-            color: var(--danger);
-            background-color: rgba(198, 40, 40, 0.1);
-        }
+        .btn-gps.active { border-color: var(--success); color: var(--success); background-color: rgba(46, 125, 50, 0.1); }
+        .btn-gps.loading { border-color: var(--primary); color: var(--primary); background-color: rgba(212, 175, 55, 0.1); cursor: wait; }
+        .btn-gps.error { border-color: var(--danger); color: var(--danger); background-color: rgba(198, 40, 40, 0.1); }
         .btn-save-shop {
             background-color: var(--success);
             color: white;
@@ -709,14 +775,8 @@
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
         }
-        .summary-card.profit {
-            border-right-color: #2e7d32;
-            background-color: rgba(46, 125, 50, 0.1);
-        }
-        .summary-card.loss {
-            border-right-color: #c62828;
-            background-color: rgba(198, 40, 40, 0.1);
-        }
+        .summary-card.profit { border-right-color: #2e7d32; background-color: rgba(46, 125, 50, 0.1); }
+        .summary-card.loss { border-right-color: #c62828; background-color: rgba(198, 40, 40, 0.1); }
         .summary-card h3 {
             margin: 0 0 10px 0;
             font-size: calc(12px * var(--font-scale));
@@ -760,26 +820,11 @@
             border-radius: 4px;
             display: inline-block;
         }
-        .profit-badge.positive {
-            color: #2e7d32;
-            background-color: rgba(46, 125, 50, 0.15);
-        }
-        .profit-badge.negative {
-            color: #c62828;
-            background-color: rgba(198, 40, 40, 0.15);
-        }
-        .profit-badge.neutral {
-            color: var(--text-sub);
-            background-color: var(--bg-body);
-        }
-        [data-theme="dark"] .profit-badge.positive {
-            color: #81c784;
-            background-color: rgba(129, 199, 132, 0.2);
-        }
-        [data-theme="dark"] .profit-badge.negative {
-            color: #ef5350;
-            background-color: rgba(239, 83, 80, 0.2);
-        }
+        .profit-badge.positive { color: #2e7d32; background-color: rgba(46, 125, 50, 0.15); }
+        .profit-badge.negative { color: #c62828; background-color: rgba(198, 40, 40, 0.15); }
+        .profit-badge.neutral { color: var(--text-sub); background-color: var(--bg-body); }
+        [data-theme="dark"] .profit-badge.positive { color: #81c784; background-color: rgba(129, 199, 132, 0.2); }
+        [data-theme="dark"] .profit-badge.negative { color: #ef5350; background-color: rgba(239, 83, 80, 0.2); }
 
         .tradingview-embed-container {
             width: 100%;
@@ -791,16 +836,8 @@
             background: var(--bg-card);
             position: relative;
         }
-        .tradingview-embed-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .tradingview-widget-container {
-            width: 100%;
-            height: 100%;
-        }
-        /* Carat selector for jewelry */
+        .tradingview-embed-container iframe { width: 100%; height: 100%; border: none; }
+        .tradingview-widget-container { width: 100%; height: 100%; }
         .carat-selector-group {
             display: flex;
             gap: 10px;
@@ -821,17 +858,13 @@
             font-size: calc(14px * var(--font-scale));
             transition: all 0.3s;
         }
-        .carat-selector-group .carat-option:hover {
-            border-color: var(--primary);
-        }
+        .carat-selector-group .carat-option:hover { border-color: var(--primary); }
         .carat-selector-group .carat-option.active {
             border-color: var(--primary);
             background-color: var(--primary);
             color: white;
         }
-        [data-theme="dark"] .carat-selector-group .carat-option.active {
-            color: #1a1a1a;
-        }
+        [data-theme="dark"] .carat-selector-group .carat-option.active { color: #1a1a1a; }
         .hidden { display: none !important; }
         .loading-spinner {
             display: inline-block;
@@ -867,15 +900,9 @@
             font-size: calc(14px * var(--font-scale));
         }
         .discount-type-container .radio-group input { width: auto; cursor: pointer; }
-        .discount-type-container .radio-group input:disabled {
-            cursor: not-allowed;
-        }
-        .discount-type-container .radio-group.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .discount-type-container .radio-group input:disabled { cursor: not-allowed; }
+        .discount-type-container .radio-group.disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* GPS Enhancements */
         .gps-loading {
             display: inline-block;
             width: 20px;
@@ -886,12 +913,8 @@
             animation: spin 0.8s linear infinite;
             margin-right: 8px;
         }
-        .gps-success {
-            color: var(--success);
-        }
-        .gps-error {
-            color: var(--danger);
-        }
+        .gps-success { color: var(--success); }
+        .gps-error { color: var(--danger); }
         .location-info {
             background: var(--bg-body);
             padding: 12px 15px;
@@ -903,23 +926,11 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .location-info .label {
-            font-weight: bold;
-            color: var(--text-sub);
-        }
-        .location-info .value {
-            font-weight: bold;
-            color: var(--text-main);
-        }
-        .location-info .accuracy-high {
-            color: var(--success);
-        }
-        .location-info .accuracy-medium {
-            color: #f39c12;
-        }
-        .location-info .accuracy-low {
-            color: var(--danger);
-        }
+        .location-info .label { font-weight: bold; color: var(--text-sub); }
+        .location-info .value { font-weight: bold; color: var(--text-main); }
+        .location-info .accuracy-high { color: var(--success); }
+        .location-info .accuracy-medium { color: #f39c12; }
+        .location-info .accuracy-low { color: var(--danger); }
         .map-container {
             margin-top: 10px;
             border-radius: 8px;
@@ -929,11 +940,7 @@
             border: 1px solid var(--border-color);
             position: relative;
         }
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+        .map-container iframe { width: 100%; height: 100%; border: 0; }
         .open-map-btn {
             width: 100%;
             padding: 10px;
@@ -947,9 +954,7 @@
             margin-top: 10px;
             transition: background 0.3s;
         }
-        .open-map-btn:hover {
-            background-color: var(--primary-hover);
-        }
+        .open-map-btn:hover { background-color: var(--primary-hover); }
         .manual-location-container {
             margin-top: 10px;
             display: none;
@@ -980,9 +985,7 @@
             margin-top: 8px;
             transition: background 0.3s;
         }
-        .manual-location-container .btn-confirm:hover {
-            opacity: 0.9;
-        }
+        .manual-location-container .btn-confirm:hover { opacity: 0.9; }
         .gps-actions {
             display: flex;
             gap: 10px;
@@ -990,10 +993,7 @@
             width: 100%;
             margin-top: 5px;
         }
-        .gps-actions .btn-gps {
-            flex: 2;
-            min-width: 150px;
-        }
+        .gps-actions .btn-gps { flex: 2; min-width: 150px; }
         .gps-actions .btn-gps-secondary {
             flex: 1;
             min-width: 100px;
@@ -1018,7 +1018,6 @@
             text-align: center;
         }
 
-        /* Summary Boxes - NEW */
         .summary-box-custom {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1053,12 +1052,8 @@
             font-weight: bold;
             color: var(--text-main);
         }
-        .summary-box-custom .summary-item .amount.positive {
-            color: var(--success);
-        }
-        .summary-box-custom .summary-item .amount.negative {
-            color: var(--danger);
-        }
+        .summary-box-custom .summary-item .amount.positive { color: var(--success); }
+        .summary-box-custom .summary-item .amount.negative { color: var(--danger); }
         .summary-box-custom .summary-item .currency-sm {
             font-size: calc(13px * var(--font-scale));
             color: var(--text-sub);
@@ -1069,12 +1064,8 @@
             margin-top: 4px;
             font-weight: bold;
         }
-        .summary-box-custom .summary-item .status-text.profit-text {
-            color: var(--success);
-        }
-        .summary-box-custom .summary-item .status-text.loss-text {
-            color: var(--danger);
-        }
+        .summary-box-custom .summary-item .status-text.profit-text { color: var(--success); }
+        .summary-box-custom .summary-item .status-text.loss-text { color: var(--danger); }
 
         .summary-box-custom.single-item {
             grid-template-columns: 1fr;
@@ -1093,49 +1084,23 @@
                 justify-content: center;
                 flex-wrap: wrap;
             }
-            .header-center {
-                order: 3;
-            }
-            .header-right {
-                order: 2;
-            }
+            .header-center { order: 3; }
+            .header-right { order: 2; }
             header h1 {
                 font-size: calc(14px * var(--font-scale));
                 text-align: center;
             }
-            .top-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .controls-right {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            .results-container {
-                flex-direction: column;
-            }
-            .gps-actions {
-                flex-direction: column;
-            }
+            .top-controls { flex-direction: column; align-items: stretch; }
+            .controls-right { justify-content: center; flex-wrap: wrap; }
+            .results-container { flex-direction: column; }
+            .gps-actions { flex-direction: column; }
             .gps-actions .btn-gps,
-            .gps-actions .btn-gps-secondary {
-                flex: 1;
-                width: 100%;
-            }
-            .manual-location-container .input-group {
-                flex-direction: column;
-            }
-            .manual-location-container .input-group input {
-                min-width: auto;
-            }
-            .summary-box-custom {
-                grid-template-columns: 1fr;
-            }
-            .summary-box-custom.single-item {
-                max-width: 100%;
-            }
+            .gps-actions .btn-gps-secondary { flex: 1; width: 100%; }
+            .manual-location-container .input-group { flex-direction: column; }
+            .manual-location-container .input-group input { min-width: auto; }
+            .summary-box-custom { grid-template-columns: 1fr; }
+            .summary-box-custom.single-item { max-width: 100%; }
         }
-        /* زر التعليمات */
         .help-btn {
             background-color: var(--bg-card);
             border: 2px solid var(--primary);
@@ -1155,18 +1120,9 @@
             color: white;
             transform: scale(1.03);
         }
-        .help-modal-content {
-            text-align: right;
-            max-width: 600px;
-        }
-        .help-modal-content h3 {
-            color: var(--primary);
-            margin-top: 0;
-        }
-        .help-modal-content ul {
-            list-style: none;
-            padding: 0;
-        }
+        .help-modal-content { text-align: right; max-width: 600px; }
+        .help-modal-content h3 { color: var(--primary); margin-top: 0; }
+        .help-modal-content ul { list-style: none; padding: 0; }
         .help-modal-content ul li {
             padding: 8px 0;
             border-bottom: 1px solid var(--border-color);
@@ -1174,9 +1130,7 @@
             align-items: center;
             gap: 10px;
         }
-        .help-modal-content ul li:last-child {
-            border-bottom: none;
-        }
+        .help-modal-content ul li:last-child { border-bottom: none; }
         .help-modal-content .help-images {
             display: flex;
             gap: 10px;
@@ -1193,13 +1147,8 @@
             cursor: pointer;
             transition: transform 0.3s;
         }
-        .help-modal-content .help-images img:hover {
-            transform: scale(1.05);
-        }
+        .help-modal-content .help-images img:hover { transform: scale(1.05); }
 
-        /* =============================================
-           FLOATING ACTION BUTTON (FAB) - NEW
-           ============================================= */
         .fab-container {
             position: fixed;
             bottom: 25px;
@@ -1247,9 +1196,7 @@
             border: 1px solid var(--border-color);
             animation: fabFadeIn 0.25s ease;
         }
-        .fab-menu.show {
-            display: flex;
-        }
+        .fab-menu.show { display: flex; }
         @keyframes fabFadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -1271,15 +1218,9 @@
             white-space: nowrap;
             font-family: inherit;
         }
-        .fab-menu-item:hover {
-            background-color: var(--bg-body);
-        }
-        .fab-menu-item.danger {
-            color: var(--danger);
-        }
-        .fab-menu-item.danger:hover {
-            background-color: rgba(198, 40, 40, 0.1);
-        }
+        .fab-menu-item:hover { background-color: var(--bg-body); }
+        .fab-menu-item.danger { color: var(--danger); }
+        .fab-menu-item.danger:hover { background-color: rgba(198, 40, 40, 0.1); }
         .fab-menu-header {
             padding: 8px 12px 4px 12px;
             font-size: 11px;
@@ -1290,24 +1231,12 @@
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 5px;
         }
-        .fab-menu-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 4px 0;
-        }
+        .fab-menu-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
         @media (max-width: 768px) {
-            .fab-container {
-                bottom: 15px;
-                left: 15px;
-            }
-            .fab-main-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 24px;
-            }
+            .fab-container { bottom: 15px; left: 15px; }
+            .fab-main-btn { width: 55px; height: 55px; font-size: 24px; }
         }
 
-        /* أزرار الحفظ والاستيراد - جديدة */
         .data-action-btn {
             background-color: var(--bg-card);
             border: 2px solid var(--primary);
@@ -1328,7 +1257,114 @@
             color: white;
             transform: scale(1.03);
         }
+
+        /* ================================================
+           PRINT STYLES - for professional printing
+           ================================================ */
+        @media print {
+            @page { size: A4; margin: 12mm; }
+
+            header, .sidebar, .overlay, .fab-container, .modal-overlay,
+            .footer-copyrights, .section-actions, .help-btn,
+            .data-action-btn, .tradingview-nav-btn, .menu-btn,
+            .header-center, .status-bar button, .btn-calc,
+            .btn-save-shop, .btn-refresh, .btn-backup,
+            .backup-container, .image-options-container,
+            .btn-img-option, .gps-actions, .manual-location-container,
+            .open-map-btn, .image-options-container,
+            .btn-gps, .btn-gps-secondary, .btn-action-row,
+            .btn-clear-all, .btn-img-option,
+            .images-grid-inputs input[type="file"],
+            #imageFileInput1, #imageFileInput2, #importFileInput,
+            #fabImportInput, .btn-delete-row, .btn-edit-row,
+            .sort-container, .comparison-header button {
+                display: none !important;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11pt !important;
+            }
+
+            .container {
+                padding: 0 !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                display: block !important;
+            }
+
+            .page-section { display: none !important; }
+            .page-section.print-target {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .calculator-card {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 10px !important;
+                border: none !important;
+                background: #fff !important;
+            }
+
+            .section-title {
+                color: #000 !important;
+                border-bottom: 2px solid #d4af37 !important;
+                page-break-after: avoid;
+            }
+
+            h2 { color: #000 !important; }
+            .developer-tag { color: #b8941f !important; }
+
+            th, td {
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+                padding: 6px !important;
+                font-size: 9pt !important;
+            }
+            th { background: #f5f5f5 !important; }
+
+            .result-box, .summary-item, .summary-card {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+            }
+
+            .profit-badge.positive { color: #2e7d32 !important; background: #e8f5e9 !important; }
+            .profit-badge.negative { color: #c62828 !important; background: #ffebee !important; }
+
+            .table-responsive { overflow: visible !important; border: 1px solid #ccc !important; }
+            table { min-width: 0 !important; }
+
+            .save-container,
+            .status-bar {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+            }
+
+            .print-only-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 3px double #d4af37;
+            }
+            .print-only-header h1 {
+                margin: 0 0 5px 0;
+                color: #b8941f;
+                font-size: 18pt;
+            }
+            .print-only-header small {
+                color: #666;
+                font-size: 9pt;
+            }
+        }
+        .print-only-header { display: none; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -1357,6 +1393,9 @@
     </div>
 
     <div class="header-right">
+        <button class="data-action-btn share-site" onclick="shareWebsite()" title="مشاركة الموقع">
+            🔗 <span id="shareSiteBtnTxt">مشاركة الموقع</span>
+        </button>
         <button class="data-action-btn" onclick="exportBackupData()" title="حفظ نسخة احتياطية">
             💾 <span id="saveBtnTxt">حفظ</span>
         </button>
@@ -1385,11 +1424,15 @@
     <!-- ================= القسم الأول: مقارنة الاسعار بين محلات الذهب ================= -->
     <div id="calculator-page" class="page-section active">
         <div class="calculator-card">
+            <div class="print-only-header">
+                <h1>🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين</h1>
+                <small>تم عمل الموقع بواسطة Muharraqi</small>
+            </div>
             <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
 
             <h2 id="mainTitle">🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين</h2>
             
-            <!-- ===== زر التعليمات الجديد ===== -->
+            <!-- ===== زر التعليمات ===== -->
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                 <button class="help-btn" onclick="openHelpModal()">
                     📖 <span id="helpBtnText">تعليمات مهمة قبل الشراء الذهب الملبوس</span>
@@ -1467,7 +1510,6 @@
                 </div>
             </div>
 
-            <!-- ====== المستطيل الأول: ملخص الصفقة ====== -->
             <div id="summaryBox1" class="summary-box-custom" style="display:none;">
                 <div class="summary-item" id="totalGoldValueBox">
                     <h4 id="summaryTotalGoldTitle">السعر الكلي للذهب اليوم حسب التسعير العالمية (بدون المصنعية والفائدة)</h4>
@@ -1480,10 +1522,8 @@
                 </div>
             </div>
 
-            <!-- ================= القسم الثاني: حدد كم ستعطي المحل الفائدة والمصنعية لكل غرام ================= -->
             <div class="section-title" id="secTitle2">ثانياً: حدد كم ستعطي المحل الفائدة والمصنعية لكل غرام</div>
             
-            <!-- ====== نوع الخصم ====== -->
             <div class="form-group">
                 <label id="lblDiscountType">نوع الخصم:</label>
                 <div class="discount-type-container" id="discountTypeContainer">
@@ -1501,7 +1541,6 @@
                 </div>
             </div>
 
-            <!-- ====== خيار الخصم العادي (مستقل عن فائدة المحل) ====== -->
             <div id="discountNormalSection">
                 <div class="form-group">
                     <label id="lblNormalDiscount" for="normalDiscountSelect">اختر الفائدة الإضافية لكل غرام (د.ب):</label>
@@ -1558,7 +1597,6 @@
                 <button class="btn-calc" id="btnCalcNormal" onclick="calculateNormalDiscount()">احسب التكلفة</button>
             </div>
 
-            <!-- ====== خيار الخصم المتقدم (نفس النظام القديم) ====== -->
             <div id="discountAdvancedSection" style="display:none;">
                 <div class="form-group">
                     <label id="lblMinProfit" for="minProfitSelect">الحد الأدنى للربح المطلوب للمحل (د.ب):</label>
@@ -1613,7 +1651,6 @@
                 </div>
             </div>
 
-            <!-- ====== المستطيل الثاني: ربح المحل الكلي بعد الخصم ====== -->
             <div id="summaryBox2" class="summary-box-custom single-item" style="display:none;">
                 <div class="summary-item" id="totalShopProfitAfterBox">
                     <h4 id="summaryTotalProfitAfterTitle">ربح المحل الكلي بعد الخصم</h4>
@@ -1622,7 +1659,6 @@
                 </div>
             </div>
 
-            <!-- ================= القسم الثالث: حفظ بيانات المحل ================= -->
             <div class="save-container" id="saveContainer">
                 <div class="save-flex">
                     <div class="form-group" style="margin-bottom:10px;">
@@ -1661,7 +1697,6 @@
                         </div>
                     </div>
 
-                    <!-- ====== GPS ENHANCED SECTION ====== -->
                     <div class="form-group" style="margin-bottom:15px;">
                         <label id="lblAddLocation">موقع المحل الجغرافي (اختياري):</label>
                         <div class="gps-actions">
@@ -1674,7 +1709,6 @@
                         </div>
                         <div id="gpsStatusText" class="gps-status-text"></div>
                         
-                        <!-- حاوية الموقع اليدوي -->
                         <div class="manual-location-container" id="manualLocationContainer">
                             <label style="font-size:13px; margin-bottom:5px;">أدخل الإحداثيات يدوياً:</label>
                             <div class="input-group">
@@ -1684,7 +1718,6 @@
                             <button class="btn-confirm" onclick="setManualLocation()">✅ تأكيد الموقع اليدوي</button>
                         </div>
 
-                        <!-- حاوية عرض الخريطة -->
                         <div id="mapContainer" class="map-container" style="display:none;">
                             <iframe id="locationMap" width="100%" height="100%" frameborder="0" style="border:0;" 
                                     allowfullscreen="" loading="lazy" 
@@ -1692,7 +1725,6 @@
                             </iframe>
                         </div>
 
-                        <!-- حاوية معلومات الموقع -->
                         <div id="locationInfoContainer"></div>
                     </div>
 
@@ -1745,12 +1777,26 @@
             <div class="live-price-info" id="footerInfo">
                 * يتم تحديث الأسعار تلقائياً من البورصة العالمية وتحويلها للدينار البحريني.
             </div>
+
+            <!-- ====== أزرار الطباعة والمشاركة (أسفل القسم) ====== -->
+            <div class="section-actions section-actions-bottom">
+                <button class="action-icon-btn" onclick="printSection('calculator-page')" title="طباعة">
+                    🖨️ <span id="printBtnCalcTxt">طباعة</span>
+                </button>
+                <button class="action-icon-btn pdf-share" onclick="shareAsPDF('calculator-page')" title="مشاركة كـ PDF">
+                    📄 <span id="pdfBtnCalcTxt">مشاركة PDF</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- ================= القسم الثاني: حساب المتوسط السعري للسبائك ================= -->
     <div id="bullion-page" class="page-section">
         <div class="calculator-card">
+            <div class="print-only-header">
+                <h1>📊 المتوسط السعري للسبائك</h1>
+                <small>تم عمل الموقع بواسطة Muharraqi</small>
+            </div>
             <div class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
             <h2 id="bullionMainTitle">📊 المتوسط السعري للسبائك</h2>
             
@@ -1848,12 +1894,26 @@
                     <tbody id="bullion-table-body"></tbody>
                 </table>
             </div>
+
+            <!-- ====== أزرار الطباعة والمشاركة (أسفل القسم) ====== -->
+            <div class="section-actions section-actions-bottom">
+                <button class="action-icon-btn" onclick="printSection('bullion-page')" title="طباعة">
+                    🖨️ <span id="printBtnBullionTxt">طباعة</span>
+                </button>
+                <button class="action-icon-btn pdf-share" onclick="shareAsPDF('bullion-page')" title="مشاركة كـ PDF">
+                    📄 <span id="pdfBtnBullionTxt">مشاركة PDF</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- ================= القسم الثالث: المتوسط السعري للملبوس (الجواهر) ================= -->
+    <!-- ================= القسم الثالث: المتوسط السعري للملبوس ================= -->
     <div id="jewelry-page" class="page-section">
         <div class="calculator-card">
+            <div class="print-only-header">
+                <h1>📊 المتوسط السعري للملبوس</h1>
+                <small>تم عمل الموقع بواسطة Muharraqi</small>
+            </div>
             <div class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
             <h2 id="jewelryMainTitle">📊 المتوسط السعري للملبوس</h2>
             
@@ -1963,6 +2023,16 @@
                     <tbody id="jewelry-table-body"></tbody>
                 </table>
             </div>
+
+            <!-- ====== أزرار الطباعة والمشاركة (أسفل القسم) ====== -->
+            <div class="section-actions section-actions-bottom">
+                <button class="action-icon-btn" onclick="printSection('jewelry-page')" title="طباعة">
+                    🖨️ <span id="printBtnJewelryTxt">طباعة</span>
+                </button>
+                <button class="action-icon-btn pdf-share" onclick="shareAsPDF('jewelry-page')" title="مشاركة كـ PDF">
+                    📄 <span id="pdfBtnJewelryTxt">مشاركة PDF</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -2028,6 +2098,13 @@
     </div>
 </div>
 
+<!-- PDF generating overlay -->
+<div id="pdfOverlay" class="pdf-overlay">
+    <div class="pdf-spinner"></div>
+    <p id="pdfOverlayText">📄 جاري إنشاء ملف PDF...</p>
+    <small id="pdfOverlaySub">الرجاء الانتظار قليلاً</small>
+</div>
+
 <!-- ============================================
      FLOATING ACTION BUTTON - NEW
      ============================================ -->
@@ -2056,6 +2133,7 @@
     // CONFIGURATION
     // ============================================================
     const GOLD_API_KEY = 'goldapi-4ce604c6334baceaab771f5a376ef4b4-io';
+    const SITE_URL = window.location.href;
 
     // ============================================================
     // HELPER FUNCTIONS
@@ -2084,7 +2162,366 @@
     }
 
     // ============================================================
-    // FLOATING ACTION BUTTON (FAB) FUNCTIONS - NEW
+    // PRINT SECTION
+    // ============================================================
+    function printSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('print-target'));
+        section.classList.add('print-target');
+
+        setTimeout(() => {
+            window.print();
+            setTimeout(() => {
+                section.classList.remove('print-target');
+            }, 500);
+        }, 100);
+    }
+
+    // ============================================================
+    // SHARE AS PDF
+    // ============================================================
+    function getPDFFilename(sectionId) {
+        const lang = goldData.currentLang;
+        const map = {
+            'calculator-page': {
+                ar: 'مقارنة-اسعار-الذهب-البحرين',
+                en: 'Gold-Price-Comparison-Bahrain',
+                hi: 'सोने-की-कीमत-तुलना-बहरीन'
+            },
+            'bullion-page': {
+                ar: 'تقرير-السبائك',
+                en: 'Bullion-Report',
+                hi: 'बुलियन-रिपोर्ट'
+            },
+            'jewelry-page': {
+                ar: 'تقرير-الملبوس',
+                en: 'Jewelry-Report',
+                hi: 'आभूषण-रिपोर्ट'
+            }
+        };
+        const name = (map[sectionId] && map[sectionId][lang]) ? map[sectionId][lang] : 'Gold-Report';
+        return `${name}-${new Date().toISOString().slice(0,10)}.pdf`;
+    }
+
+    async function shareAsPDF(sectionId) {
+        if (typeof html2pdf === 'undefined') {
+            alert('⏳ جاري تحميل مكتبة PDF، يرجى الانتظار ثم إعادة المحاولة.');
+            return;
+        }
+
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+
+        const overlay = document.getElementById('pdfOverlay');
+        const overlayText = document.getElementById('pdfOverlayText');
+        const overlaySub = document.getElementById('pdfOverlaySub');
+        const lang = goldData.currentLang;
+        overlayText.innerText = lang === 'ar' ? '📄 جاري إنشاء ملف PDF...' : (lang === 'en' ? '📄 Generating PDF file...' : '📄 PDF फ़ाइल बना रहे हैं...');
+        overlaySub.innerText = lang === 'ar' ? 'الرجاء الانتظار قليلاً' : (lang === 'en' ? 'Please wait a moment' : 'कृपया थोड़ी प्रतीक्षा करें');
+        overlay.classList.add('show');
+
+        try {
+            const clone = section.cloneNode(true);
+
+            clone.querySelectorAll(
+                '.section-actions, .btn-calc, .btn-save-shop, .btn-refresh, .btn-backup, ' +
+                '.data-action-btn, .help-btn, .btn-img-option, .btn-gps, .btn-gps-secondary, ' +
+                '.manual-location-container, .open-map-btn, .image-options-container, ' +
+                '.btn-action-row, .backup-container, .images-grid-inputs, ' +
+                'input[type="file"], .btn-clear-all, .btn-capture, ' +
+                '.sort-container, #comparisonSection .comparison-header > button, ' +
+                '.btn-refresh, .tradingview-nav-btn, .menu-btn, .pdf-overlay'
+            ).forEach(el => el.remove());
+
+            clone.querySelectorAll('.print-only-header').forEach(el => el.remove());
+
+            const headerHtml = `
+                <div style="text-align:center; padding: 15px 0; border-bottom: 3px double #d4af37; margin-bottom: 15px;">
+                    <h1 style="margin: 0 0 6px 0; color: #b8941f; font-size: 20pt; font-family: 'Segoe UI', Tahoma, sans-serif;">
+                        ${sectionId === 'calculator-page' ? '🇧🇭 مقارنة اسعار الذهب - البحرين' :
+                          sectionId === 'bullion-page' ? '📊 تقرير السبائك' :
+                          '📊 تقرير الملبوس'}
+                    </h1>
+                    <small style="color: #666; font-size: 10pt;">
+                        تم عمل الموقع بواسطة Muharraqi &nbsp;|&nbsp; ${new Date().toLocaleDateString('ar-BH')}
+                    </small>
+                </div>
+            `;
+
+            const wrapper = document.createElement('div');
+            wrapper.style.background = '#ffffff';
+            wrapper.style.color = '#000000';
+            wrapper.style.padding = '15px';
+            wrapper.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            wrapper.style.direction = 'rtl';
+            wrapper.style.textAlign = 'right';
+            wrapper.style.width = '760px';
+            wrapper.style.boxSizing = 'border-box';
+            wrapper.innerHTML = headerHtml;
+            wrapper.appendChild(clone);
+
+            wrapper.querySelectorAll('*').forEach(el => {
+                el.style.animation = 'none';
+                el.style.transition = 'none';
+            });
+
+            const styleTag = document.createElement('style');
+            styleTag.textContent = `
+                .pdf-wrapper * { box-sizing: border-box !important; }
+                .pdf-wrapper .calculator-card {
+                    box-shadow: none !important;
+                    border: none !important;
+                    background: #ffffff !important;
+                    padding: 0 !important;
+                    border-radius: 0 !important;
+                }
+                .pdf-wrapper .developer-tag { color: #b8941f !important; }
+                .pdf-wrapper h2 { display: none !important; }
+                .pdf-wrapper .status-bar {
+                    background: #fffbea !important;
+                    border: 1px solid #d4af37 !important;
+                    color: #856404 !important;
+                }
+                .pdf-wrapper .status-bar button { display: none !important; }
+                .pdf-wrapper .save-container {
+                    background: #f8f9fa !important;
+                    border: 1px solid #ddd !important;
+                }
+                .pdf-wrapper .result-box {
+                    background: #f8f9fa !important;
+                    border: 1px solid #ddd !important;
+                }
+                .pdf-wrapper .result-box.active {
+                    border-color: #d4af37 !important;
+                    background: #fffbea !important;
+                }
+                .pdf-wrapper .summary-item,
+                .pdf-wrapper .summary-card {
+                    background: #f8f9fa !important;
+                    border: 1px solid #ddd !important;
+                }
+                .pdf-wrapper table {
+                    min-width: 0 !important;
+                    width: 100% !important;
+                    font-size: 11px !important;
+                }
+                .pdf-wrapper th, .pdf-wrapper td {
+                    padding: 6px 4px !important;
+                    border: 1px solid #ddd !important;
+                    color: #000 !important;
+                }
+                .pdf-wrapper th { background: #f0f0f0 !important; }
+                .pdf-wrapper .profit-badge { font-size: 11px !important; }
+                .pdf-wrapper .table-responsive { overflow: visible !important; }
+                .pdf-wrapper input,
+                .pdf-wrapper select {
+                    background: #f8f9fa !important;
+                    color: #000 !important;
+                    border: 1px solid #ccc !important;
+                }
+                .pdf-wrapper .form-group { margin-bottom: 10px !important; }
+                .pdf-wrapper label { color: #333 !important; }
+                .pdf-wrapper .section-title { color: #000 !important; }
+                .pdf-wrapper .price-source-container { background: #f8f9fa !important; }
+                .pdf-wrapper .bullion-price-source { background: #f8f9fa !important; }
+                .pdf-wrapper .live-price-info,
+                .pdf-wrapper .footer-copyrights { color: #666 !important; }
+                .pdf-wrapper .hidden { display: none !important; }
+            `;
+            wrapper.classList.add('pdf-wrapper');
+            wrapper.appendChild(styleTag);
+
+            document.body.appendChild(wrapper);
+
+            const filename = getPDFFilename(sectionId);
+
+            const opt = {
+                margin: [8, 8, 10, 8],
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    windowWidth: 800
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            const pdfBlob = await html2pdf().set(opt).from(wrapper).outputPdf('blob');
+
+            document.body.removeChild(wrapper);
+
+            overlay.classList.remove('show');
+
+            await shareOrDownloadPDF(pdfBlob, filename, sectionId);
+
+        } catch (err) {
+            console.error('PDF generation error:', err);
+            overlay.classList.remove('show');
+            alert(lang === 'ar' ? '❌ حدث خطأ أثناء إنشاء PDF. حاول مرة أخرى.' : (lang === 'en' ? '❌ Error while generating PDF. Please try again.' : '❌ PDF बनाते समय त्रुटि। कृपया पुनः प्रयास करें।'));
+        }
+    }
+
+    async function shareOrDownloadPDF(blob, filename, sectionId) {
+        const lang = goldData.currentLang;
+
+        const titleMap = {
+            'calculator-page': { ar: 'تقرير مقارنة أسعار الذهب - البحرين 🇧🇭', en: 'Gold Price Comparison Report - Bahrain 🇧🇭', hi: 'सोने की कीमत तुलना रिपोर्ट - बहरीन 🇧🇭' },
+            'bullion-page': { ar: 'تقرير السبائك 📊', en: 'Bullion Report 📊', hi: 'बुलियन रिपोर्ट 📊' },
+            'jewelry-page': { ar: 'تقرير الملبوس 📊', en: 'Jewelry Report 📊', hi: 'आभूषण रिपोर्ट 📊' }
+        };
+        const title = (titleMap[sectionId] && titleMap[sectionId][lang]) || 'Gold Report';
+        const text = lang === 'ar'
+            ? `📄 تقرير من حاسبة الذهب الذكية\n🔗 ${SITE_URL}`
+            : (lang === 'en'
+                ? `📄 Report from Smart Gold Calculator\n🔗 ${SITE_URL}`
+                : `📄 स्मार्ट गोल्ड कैलकुलेटर से रिपोर्ट\n🔗 ${SITE_URL}`);
+
+        const file = new File([blob], filename, { type: 'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: title,
+                    text: text
+                });
+                return;
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                console.warn('Share failed, falling back:', err);
+            }
+        }
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+
+        setTimeout(() => showShareOptions(filename), 400);
+    }
+
+    function showShareOptions(filename) {
+        const lang = goldData.currentLang;
+        const messages = {
+            ar: `✅ تم تنزيل ملف PDF بنجاح (${filename})\n\n📤 هل تريد مشاركته عبر واتساب؟\n(سيتم فتح واتساب، ثم أرفق الملف من التنزيلات)`,
+            en: `✅ PDF file downloaded successfully (${filename})\n\n📤 Do you want to share it via WhatsApp?\n(WhatsApp will open, then attach the file from Downloads)`,
+            hi: `✅ PDF फ़ाइल सफलतापूर्वक डाउनलोड हुई (${filename})\n\n📤 क्या आप इसे WhatsApp पर साझा करना चाहते हैं?\n(WhatsApp खुलेगा, फिर Downloads से फ़ाइल अटैच करें)`
+        };
+        const msg = messages[lang] || messages.ar;
+
+        if (confirm(msg)) {
+            const text = lang === 'ar'
+                ? `📄 تقرير الذهب الذكية\n🔗 ${SITE_URL}`
+                : (lang === 'en' ? `📄 Smart Gold Report\n🔗 ${SITE_URL}` : `📄 स्मार्ट गोल्ड रिपोर्ट\n🔗 ${SITE_URL}`);
+            const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(wa, '_blank');
+        }
+    }
+
+    // ============================================================
+    // SHARE WEBSITE (top button)
+    // ============================================================
+    async function shareWebsite() {
+        const lang = goldData.currentLang;
+        const shareText = {
+            ar: '🇧🇭 جرب حاسبة الذهب الذكية لمقارنة أسعار الذهب بين محلات البحرين - أسعار محدّثة مباشرة!',
+            en: '🇧🇭 Try Smart Gold Calculator to compare gold prices between Bahrain shops - live updated prices!',
+            hi: '🇧🇭 बहरीन की दुकानों के बीच सोने की कीमतों की तुलना के लिए स्मार्ट गोल्ड कैलकुलेटर आज़माएं!'
+        };
+        const title = {
+            ar: 'حاسبة الذهب الذكية - البحرين 🇧🇭',
+            en: 'Smart Gold Calculator - Bahrain 🇧🇭',
+            hi: 'स्मार्ट गोल्ड कैलकुलेटर - बहरीन 🇧🇭'
+        };
+        const text = shareText[lang] || shareText.ar;
+        const ttl = title[lang] || title.ar;
+
+        const shareData = {
+            title: ttl,
+            text: text,
+            url: SITE_URL
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                return;
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+            }
+        }
+
+        showShareModalFallback(ttl, text);
+    }
+
+    function showShareModalFallback(title, text) {
+        const lang = goldData.currentLang;
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:6000;
+            display:flex; justify-content:center; align-items:center; padding:20px;
+        `;
+        const box = document.createElement('div');
+        box.style.cssText = `
+            background: var(--bg-card); color: var(--text-main);
+            padding: 25px; border-radius: 15px; max-width: 420px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); text-align: center;
+            border-top: 4px solid var(--primary);
+        `;
+        const heading = lang === 'ar' ? '🔗 مشاركة الموقع' : (lang === 'en' ? '🔗 Share Website' : '🔗 वेबसाइट साझा करें');
+        const waText = lang === 'ar' ? '📱 واتساب' : (lang === 'en' ? '📱 WhatsApp' : '📱 WhatsApp');
+        const tgText = lang === 'ar' ? '✈️ تيليجرام' : (lang === 'en' ? '✈️ Telegram' : '✈️ Telegram');
+        const cpText = lang === 'ar' ? '📋 نسخ الرابط' : (lang === 'en' ? '📋 Copy Link' : '📋 लिंक कॉपी करें');
+        const cancelText = lang === 'ar' ? 'إلغاء' : (lang === 'en' ? 'Cancel' : 'रद्द करें');
+
+        box.innerHTML = `
+            <h3 style="margin: 0 0 15px 0; color: var(--primary);">${heading}</h3>
+            <p style="margin: 0 0 20px 0; font-size: 13px; color: var(--text-sub); word-break: break-all;">${SITE_URL}</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button id="shareWA" style="padding:14px; background:#25D366; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:15px;">${waText}</button>
+                <button id="shareTG" style="padding:14px; background:#229ED9; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:15px;">${tgText}</button>
+                <button id="shareCopy" style="padding:14px; background: var(--primary); color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:15px;">${cpText}</button>
+                <button id="shareCancel" style="padding:10px; background: transparent; color: var(--text-sub); border: 1px solid var(--border-color); border-radius:10px; cursor:pointer; font-size:14px;">${cancelText}</button>
+            </div>
+        `;
+        modal.appendChild(box);
+        document.body.appendChild(modal);
+
+        const close = () => document.body.removeChild(modal);
+        const fullText = text + '\n' + SITE_URL;
+
+        box.querySelector('#shareWA').onclick = () => {
+            window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
+            close();
+        };
+        box.querySelector('#shareTG').onclick = () => {
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(SITE_URL)}&text=${encodeURIComponent(text)}`, '_blank');
+            close();
+        };
+        box.querySelector('#shareCopy').onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(SITE_URL);
+                alert(lang === 'ar' ? '✅ تم نسخ الرابط' : (lang === 'en' ? '✅ Link copied' : '✅ लिंक कॉपी हो गया'));
+            } catch (e) {
+                prompt(lang === 'ar' ? 'انسخ الرابط:' : 'Copy link:', SITE_URL);
+            }
+            close();
+        };
+        box.querySelector('#shareCancel').onclick = close;
+        modal.onclick = (e) => { if (e.target === modal) close(); };
+    }
+
+    // ============================================================
+    // FLOATING ACTION BUTTON (FAB)
     // ============================================================
     function toggleFabMenu() {
         const menu = document.getElementById('fabMenu');
@@ -2111,7 +2548,7 @@
     }
 
     // ============================================================
-    // ✅ CLEAR ALL DATA - يحتفظ بالإعدادات (اللغة، الثيم، حجم الخط)
+    // CLEAR ALL DATA
     // ============================================================
     function clearAllData() {
         const lang = goldData.currentLang;
@@ -2126,7 +2563,6 @@
 
         if (!confirm(msg)) return;
 
-        // تأكيد ثاني للأمان
         let confirmMsg = '';
         if (lang === 'ar') confirmMsg = '🔴 تأكيد نهائي: سيتم حذف جميع البيانات المدخلة نهائياً. متأكد؟';
         else if (lang === 'en') confirmMsg = '🔴 Final confirmation: All entered data will be permanently deleted. Are you sure?';
@@ -2134,12 +2570,10 @@
         
         if (!confirm(confirmMsg)) return;
 
-        // ✅ الاحتفاظ بالإعدادات الحالية (اللغة، الثيم، حجم الخط)
         const preservedLang = goldData.currentLang;
         const preservedTheme = goldData.theme;
         const preservedFontSize = goldData.fontSize;
 
-        // ✅ مسح البيانات المدخلة فقط (الجدول والعمليات)
         goldData.savedShops = [];
         bullionTransactions = [];
         jewelryTransactions = [];
@@ -2148,29 +2582,20 @@
         bullionHistoricalPrice = null;
         jewelryHistoricalPrice = null;
 
-        // ✅ إعادة الإعدادات المحفوظة
         goldData.currentLang = preservedLang;
         goldData.theme = preservedTheme;
         goldData.fontSize = preservedFontSize;
 
-        // ✅ حفظ البيانات الجديدة (بدون البيانات المدخلة لكن مع الإعدادات)
         saveLocalData();
 
-        // إعادة تعيين واجهة المستخدم (بدون إعادة تحميل الصفحة)
-        
-        // 1. مسح جداول المقارنات
         renderComparisonTable();
         renderBullionTable();
         renderJewelryTable();
-        
-        // 2. إعادة حساب الإحصائيات (ستظهر كصفر)
         calculateBullionMetrics();
         calculateJewelryMetrics();
         
-        // 3. إخفاء قسم المقارنة (لأن الجدول فارغ)
         document.getElementById('comparisonSection').style.display = 'none';
         
-        // 4. إعادة تعيين النماذج
         document.getElementById('shopNameInput').value = '';
         document.getElementById('totalWeight').value = '';
         document.getElementById('totalPrice').value = '';
@@ -2181,7 +2606,6 @@
         document.getElementById('adoptedWeightDisplayNormal').value = '';
         document.getElementById('adoptedWeightDisplayAdvanced').value = '';
         
-        // 5. إخفاء المستطيلات والحاويات
         document.getElementById('summaryBox1').style.display = 'none';
         document.getElementById('summaryBox2').style.display = 'none';
         document.getElementById('saveContainer').style.display = 'none';
@@ -2190,13 +2614,11 @@
         document.getElementById('box2_1').classList.remove('active');
         document.getElementById('box2_2').classList.remove('active');
         
-        // 6. إعادة تعيين صفوف النتائج
         document.getElementById('pricePerGramStore').innerHTML = '0.00 <span class="currency">د.ب</span>';
         document.getElementById('profitOnly').innerHTML = '0.00 <span class="currency">د.ب</span>';
         document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
         document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
         
-        // 7. إعادة تعيين حالة الخصم
         document.getElementById('discountTypeDisabledMsg').style.display = 'block';
         document.getElementById('normalDiscountSelect').disabled = true;
         document.getElementById('btnCalcNormal').disabled = true;
@@ -2212,14 +2634,12 @@
         document.getElementById('discountAllowed').style.display = 'none';
         document.getElementById('discountMinWarning').style.display = 'none';
         
-        // 8. إعادة تعيين متغيرات الحالة
         lastStorePricePerGram = 0;
         lastStoreProfitPerGram = 0;
         lastTotalWeight = 0;
         editingShopId = null;
         document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnSaveShop;
         
-        // 9. إعادة تعيين صور المرفقات والموقع
         removeAttachedImage(1);
         removeAttachedImage(2);
         resolvedGPS = null;
@@ -2237,7 +2657,6 @@
         isManualLocation = false;
         stopWatchingLocation();
         
-        // رسالة نجاح
         let doneMsg = '';
         if (lang === 'ar') doneMsg = '✅ تم مسح جميع البيانات المدخلة بنجاح.\n✅ تم الاحتفاظ بالإعدادات (اللغة، الثيم، حجم الخط).';
         else if (lang === 'en') doneMsg = '✅ All entered data cleared successfully.\n✅ Settings preserved (language, theme, font size).';
@@ -2246,7 +2665,6 @@
         alert(doneMsg);
     }
 
-    // إغلاق القائمة عند النقر خارجها
     document.addEventListener('click', function(e) {
         const fabContainer = document.getElementById('fabContainer');
         if (fabContainer && !fabContainer.contains(e.target)) {
@@ -2254,19 +2672,11 @@
         }
     });
 
-    // ============================================================
-    // HELP MODAL FUNCTIONS
-    // ============================================================
-    function openHelpModal() {
-        document.getElementById('helpModal').style.display = 'flex';
-    }
-
-    function closeHelpModal() {
-        document.getElementById('helpModal').style.display = 'none';
-    }
+    function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+    function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
 
     // ============================================================
-    // HISTORICAL PRICE FETCH (المسار الصحيح)
+    // HISTORICAL PRICE FETCH
     // ============================================================
     async function fetchHistoricalPrice(section) {
         let dateField, priceField, btn;
@@ -2289,10 +2699,7 @@
         if (!dateField || !priceField) return;
 
         const dateStr = dateField.value;
-        if (!dateStr) {
-            alert('الرجاء اختيار تاريخ');
-            return;
-        }
+        if (!dateStr) { alert('الرجاء اختيار تاريخ'); return; }
 
         const originalText = btn.innerText;
         btn.innerHTML = '<span class="loading-spinner"></span> جاري التحميل...';
@@ -2308,9 +2715,7 @@
                 }
             });
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
 
             const data = await response.json();
 
@@ -2334,20 +2739,15 @@
                     const statusMsg = `✅ تم جلب السعر التاريخي (${dateStr}): سعر 24 = ${roundedPrice} د.ب`;
                     setStatus(statusMsg, 'success');
                 } else {
-                    if (section === 'bullion') {
-                        bullionHistoricalPrice = roundedPrice;
-                    } else if (section === 'jewelry') {
-                        jewelryHistoricalPrice = roundedPrice;
-                    }
+                    if (section === 'bullion') bullionHistoricalPrice = roundedPrice;
+                    else if (section === 'jewelry') jewelryHistoricalPrice = roundedPrice;
+                    
                     priceField.value = roundedPrice;
                     priceField.readOnly = true;
                     priceField.style.backgroundColor = 'var(--bg-readonly)';
                     
-                    if (section === 'bullion') {
-                        calculateBullionMetrics();
-                    } else if (section === 'jewelry') {
-                        calculateJewelryMetrics();
-                    }
+                    if (section === 'bullion') calculateBullionMetrics();
+                    else if (section === 'jewelry') calculateJewelryMetrics();
                 }
             } else {
                 throw new Error('No price data returned');
@@ -2552,7 +2952,9 @@
             helpBtnText: "تعليمات مهمة قبل الشراء الذهب الملبوس",
             saveBtnTxt: "حفظ",
             importBtnTxt: "استيراد",
-            // ===== FAB Translations =====
+            shareSiteBtnTxt: "مشاركة الموقع",
+            printBtnTxt: "طباعة",
+            pdfBtnTxt: "مشاركة PDF",
             fabMenuHeader: "⚙️ إدارة البيانات",
             fabExportTxt: "حفظ البيانات (نسخة احتياطية)",
             fabImportTxt: "استرجاع البيانات من نسخة احتياطية",
@@ -2730,7 +3132,9 @@
             helpBtnText: "Important Instructions Before Buying Gold Jewelry",
             saveBtnTxt: "Save",
             importBtnTxt: "Import",
-            // ===== FAB Translations =====
+            shareSiteBtnTxt: "Share Site",
+            printBtnTxt: "Print",
+            pdfBtnTxt: "Share PDF",
             fabMenuHeader: "⚙️ Data Management",
             fabExportTxt: "Save Data (Backup)",
             fabImportTxt: "Restore Data from Backup",
@@ -2908,7 +3312,9 @@
             helpBtnText: "सोने के आभूषण खरीदने से पहले महत्वपूर्ण निर्देश",
             saveBtnTxt: "सहेजें",
             importBtnTxt: "आयात",
-            // ===== FAB Translations =====
+            shareSiteBtnTxt: "साइट साझा करें",
+            printBtnTxt: "प्रिंट",
+            pdfBtnTxt: "PDF साझा करें",
             fabMenuHeader: "⚙️ डेटा प्रबंधन",
             fabExportTxt: "डेटा सहेजें (बैकअप)",
             fabImportTxt: "बैकअप से डेटा पुनर्स्थापित करें",
@@ -2958,9 +3364,7 @@
             displayInput.readOnly = true;
             displayInput.style.backgroundColor = 'var(--bg-readonly)';
             const dateField = document.getElementById('historicalDate');
-            if (dateField.value) {
-                fetchHistoricalPrice('calculator');
-            }
+            if (dateField.value) fetchHistoricalPrice('calculator');
         } else {
             historicalContainer.classList.add('hidden');
             if (source === 'auto') {
@@ -2988,11 +3392,8 @@
             field.style.backgroundColor = 'var(--bg-readonly)';
             document.getElementById('bullionPriceHelp').innerText = '📅 السعر بناءً على التاريخ المحدد';
             const dateField = document.getElementById('bullionHistoricalDate');
-            if (dateField.value && !bullionHistoricalPrice) {
-                fetchHistoricalPrice('bullion');
-            } else if (bullionHistoricalPrice) {
-                field.value = bullionHistoricalPrice.toFixed(3);
-            }
+            if (dateField.value && !bullionHistoricalPrice) fetchHistoricalPrice('bullion');
+            else if (bullionHistoricalPrice) field.value = bullionHistoricalPrice.toFixed(3);
         } else {
             historicalContainer.classList.add('hidden');
             if (source === 'auto') {
@@ -3003,9 +3404,7 @@
             } else if (source === 'manual') {
                 field.readOnly = false;
                 field.style.backgroundColor = 'var(--bg-card)';
-                if (bullionManualPrice) {
-                    field.value = bullionManualPrice;
-                }
+                if (bullionManualPrice) field.value = bullionManualPrice;
                 document.getElementById('bullionPriceHelp').innerText = t.bullionHelp;
             }
         }
@@ -3024,11 +3423,8 @@
             field.style.backgroundColor = 'var(--bg-readonly)';
             document.getElementById('jewelryPriceHelp').innerText = '📅 السعر بناءً على التاريخ المحدد';
             const dateField = document.getElementById('jewelryHistoricalDate');
-            if (dateField.value && !jewelryHistoricalPrice) {
-                fetchHistoricalPrice('jewelry');
-            } else if (jewelryHistoricalPrice) {
-                field.value = jewelryHistoricalPrice.toFixed(3);
-            }
+            if (dateField.value && !jewelryHistoricalPrice) fetchHistoricalPrice('jewelry');
+            else if (jewelryHistoricalPrice) field.value = jewelryHistoricalPrice.toFixed(3);
         } else {
             historicalContainer.classList.add('hidden');
             if (source === 'auto') {
@@ -3039,9 +3435,7 @@
             } else if (source === 'manual') {
                 field.readOnly = false;
                 field.style.backgroundColor = 'var(--bg-card)';
-                if (jewelryManualPrice) {
-                    field.value = jewelryManualPrice;
-                }
+                if (jewelryManualPrice) field.value = jewelryManualPrice;
                 document.getElementById('jewelryPriceHelp').innerText = t.jewelryHelp;
             }
         }
@@ -3115,9 +3509,7 @@
             displayInput.readOnly = true;
             displayInput.style.backgroundColor = "var(--bg-readonly)";
             const carat = document.getElementById('carat').value;
-            if (livePrices[carat]) {
-                displayInput.value = livePrices[carat];
-            }
+            if (livePrices[carat]) displayInput.value = livePrices[carat];
         }
     }
 
@@ -3131,13 +3523,9 @@
         } else if (source === 'manual') {
             field.readOnly = false;
             field.style.backgroundColor = 'var(--bg-card)';
-            if (bullionManualPrice) {
-                field.value = bullionManualPrice;
-            }
+            if (bullionManualPrice) field.value = bullionManualPrice;
         } else if (source === 'historical') {
-            if (bullionHistoricalPrice) {
-                field.value = bullionHistoricalPrice.toFixed(3);
-            }
+            if (bullionHistoricalPrice) field.value = bullionHistoricalPrice.toFixed(3);
             field.readOnly = true;
             field.style.backgroundColor = 'var(--bg-readonly)';
         }
@@ -3154,22 +3542,15 @@
         } else if (source === 'manual') {
             field.readOnly = false;
             field.style.backgroundColor = 'var(--bg-card)';
-            if (jewelryManualPrice) {
-                field.value = jewelryManualPrice;
-            }
+            if (jewelryManualPrice) field.value = jewelryManualPrice;
         } else if (source === 'historical') {
-            if (jewelryHistoricalPrice) {
-                field.value = jewelryHistoricalPrice.toFixed(3);
-            }
+            if (jewelryHistoricalPrice) field.value = jewelryHistoricalPrice.toFixed(3);
             field.readOnly = true;
             field.style.backgroundColor = 'var(--bg-readonly)';
         }
         calculateJewelryMetrics();
     }
 
-    // ============================================================
-    // JEWELRY CARAT SELECTION
-    // ============================================================
     function selectJewelryCarat(carat, element) {
         document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
             el.classList.remove('active');
@@ -3179,9 +3560,6 @@
         calculateJewelryMetrics();
     }
 
-    // ============================================================
-    // SYNC WEIGHT
-    // ============================================================
     function syncWeight() {
         const weightVal = document.getElementById('totalWeight').value;
         const lang = goldData.currentLang;
@@ -3191,18 +3569,12 @@
         lastTotalWeight = parseFloat(weightVal) || 0;
     }
 
-    // ============================================================
-    // UPDATE SUMMARY BOX 1
-    // ============================================================
     function updateSummaryBox1(marketPrice, weight, profitPerGram) {
         const box = document.getElementById('summaryBox1');
         const t = translations[goldData.currentLang];
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
         
-        if (marketPrice <= 0 || weight <= 0) {
-            box.style.display = 'none';
-            return;
-        }
+        if (marketPrice <= 0 || weight <= 0) { box.style.display = 'none'; return; }
         
         box.style.display = 'grid';
         
@@ -3237,18 +3609,12 @@
         }
     }
 
-    // ============================================================
-    // UPDATE SUMMARY BOX 2 (After Discount - Single Item)
-    // ============================================================
     function updateSummaryBox2(newProfitPerGram, weight) {
         const box = document.getElementById('summaryBox2');
         const t = translations[goldData.currentLang];
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
         
-        if (weight <= 0) {
-            box.style.display = 'none';
-            return;
-        }
+        if (weight <= 0) { box.style.display = 'none'; return; }
         
         box.style.display = 'grid';
         
@@ -3278,9 +3644,6 @@
         }
     }
 
-    // ============================================================
-    // TOGGLE DISCOUNT TYPE
-    // ============================================================
     function toggleDiscountType() {
         const discountType = document.querySelector('input[name="discountType"]:checked').value;
         const normalSection = document.getElementById('discountNormalSection');
@@ -3297,9 +3660,6 @@
         }
     }
 
-    // ============================================================
-    // UPDATE DISCOUNT FIELD STATUS (للخصم المتقدم)
-    // ============================================================
     function updateDiscountFieldStatus() {
         const customProfitInput = document.getElementById('customProfit');
         const discountWarning = document.getElementById('discountWarning');
@@ -3309,7 +3669,6 @@
         const maxDiscountWarningDisplay = document.getElementById('maxDiscountWarningDisplay');
         const minProfitWarningDisplay = document.getElementById('minProfitWarningDisplay');
         const btnCalcAdvanced = document.getElementById('btnCalcAdvanced');
-        const t = translations[goldData.currentLang];
 
         const minProfitSelect = document.getElementById('minProfitSelect');
         const minProfit = parseFloat(minProfitSelect.value) || 4;
@@ -3345,16 +3704,12 @@
         }
     }
 
-    // ============================================================
-    // UPDATE DISCOUNT TYPE STATUS (تعطيل/تفعيل حسب ربح المحل)
-    // ============================================================
     function updateDiscountTypeStatus() {
         const normalRadio = document.querySelector('input[name="discountType"][value="normal"]');
         const advancedRadio = document.querySelector('input[name="discountType"][value="advanced"]');
         const normalLabel = document.getElementById('discountNormalLabel');
         const advancedLabel = document.getElementById('discountAdvancedLabel');
         const disabledMsg = document.getElementById('discountTypeDisabledMsg');
-        const container = document.getElementById('discountTypeContainer');
         const box2_1 = document.getElementById('box2_1');
         const box2_2 = document.getElementById('box2_2');
         const summaryBox2 = document.getElementById('summaryBox2');
@@ -3377,7 +3732,6 @@
             document.getElementById('gramWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
             document.getElementById('totalWithProfit').innerHTML = '0.00 <span class="currency">د.ب</span>';
             summaryBox2.style.display = 'none';
-
         } else {
             normalRadio.disabled = false;
             advancedRadio.disabled = false;
@@ -3394,7 +3748,7 @@
     }
 
     // ============================================================
-    // ENHANCED GPS FUNCTIONS
+    // GPS FUNCTIONS
     // ============================================================
     function toggleManualLocation() {
         const container = document.getElementById('manualLocationContainer');
@@ -3439,16 +3793,9 @@
             gpsBtnTxt.innerHTML = '<span class="gps-loading"></span> ' + t.gpsLoading;
             gpsStatusText.innerHTML = '⏳ ' + t.gpsWaiting;
             
-            const options = {
-                enableHighAccuracy: true,
-                timeout: 15000,
-                maximumAge: 0
-            };
+            const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
             
-            if (watchId) {
-                navigator.geolocation.clearWatch(watchId);
-                watchId = null;
-            }
+            if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
             
             watchId = navigator.geolocation.watchPosition(
                 (position) => {
@@ -3457,8 +3804,6 @@
                         lng: position.coords.longitude,
                         accuracy: position.coords.accuracy,
                         altitude: position.coords.altitude,
-                        altitudeAccuracy: position.coords.altitudeAccuracy,
-                        heading: position.coords.heading,
                         speed: position.coords.speed
                     };
                     
@@ -3487,11 +3832,9 @@
                     showLocationOnMap(coords.lat, coords.lng);
                     displayLocationInfo(coords);
                     
-                    if (coords.accuracy < 50) {
-                        if (watchId) {
-                            navigator.geolocation.clearWatch(watchId);
-                            watchId = null;
-                        }
+                    if (coords.accuracy < 50 && watchId) {
+                        navigator.geolocation.clearWatch(watchId);
+                        watchId = null;
                     }
                 },
                 (error) => {
@@ -3515,10 +3858,7 @@
                     gpsStatusText.innerHTML = '<span class="gps-error">' + errorMsg + '</span>';
                     alert(errorMsg);
                     
-                    if (watchId) {
-                        navigator.geolocation.clearWatch(watchId);
-                        watchId = null;
-                    }
+                    if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
                 },
                 options
             );
@@ -3582,10 +3922,7 @@
     }
 
     function stopWatchingLocation() {
-        if (watchId) {
-            navigator.geolocation.clearWatch(watchId);
-            watchId = null;
-        }
+        if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
     }
 
     // ============================================================
@@ -3631,8 +3968,8 @@
             const warningMsg = goldData.currentLang === 'ar' 
                 ? `⚠️ تنبيه: سعر الغرام في المحل (${pricePerGramStore.toFixed(3)} د.ب) أقل من سعر السوق (${marketPrice.toFixed(3)} د.ب) بفارق ${diff} د.ب. هذا قد يشير إلى خطأ في الإدخال أو وجود خصم استثنائي.`
                 : (goldData.currentLang === 'en' 
-                    ? `⚠️ Warning: Shop price per gram (${pricePerGramStore.toFixed(3)} BHD) is lower than market price (${marketPrice.toFixed(3)} BHD) by ${diff} BHD. This may indicate input error or exceptional discount.`
-                    : `⚠️ चेतावनी: दुकान की प्रति ग्राम कीमत (${pricePerGramStore.toFixed(3)} BHD) बाजार मूल्य (${marketPrice.toFixed(3)} BHD) से ${diff} BHD कम है। यह इनपुट त्रुटि या असाधारण छूट का संकेत हो सकता है।`);
+                    ? `⚠️ Warning: Shop price per gram (${pricePerGramStore.toFixed(3)} BHD) is lower than market price (${marketPrice.toFixed(3)} BHD) by ${diff} BHD.`
+                    : `⚠️ चेतावनी: दुकान की प्रति ग्राम कीमत (${pricePerGramStore.toFixed(3)} BHD) बाजार मूल्य (${marketPrice.toFixed(3)} BHD) से ${diff} BHD कम है।`);
             alert(warningMsg);
         }
 
@@ -3664,21 +4001,15 @@
 
         document.getElementById('box1_1').classList.add('active');
         document.getElementById('box1_2').classList.add('active');
-
         document.getElementById('saveContainer').style.display = 'block';
     }
 
-    // ============================================================
-    // NORMAL DISCOUNT CALCULATION (مستقل عن فائدة المحل)
-    // ============================================================
     function calculateNormalDiscount() {
         const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
         const weight = lastTotalWeight || parseFloat(document.getElementById('totalWeight').value) || 0;
         const selectedProfit = parseFloat(document.getElementById('normalDiscountSelect').value) || 0;
 
-        if (marketPrice <= 0 || weight <= 0) {
-            return;
-        }
+        if (marketPrice <= 0 || weight <= 0) return;
 
         const targetGramPrice = marketPrice + selectedProfit;
         const totalCost = targetGramPrice * weight;
@@ -3715,13 +4046,9 @@
         document.getElementById('box2_1').classList.add('active');
         document.getElementById('box2_2').classList.add('active');
         
-        const newProfitPerGram = selectedProfit;
-        updateSummaryBox2(newProfitPerGram, weight);
+        updateSummaryBox2(selectedProfit, weight);
     }
 
-    // ============================================================
-    // ADVANCED DISCOUNT CALCULATION (نفس النظام القديم)
-    // ============================================================
     function calculateCustomPrice() {
         const storePricePerGram = lastStorePricePerGram;
         const weight = lastTotalWeight;
@@ -3745,7 +4072,7 @@
         const customProfit = -1 * customProfitInput;
 
         if (storePricePerGram <= 0 || weight <= 0) {
-            alert(goldData.currentLang === 'ar' ? "الرجاء أولاً تحليل السعر المعروض في القسم الأول لتحديد سعر الغرام والوزن." : (goldData.currentLang === 'en' ? "Please first analyze the shop price in the first section to determine price per gram and weight." : "कृपया पहले पहले खंड में दुकान की कीमत का विश्लेषण करें।"));
+            alert(goldData.currentLang === 'ar' ? "الرجاء أولاً تحليل السعر المعروض في القسم الأول لتحديد سعر الغرام والوزن." : (goldData.currentLang === 'en' ? "Please first analyze the shop price in the first section." : "कृपया पहले पहले खंड में दुकान की कीमत का विश्लेषण करें।"));
             return;
         }
 
@@ -3772,32 +4099,29 @@
 
         if (newShopProfit > 0.001) {
             msgSpan.style.color = 'var(--success)';
-            const profitText = goldData.currentLang === 'ar' 
+            msgSpan.textContent = goldData.currentLang === 'ar' 
                 ? `🟢 المحل يستفيد +${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
                 : (goldData.currentLang === 'en' 
                     ? `🟢 Shop profits +${newShopProfit.toFixed(3)} ${currency} per gram` 
                     : `🟢 दुकान को लाभ +${newShopProfit.toFixed(3)} ${currency} प्रति ग्राम`);
-            msgSpan.textContent = profitText;
             profitBox2.style.borderColor = 'var(--success)';
             profitBox2.style.backgroundColor = 'rgba(46, 125, 50, 0.08)';
         } else if (newShopProfit < -0.001) {
             msgSpan.style.color = 'var(--danger)';
-            const lossText = goldData.currentLang === 'ar' 
+            msgSpan.textContent = goldData.currentLang === 'ar' 
                 ? `🔴 المحل خسران ${newShopProfit.toFixed(3)} ${currency} لكل غرام` 
                 : (goldData.currentLang === 'en' 
                     ? `🔴 Shop loses ${Math.abs(newShopProfit).toFixed(3)} ${currency} per gram` 
                     : `🔴 दुकान को हानि ${Math.abs(newShopProfit).toFixed(3)} ${currency} प्रति ग्राम`);
-            msgSpan.textContent = lossText;
             profitBox2.style.borderColor = 'var(--danger)';
             profitBox2.style.backgroundColor = 'rgba(198, 40, 40, 0.08)';
         } else {
             msgSpan.style.color = 'var(--text-sub)';
-            const neutralText = goldData.currentLang === 'ar' 
+            msgSpan.textContent = goldData.currentLang === 'ar' 
                 ? '⚪ لا ربح ولا خسارة للمحل' 
                 : (goldData.currentLang === 'en' 
                     ? '⚪ No profit or loss for shop' 
                     : '⚪ दुकान को न लाभ न हानि');
-            msgSpan.textContent = neutralText;
             profitBox2.style.borderColor = 'var(--border-color)';
             profitBox2.style.backgroundColor = 'var(--bg-body)';
         }
@@ -3837,7 +4161,7 @@
             editingShopId = null;
             document.getElementById('btnSaveShop').innerText = translations[goldData.currentLang].btnSaveShop;
         } else {
-            const newShop = {
+            goldData.savedShops.push({
                 id: Date.now(),
                 name: shopName,
                 weight: weight,
@@ -3846,8 +4170,7 @@
                 profitPerGram: profitPerGram,
                 images: { ...attachedImages },
                 gps: resolvedGPS
-            };
-            goldData.savedShops.push(newShop);
+            });
         }
 
         document.getElementById('shopNameInput').value = '';
@@ -3877,10 +4200,7 @@
         tbody.innerHTML = '';
 
         const section = document.getElementById('comparisonSection');
-        if(goldData.savedShops.length === 0) {
-            section.style.display = 'none';
-            return;
-        }
+        if(goldData.savedShops.length === 0) { section.style.display = 'none'; return; }
         section.style.display = 'block';
 
         const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
@@ -3938,12 +4258,8 @@
         syncWeight();
         calculateProfit();
 
-        if(shop.images && shop.images[1]) {
-            attachImageToPreview(1, shop.images[1]);
-        }
-        if(shop.images && shop.images[2]) {
-            attachImageToPreview(2, shop.images[2]);
-        }
+        if(shop.images && shop.images[1]) attachImageToPreview(1, shop.images[1]);
+        if(shop.images && shop.images[2]) attachImageToPreview(2, shop.images[2]);
 
         if(shop.gps) {
             resolvedGPS = shop.gps;
@@ -4083,7 +4399,7 @@
     }
 
     // ============================================================
-    // UI SETTINGS (Font, Theme, Language)
+    // UI SETTINGS
     // ============================================================
     function setFontSize(scale, btn) {
         goldData.fontSize = scale;
@@ -4261,8 +4577,14 @@
         document.getElementById('helpBtnText').innerText = t.helpBtnText;
         document.getElementById('saveBtnTxt').innerText = t.saveBtnTxt;
         document.getElementById('importBtnTxt').innerText = t.importBtnTxt;
+        document.getElementById('shareSiteBtnTxt').innerText = t.shareSiteBtnTxt;
+        document.getElementById('printBtnCalcTxt').innerText = t.printBtnTxt;
+        document.getElementById('pdfBtnCalcTxt').innerText = t.pdfBtnTxt;
+        document.getElementById('printBtnBullionTxt').innerText = t.printBtnTxt;
+        document.getElementById('pdfBtnBullionTxt').innerText = t.pdfBtnTxt;
+        document.getElementById('printBtnJewelryTxt').innerText = t.printBtnTxt;
+        document.getElementById('pdfBtnJewelryTxt').innerText = t.pdfBtnTxt;
 
-        // ===== FAB Translations =====
         document.getElementById('fabMenuHeader').innerText = t.fabMenuHeader;
         document.getElementById('fabExportTxt').innerText = t.fabExportTxt;
         document.getElementById('fabImportTxt').innerText = t.fabImportTxt;
@@ -4323,18 +4645,10 @@
                     goldData = parsed.goldData;
                     bullionTransactions = parsed.bullionTransactions || [];
                     jewelryTransactions = parsed.jewelryTransactions || [];
-                    if (parsed.bullionManualPrice) {
-                        bullionManualPrice = parsed.bullionManualPrice;
-                    }
-                    if (parsed.jewelryManualPrice) {
-                        jewelryManualPrice = parsed.jewelryManualPrice;
-                    }
-                    if (parsed.bullionHistoricalPrice) {
-                        bullionHistoricalPrice = parsed.bullionHistoricalPrice;
-                    }
-                    if (parsed.jewelryHistoricalPrice) {
-                        jewelryHistoricalPrice = parsed.jewelryHistoricalPrice;
-                    }
+                    if (parsed.bullionManualPrice) bullionManualPrice = parsed.bullionManualPrice;
+                    if (parsed.jewelryManualPrice) jewelryManualPrice = parsed.jewelryManualPrice;
+                    if (parsed.bullionHistoricalPrice) bullionHistoricalPrice = parsed.bullionHistoricalPrice;
+                    if (parsed.jewelryHistoricalPrice) jewelryHistoricalPrice = parsed.jewelryHistoricalPrice;
                     saveLocalData();
                     
                     document.getElementById('langSelect').value = goldData.currentLang;
@@ -4363,7 +4677,6 @@
             } catch(err) {
                 alert(goldData.currentLang === 'ar' ? "خطأ أثناء معالجة الملف." : (goldData.currentLang === 'en' ? "Error processing file." : "फ़ाइल संसाधित करने में त्रुटि।"));
             }
-            // Reset the input so same file can be selected again
             event.target.value = '';
         };
         reader.readAsText(file);
@@ -4414,18 +4727,11 @@
         }
         document.getElementById('page-title').innerText = pageTitle;
 
-        document.querySelectorAll('.sidebar ul li').forEach(li => {
-            li.classList.remove('active');
-        });
-        if (sectionId === 'calculator-page') {
-            document.getElementById('menu-calc').classList.add('active');
-        } else if (sectionId === 'bullion-page') {
-            document.getElementById('menu-bullion').classList.add('active');
-        } else if (sectionId === 'jewelry-page') {
-            document.getElementById('menu-jewelry').classList.add('active');
-        } else if (sectionId === 'tradingview-page') {
-            document.getElementById('menu-tradingview').classList.add('active');
-        }
+        document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+        if (sectionId === 'calculator-page') document.getElementById('menu-calc').classList.add('active');
+        else if (sectionId === 'bullion-page') document.getElementById('menu-bullion').classList.add('active');
+        else if (sectionId === 'jewelry-page') document.getElementById('menu-jewelry').classList.add('active');
+        else if (sectionId === 'tradingview-page') document.getElementById('menu-tradingview').classList.add('active');
 
         toggleSidebar();
     }
@@ -4481,14 +4787,10 @@
             const profitLoss = currentValue - txn.price;
             
             let profitPercentage = 0;
-            if (txn.price > 0) {
-                profitPercentage = (profitLoss / txn.price) * 100;
-            }
-            const profitPercentageFormatted = profitPercentage.toFixed(2);
-            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentageFormatted}%)` : '';
+            if (txn.price > 0) profitPercentage = (profitLoss / txn.price) * 100;
+            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentage.toFixed(2)}%)` : '';
 
             let profitLossHTML = '';
-            
             if (profitLoss > 0.001) {
                 profitLossHTML = `<span class="profit-badge positive">+${profitLoss.toFixed(3)} ${currency} 🟢📈</span>`;
             } else if (profitLoss < -0.001) {
@@ -4496,7 +4798,6 @@
             } else {
                 profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
             }
-
             profitLossHTML += `<br><span style="font-size: 0.85em; color: var(--text-sub);">${profitPercentageDisplay}</span>`;
 
             tbody.innerHTML += `
@@ -4594,17 +4895,13 @@
             profitLossCard.classList.add('profit');
             const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
             let totalProfitPercentage = 0;
-            if (totalInvested > 0) {
-                totalProfitPercentage = (profitLoss / totalInvested) * 100;
-            }
+            if (totalInvested > 0) totalProfitPercentage = (profitLoss / totalInvested) * 100;
             profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else if (profitLoss < -0.001) {
             profitLossCard.classList.add('loss');
             const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
             let totalProfitPercentage = 0;
-            if (totalInvested > 0) {
-                totalProfitPercentage = (profitLoss / totalInvested) * 100;
-            }
+            if (totalInvested > 0) totalProfitPercentage = (profitLoss / totalInvested) * 100;
             profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else {
             profitLossVal.innerText = `0.000 ${currency}`;
@@ -4672,14 +4969,10 @@
             const profitLoss = currentValue - txn.price;
             
             let profitPercentage = 0;
-            if (txn.price > 0) {
-                profitPercentage = (profitLoss / txn.price) * 100;
-            }
-            const profitPercentageFormatted = profitPercentage.toFixed(2);
-            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentageFormatted}%)` : '';
+            if (txn.price > 0) profitPercentage = (profitLoss / txn.price) * 100;
+            const profitPercentageDisplay = profitLoss !== 0 ? ` (${profitPercentage.toFixed(2)}%)` : '';
 
             let profitLossHTML = '';
-            
             if (profitLoss > 0.001) {
                 profitLossHTML = `<span class="profit-badge positive">+${profitLoss.toFixed(3)} ${currency} 🟢📈</span>`;
             } else if (profitLoss < -0.001) {
@@ -4687,7 +4980,6 @@
             } else {
                 profitLossHTML = `<span class="profit-badge neutral">0.000 ${currency}</span>`;
             }
-
             profitLossHTML += `<br><span style="font-size: 0.85em; color: var(--text-sub);">${profitPercentageDisplay}</span>`;
 
             const caratLabel = goldData.currentLang === 'ar' ? `عيار ${txn.carat}` : `${txn.carat}K`;
@@ -4718,9 +5010,7 @@
         
         document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
             el.classList.remove('active');
-            if (el.dataset.carat === txn.carat) {
-                el.classList.add('active');
-            }
+            if (el.dataset.carat === txn.carat) el.classList.add('active');
         });
         document.getElementById('jewelry-selected-carat').value = txn.carat;
         
@@ -4743,9 +5033,7 @@
         document.getElementById('jewelry-date').valueAsDate = new Date();
         document.querySelectorAll('#jewelryCaratSelector .carat-option').forEach(el => {
             el.classList.remove('active');
-            if (el.dataset.carat === '21') {
-                el.classList.add('active');
-            }
+            if (el.dataset.carat === '21') el.classList.add('active');
         });
         document.getElementById('jewelry-selected-carat').value = '21';
     }
@@ -4809,17 +5097,13 @@
             profitLossCard.classList.add('profit');
             const profitWord = goldData.currentLang === 'ar' ? 'ربحان 🎉' : (goldData.currentLang === 'en' ? 'Profit 🎉' : 'लाभ 🎉');
             let totalProfitPercentage = 0;
-            if (totalInvested > 0) {
-                totalProfitPercentage = (profitLoss / totalInvested) * 100;
-            }
+            if (totalInvested > 0) totalProfitPercentage = (profitLoss / totalInvested) * 100;
             profitLossVal.innerHTML = `${profitWord} <br>+${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else if (profitLoss < -0.001) {
             profitLossCard.classList.add('loss');
             const lossWord = goldData.currentLang === 'ar' ? 'خسران 📉' : (goldData.currentLang === 'en' ? 'Loss 📉' : 'हानि 📉');
             let totalProfitPercentage = 0;
-            if (totalInvested > 0) {
-                totalProfitPercentage = (profitLoss / totalInvested) * 100;
-            }
+            if (totalInvested > 0) totalProfitPercentage = (profitLoss / totalInvested) * 100;
             profitLossVal.innerHTML = `${lossWord} <br>${profitLoss.toFixed(3)} ${currency} (${totalProfitPercentage.toFixed(2)}%)`;
         } else {
             profitLossVal.innerText = `0.000 ${currency}`;
@@ -4853,41 +5137,12 @@
             } catch(e){}
         }
 
-        if(storedBullions) {
-            try {
-                bullionTransactions = JSON.parse(storedBullions);
-            } catch(e){}
-        }
-
-        if(storedJewelry) {
-            try {
-                jewelryTransactions = JSON.parse(storedJewelry);
-            } catch(e){}
-        }
-
-        if(storedManualPrice) {
-            try {
-                bullionManualPrice = JSON.parse(storedManualPrice);
-            } catch(e){}
-        }
-
-        if(storedJewelryManualPrice) {
-            try {
-                jewelryManualPrice = JSON.parse(storedJewelryManualPrice);
-            } catch(e){}
-        }
-
-        if(storedBullionHist) {
-            try {
-                bullionHistoricalPrice = JSON.parse(storedBullionHist);
-            } catch(e){}
-        }
-
-        if(storedJewelryHist) {
-            try {
-                jewelryHistoricalPrice = JSON.parse(storedJewelryHist);
-            } catch(e){}
-        }
+        if(storedBullions) { try { bullionTransactions = JSON.parse(storedBullions); } catch(e){} }
+        if(storedJewelry) { try { jewelryTransactions = JSON.parse(storedJewelry); } catch(e){} }
+        if(storedManualPrice) { try { bullionManualPrice = JSON.parse(storedManualPrice); } catch(e){} }
+        if(storedJewelryManualPrice) { try { jewelryManualPrice = JSON.parse(storedJewelryManualPrice); } catch(e){} }
+        if(storedBullionHist) { try { bullionHistoricalPrice = JSON.parse(storedBullionHist); } catch(e){} }
+        if(storedJewelryHist) { try { jewelryHistoricalPrice = JSON.parse(storedJewelryHist); } catch(e){} }
 
         document.getElementById('langSelect').value = goldData.currentLang;
         changeLanguage();

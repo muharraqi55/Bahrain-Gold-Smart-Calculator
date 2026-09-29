@@ -1306,6 +1306,28 @@
                 font-size: 24px;
             }
         }
+
+        /* أزرار الحفظ والاستيراد - جديدة */
+        .data-action-btn {
+            background-color: var(--bg-card);
+            border: 2px solid var(--primary);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: calc(13px * var(--font-scale));
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .data-action-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: scale(1.03);
+        }
     </style>
 </head>
 <body>
@@ -1335,6 +1357,12 @@
     </div>
 
     <div class="header-right">
+        <button class="data-action-btn" onclick="exportBackupData()" title="حفظ نسخة احتياطية">
+            💾 <span id="saveBtnTxt">حفظ</span>
+        </button>
+        <button class="data-action-btn" onclick="triggerFabImport()" title="استيراد نسخة احتياطية">
+            📂 <span id="importBtnTxt">استيراد</span>
+        </button>
         <button class="tradingview-nav-btn" onclick="switchTab('tradingview-page')">
             📊 TradingView
         </button>
@@ -1364,7 +1392,7 @@
             <!-- ===== زر التعليمات الجديد ===== -->
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                 <button class="help-btn" onclick="openHelpModal()">
-                    📖 <span id="helpBtnText">تعليمات مهمة قبل الشراء</span>
+                    📖 <span id="helpBtnText">تعليمات مهمة قبل الشراء الذهب الملبوس</span>
                 </button>
             </div>
 
@@ -2521,7 +2549,9 @@
             jewelryAddTitle: "إضافة عملية شراء جديدة",
             jewelrySaveBtn: "حفظ العملية 💾",
             btnRefreshJewelryGold: "تحديث أسعار الذهب 🔄",
-            helpBtnText: "تعليمات مهمة قبل الشراء",
+            helpBtnText: "تعليمات مهمة قبل الشراء الذهب الملبوس",
+            saveBtnTxt: "حفظ",
+            importBtnTxt: "استيراد",
             // ===== FAB Translations =====
             fabMenuHeader: "⚙️ إدارة البيانات",
             fabExportTxt: "حفظ البيانات (نسخة احتياطية)",
@@ -2697,7 +2727,9 @@
             jewelryAddTitle: "Add New Purchase",
             jewelrySaveBtn: "Save Transaction 💾",
             btnRefreshJewelryGold: "Refresh Gold Prices 🔄",
-            helpBtnText: "Important Instructions Before Purchase",
+            helpBtnText: "Important Instructions Before Buying Gold Jewelry",
+            saveBtnTxt: "Save",
+            importBtnTxt: "Import",
             // ===== FAB Translations =====
             fabMenuHeader: "⚙️ Data Management",
             fabExportTxt: "Save Data (Backup)",
@@ -2873,7 +2905,9 @@
             jewelryAddTitle: "नई खरीद जोड़ें",
             jewelrySaveBtn: "लेनदेन सहेजें 💾",
             btnRefreshJewelryGold: "सोने की कीमतें रीफ्रेश करें 🔄",
-            helpBtnText: "खरीदने से पहले महत्वपूर्ण निर्देश",
+            helpBtnText: "सोने के आभूषण खरीदने से पहले महत्वपूर्ण निर्देश",
+            saveBtnTxt: "सहेजें",
+            importBtnTxt: "आयात",
             // ===== FAB Translations =====
             fabMenuHeader: "⚙️ डेटा प्रबंधन",
             fabExportTxt: "डेटा सहेजें (बैकअप)",
@@ -4225,6 +4259,8 @@
         document.getElementById('btnFetchJewelryHistorical').innerText = t.btnFetchHistorical;
 
         document.getElementById('helpBtnText').innerText = t.helpBtnText;
+        document.getElementById('saveBtnTxt').innerText = t.saveBtnTxt;
+        document.getElementById('importBtnTxt').innerText = t.importBtnTxt;
 
         // ===== FAB Translations =====
         document.getElementById('fabMenuHeader').innerText = t.fabMenuHeader;

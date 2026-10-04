@@ -198,6 +198,43 @@ th { background-color: var(--bg-body); color: var(--text-sub); font-weight: bold
 [data-theme="dark"] .small-weight-note { color: #ffd54f; background: rgba(212,175,55,0.2); }
 .help-btn { background-color: var(--bg-card); border: 2px solid var(--primary); color: var(--text-main); padding: 8px 16px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
 .help-btn:hover { background-color: var(--primary); color: white; transform: scale(1.03); }
+.mode-toggle-btn { background-color: var(--bg-card); border: 2px solid var(--success); color: var(--text-main); padding: 8px 16px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
+.mode-toggle-btn:hover { background-color: var(--success); color: white; transform: scale(1.03); }
+.mode-toggle-btn.advanced { border-color: #2962FF; background-color: rgba(41, 98, 255, 0.08); }
+.mode-toggle-btn.advanced:hover { background-color: #2962FF; color: white; }
+body.mode-normal #summaryBox1 { display: none !important; }
+body.mode-normal #totalShopProfitAfterBox { display: none !important; }
+body.mode-normal #summaryBox2 { grid-template-columns: 1fr !important; }
+body.mode-normal #box1_2 .gram-breakdown-note { font-size: 15px !important; line-height: 2 !important; padding: 14px !important; }
+body.mode-normal #box1_2 .gram-breakdown-note .total-line { font-size: 17px !important; }
+body.mode-normal #box1_2 .gram-breakdown-note b { font-size: 15px; }
+body.mode-normal #profitPerGramCard2Box .breakdown-list { font-size: 15px !important; line-height: 2 !important; padding: 14px !important; }
+body.mode-normal #profitPerGramCard2Box .breakdown-list .total-line { font-size: 17px !important; }
+body.mode-normal #profitPerGramCard2Box .breakdown-list b { font-size: 15px; }
+body.mode-normal #profitPerGramCard2Title { font-size: 15px !important; }
+/* ✅ NEW: Best offer ribbon */
+.best-offer-ribbon { background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #1a1a1a; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); animation: slideInDown 0.5s ease; border: 2px solid #aa8c2c; }
+.best-offer-ribbon .crown { font-size: 32px; }
+.best-offer-ribbon .info { flex: 1; text-align: right; }
+.best-offer-ribbon .title { font-size: 11px; font-weight: bold; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
+.best-offer-ribbon .shop-name { font-size: 18px; font-weight: bold; margin: 3px 0; }
+.best-offer-ribbon .price { font-size: 14px; font-weight: bold; color: #2e7d32; }
+@keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* ✅ NEW: Comparison bar chart */
+.comparison-chart { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+.comparison-chart h4 { margin: 0 0 12px 0; font-size: 14px; color: var(--text-sub); font-weight: bold; }
+.chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.chart-label { min-width: 90px; max-width: 90px; font-size: 12px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.chart-bar-container { flex: 1; background: var(--bg-body); border-radius: 6px; height: 22px; position: relative; overflow: hidden; }
+.chart-bar { height: 100%; border-radius: 6px; transition: width 0.7s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 11px; font-weight: bold; }
+.chart-bar.best { background: linear-gradient(90deg, #2e7d32, #4caf50); }
+.chart-bar.good { background: linear-gradient(90deg, #d4af37, #f4d03f); color: #1a1a1a; }
+.chart-bar.avg { background: linear-gradient(90deg, #ff9800, #ffb74d); color: #1a1a1a; }
+.chart-bar.bad { background: linear-gradient(90deg, #c62828, #ef5350); }
+.chart-value { min-width: 80px; text-align: left; font-size: 12px; font-weight: bold; color: var(--text-main); }
+/* ✅ NEW: Auto-save indicator */
+.draft-indicator { font-size: 11px; color: var(--success); text-align: center; margin-top: 8px; opacity: 0; transition: opacity 0.3s; }
+.draft-indicator.show { opacity: 1; }
 .help-modal-content { text-align: right; max-width: 600px; }
 .help-modal-content h3 { color: var(--primary); margin-top: 0; }
 .help-modal-content ul { list-style: none; padding: 0; }
@@ -239,10 +276,12 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 .summary-box-custom { grid-template-columns: 1fr; }
 .fab-container { bottom: 15px; left: 15px; }
 .fab-main-btn { width: 55px; height: 55px; font-size: 24px; }
+.chart-label { min-width: 70px; max-width: 70px; font-size: 11px; }
+.chart-value { min-width: 65px; font-size: 11px; }
 }
 </style>
 </head>
-<body>
+<body class="mode-normal">
 
 <header>
 <div class="header-left">
@@ -288,8 +327,11 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 <div class="calculator-card">
 <div id="devTag" class="developer-tag">تم عمل الموقع بواسطة Muharraqi</div>
 <h2 id="mainTitle">🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين</h2>
-<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+<div style="display: flex; justify-content: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap;">
 <button class="help-btn" onclick="openHelpModal()">📖 <span id="helpBtnText">تعليمات مهمة قبل الشراء</span></button>
+<button class="mode-toggle-btn" id="modeToggleBtn" onclick="toggleMode()" title="التبديل بين الوضع العادي والمتقدم">
+<span id="modeIcon">⚪</span> <span id="modeText">الوضع العادي</span>
+</button>
 </div>
 <div id="statusWrapper" class="status-bar">
 <span id="statusText">جاري تحميل الأسعار...</span>
@@ -318,18 +360,19 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 </div>
 <div class="form-group">
 <label id="lblMarketPrice" for="marketPriceDisplay">سعر غرام السوق الحالي بالبحرين (د.ب):</label>
-<input type="number" id="marketPriceDisplay" min="0" step="any" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" oninput="if(this.value < 0) this.value = 0;">
+<input type="number" id="marketPriceDisplay" min="0" step="any" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" oninput="if(this.value < 0) this.value = 0; saveDraft();">
 </div>
 <div class="form-group">
 <label id="lblTotalWeight" for="totalWeight">الوزن الكلي للذهب (غرام):</label>
-<input type="number" id="totalWeight" min="0" step="any" oninput="syncWeight(); if(this.value < 0) this.value = 0;" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+<input type="number" id="totalWeight" min="0" step="any" oninput="syncWeight(); if(this.value < 0) this.value = 0; saveDraft();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
 </div>
 <div class="section-title" id="secTitle1">أولاً: تحليل السعر المعروض بالمحل</div>
 <div class="form-group">
 <label id="lblTotalPrice" for="totalPrice">سعر الذهب الكلي المعروض بالمحل (د.ب):</label>
-<input type="number" id="totalPrice" min="0" step="any" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" oninput="if(this.value < 0) this.value = 0;">
+<input type="number" id="totalPrice" min="0" step="any" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" oninput="if(this.value < 0) this.value = 0; saveDraft();">
 </div>
 <button class="btn-calc" id="btnCalc1" onclick="calculateProfit()">تحليل السعر المعروض</button>
+<div id="draftIndicator" class="draft-indicator">💾 تم استرجاع بياناتك السابقة</div>
 <div class="results-container">
 <div class="result-box" id="box1_1">
 <h3 id="resBox1Title">سعر لكل غرام في المحل +( المصنعية+الفائدة+الضريبة)</h3>
@@ -503,8 +546,10 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 </div>
 </div>
 <div class="comparison-section" id="comparisonSection">
+<h3 class="section-title" id="secTitleComparison" style="margin-top:0;">📊 جدول مقارنة عروض المحلات</h3>
+<div id="bestOfferRibbon"></div>
+<div id="comparisonChart"></div>
 <div class="comparison-header">
-<h3 class="section-title" id="secTitleComparison" style="margin:0; border:none;">📊 جدول مقارنة عروض المحلات</h3>
 <div class="sort-container">
 <label id="lblSort" for="sortSelect" style="margin:0; font-size:12px;">ترتيب بحسب:</label>
 <select id="sortSelect" class="sort-select" onchange="changeSortOrder()">
@@ -734,6 +779,56 @@ function getCaratPrice(carat, basePrice24) {
     const caratMap = {'18':18/24,'20':20/24,'21':21/24,'22':22/24,'24':1};
     return basePrice24 * (caratMap[carat] || 1);
 }
+/* ✅ NEW: Auto-save draft */
+function saveDraft() {
+    try {
+        const draft = {
+            marketPrice: document.getElementById('marketPriceDisplay')?.value || '',
+            weight: document.getElementById('totalWeight')?.value || '',
+            totalPrice: document.getElementById('totalPrice')?.value || ''
+        };
+        localStorage.setItem('goldDraft_Muharraqi', JSON.stringify(draft));
+    } catch(e) {}
+}
+function restoreDraft() {
+    try {
+        const stored = localStorage.getItem('goldDraft_Muharraqi');
+        if (!stored) return;
+        const draft = JSON.parse(stored);
+        if (draft.marketPrice && !document.getElementById('marketPriceDisplay').value) document.getElementById('marketPriceDisplay').value = draft.marketPrice;
+        if (draft.weight && !document.getElementById('totalWeight').value) document.getElementById('totalWeight').value = draft.weight;
+        if (draft.totalPrice && !document.getElementById('totalPrice').value) document.getElementById('totalPrice').value = draft.totalPrice;
+        if (draft.marketPrice || draft.weight || draft.totalPrice) {
+            const ind = document.getElementById('draftIndicator');
+            ind.classList.add('show');
+            setTimeout(() => ind.classList.remove('show'), 3500);
+        }
+    } catch(e) {}
+}
+function clearDraft() {
+    try { localStorage.removeItem('goldDraft_Muharraqi'); } catch(e) {}
+}
+function applyMode() {
+    const isNormal = goldData.mode === 'normal';
+    document.body.classList.toggle('mode-normal', isNormal);
+    document.body.classList.toggle('mode-advanced', !isNormal);
+    const btn = document.getElementById('modeToggleBtn');
+    if (btn) {
+        btn.classList.toggle('advanced', !isNormal);
+        const iconEl = document.getElementById('modeIcon');
+        const textEl = document.getElementById('modeText');
+        if (iconEl) iconEl.innerText = isNormal ? '⚪' : '🔵';
+        if (textEl) {
+            const t = translations[goldData.currentLang] || translations.ar;
+            textEl.innerText = isNormal ? (t.modeNormal || 'الوضع العادي') : (t.modeAdvanced || 'الوضع المتقدم');
+        }
+    }
+}
+function toggleMode() {
+    goldData.mode = (goldData.mode === 'normal') ? 'advanced' : 'normal';
+    applyMode();
+    saveLocalData();
+}
 function printDirect(htmlContent) {
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
@@ -925,18 +1020,21 @@ async function shareLocation() {
     try { await navigator.clipboard.writeText(shareText); alert('✅ تم نسخ رابط الموقع إلى الحافظة'); }
     catch(e) { prompt('انسخ رابط الموقع:', mapUrl); }
 }
+/* ✅ UPDATED: applySmartDisplay - when weight < 1g, show total shop profit card instead of percentage */
 function applySmartDisplay(weight, marketPrice, totalPrice) {
     const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
     const box1 = document.getElementById('box1_1');
     const box2 = document.getElementById('box1_2');
     const resBox1Title = document.getElementById('resBox1Title');
     const resBox2Title = document.getElementById('resBox2Title');
-    box1.querySelectorAll('.smart-note, .smart-subtitle, .gram-breakdown-note, .small-weight-note').forEach(el => el.remove());
-    box2.querySelectorAll('.smart-note, .smart-subtitle, .gram-breakdown-note, .small-weight-note').forEach(el => el.remove());
+    const t = translations[goldData.currentLang];
+    box1.querySelectorAll('.smart-note, .smart-subtitle, .gram-breakdown-note, .small-weight-note, .status-inline').forEach(el => el.remove());
+    box2.querySelectorAll('.smart-note, .smart-subtitle, .gram-breakdown-note, .small-weight-note, .status-inline').forEach(el => el.remove());
     const goldValue = marketPrice * weight;
     const totalAddition = totalPrice - goldValue;
-    const t = translations[goldData.currentLang];
     if (weight < 1 && weight > 0) {
+        /* ---- SMALL WEIGHT MODE (< 1g) ---- */
+        /* Box 1: Show total addition on gold */
         resBox1Title.innerText = t.smartAdditionTitle || 'إجمالي الزيادة على الذهب +(مصنعية + فائدة + ضريبة)';
         document.getElementById('pricePerGramStore').innerHTML = `${totalPrice.toFixed(3)} <span class="currency">${currency}</span>`;
         const subtitle = document.createElement('div');
@@ -947,18 +1045,29 @@ function applySmartDisplay(weight, marketPrice, totalPrice) {
         note.className = 'smart-note';
         note.innerHTML = `⚠️ ${t.smartSmallWeightNote || 'الوزن أقل من 1 غرام.'}<br>💡 ${t.smartCompareTip || 'قارن العروض بناءً على إجمالي الزيادة.'}`;
         box1.appendChild(note);
-        resBox2Title.innerText = t.smartAdditionPercent || 'نسبة الزيادة على قيمة الذهب';
-        const additionPercent = goldValue > 0 ? (totalAddition / goldValue) * 100 : 0;
-        document.getElementById('profitOnly').innerHTML = `<span style="color: var(--danger); font-weight: bold;">${additionPercent.toFixed(1)}%</span>`;
-        const percentNote = document.createElement('div');
-        percentNote.className = 'smart-subtitle';
-        percentNote.innerHTML = `${t.smartPercentNote || 'الزيادة تعادل'} <b>${additionPercent.toFixed(1)}%</b> ${t.smartPercentOfGold || 'من قيمة الذهب الخام'}.`;
-        box2.appendChild(percentNote);
-        const smallWeightNote = document.createElement('div');
-        smallWeightNote.className = 'small-weight-note';
-        smallWeightNote.innerHTML = `⚠️ <b>الوزن أقل من 1 غرام</b>: لا يمكن تقسيم الفائدة على غرامات فردية. المبلغ أعلاه هو <b>الزيادة الإجمالية للقطعة كاملة</b>.`;
-        box2.appendChild(smallWeightNote);
+        /* ✅ Box 2: Show TOTAL SHOP PROFIT (instead of percentage) */
+        resBox2Title.innerText = 'ربح المحل الكلي +"المصنعية+الفائدة+الضريبة" (بدون احتساب الوزن الكلي)';
+        const isProfit = totalAddition > 0.001;
+        const isLoss = totalAddition < -0.001;
+        const color = isLoss ? 'var(--danger)' : (isProfit ? 'var(--success)' : 'var(--text-sub)');
+        const sign = isProfit ? '+' : '';
+        document.getElementById('profitOnly').innerHTML = `<span style="color: ${color}; font-weight: bold; font-size: 1.3em;">${sign}${totalAddition.toFixed(3)} <span class="currency">${currency}</span></span>`;
+        const statusEl = document.createElement('div');
+        statusEl.className = 'status-inline';
+        statusEl.style.cssText = 'margin-top: 8px; font-size: 14px; font-weight: bold;';
+        if (isProfit) {
+            statusEl.style.color = 'var(--success)';
+            statusEl.textContent = '🟢 المحل ربحان';
+        } else if (isLoss) {
+            statusEl.style.color = 'var(--danger)';
+            statusEl.textContent = '🔴 المحل خسران';
+        } else {
+            statusEl.style.color = 'var(--text-sub)';
+            statusEl.textContent = '⚪ لا ربح ولا خسارة';
+        }
+        box2.appendChild(statusEl);
     } else {
+        /* ---- NORMAL MODE (≥ 1g) ---- */
         resBox1Title.innerText = t.resBox1Title;
         resBox2Title.innerText = t.resBox2Title;
         const pricePerGramStore = totalPrice / weight;
@@ -1006,11 +1115,11 @@ function clearAllData() {
     if (!confirm(msg)) return;
     let confirmMsg = lang === 'ar' ? '🔴 تأكيد نهائي: سيتم حذف جميع البيانات نهائياً. متأكد؟' : '🔴 Final: All data will be deleted. Sure?';
     if (!confirm(confirmMsg)) return;
-    const preservedLang = goldData.currentLang, preservedTheme = goldData.theme, preservedFontSize = goldData.fontSize;
+    const preservedLang = goldData.currentLang, preservedTheme = goldData.theme, preservedFontSize = goldData.fontSize, preservedMode = goldData.mode;
     goldData.savedShops = []; bullionTransactions = []; jewelryTransactions = [];
     bullionManualPrice = 28.5; jewelryManualPrice = 28.5;
     bullionHistoricalPrice = null; jewelryHistoricalPrice = null;
-    goldData.currentLang = preservedLang; goldData.theme = preservedTheme; goldData.fontSize = preservedFontSize;
+    goldData.currentLang = preservedLang; goldData.theme = preservedTheme; goldData.fontSize = preservedFontSize; goldData.mode = preservedMode;
     saveLocalData();
     renderComparisonTable(); renderBullionTable(); renderJewelryTable();
     calculateBullionMetrics(); calculateJewelryMetrics();
@@ -1050,6 +1159,7 @@ function clearAllData() {
     document.getElementById('manualLocationContainer').style.display = 'none';
     document.getElementById('manualLat').value = ''; document.getElementById('manualLng').value = '';
     isManualLocation = false; stopWatchingLocation();
+    clearDraft();
     alert('✅ تم مسح جميع البيانات بنجاح.');
 }
 document.addEventListener('click', function(e) { const fabContainer = document.getElementById('fabContainer'); if (fabContainer && !fabContainer.contains(e.target)) closeFabMenu(); });
@@ -1093,7 +1203,6 @@ async function fetchHistoricalPrice(section) {
     } catch (e) { console.error(e); alert('❌ فشل جلب السعر التاريخي.\n' + e.message); }
     finally { btn.innerHTML = originalText; btn.disabled = false; }
 }
-/* ✅ UPDATED: Analysis print page title changed to "ربح المحل (قبل و بعد)" */
 function generateAnalysisComparisonHTML() {
     const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
     const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
@@ -1127,7 +1236,6 @@ function generateAnalysisComparisonHTML() {
         </div>`;
     }
 
-    // Section 1: Basic Info (labels updated + carat after label)
     html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:0;">📌 المعلومات الأساسية</h3>`;
     html += `<table>
         <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
@@ -1138,7 +1246,6 @@ function generateAnalysisComparisonHTML() {
         </tbody>
     </table>`;
 
-    // Section 2: Price comparison - REMOVED "الفرق" column
     html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:20px;">🔍 مقارنة السعر قبل وبعد الخصم</h3>`;
     html += `<table>
         <thead><tr><th>البند</th><th>سعر المحل (قبل الخصم)</th><th>سعر بعد الخصم</th></tr></thead>
@@ -1162,7 +1269,6 @@ function generateAnalysisComparisonHTML() {
     }
     html += `</tbody></table>`;
 
-    // Section 3: Shop profit comparison (TITLE UPDATED)
     html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:20px;">💰 ربح المحل (قبل و بعد)</h3>`;
     html += `<div class="summary-grid">
         <div class="summary-box">
@@ -1277,6 +1383,7 @@ const translations = {
         noJewelryTransactions: "لا توجد معاملات مسجلة حالياً.", alertFillJewelry: "الرجاء تعبئة البيانات بشكل صحيح.", alertDeleteJewelry: "هل أنت متأكد من حذف هذه العملية؟",
         jewelryEditTitle: "تعديل عملية الشراء ✏️", jewelryUpdateBtn: "تحديث التعديلات ✅", jewelryAddTitle: "إضافة عملية شراء جديدة", jewelrySaveBtn: "حفظ العملية 💾",
         btnRefreshJewelryGold: "تحديث أسعار الذهب 🔄", helpBtnText: "تعليمات مهمة قبل الشراء",
+        modeNormal: "الوضع العادي", modeAdvanced: "الوضع المتقدم",
         fabMenuHeader: "⚙️ إدارة البيانات", fabExportTxt: "حفظ البيانات (نسخة احتياطية)", fabImportTxt: "استرجاع البيانات من نسخة احتياطية", fabClearTxt: "مسح جميع البيانات المدخلة",
         smartAdditionTitle: "إجمالي الزيادة على الذهب +(مصنعية + فائدة + ضريبة)",
         smartGoldValue: "قيمة الذهب الخام", smartTotalAddition: "الزيادة الإجمالية",
@@ -1285,7 +1392,9 @@ const translations = {
         smartAdditionPercent: "نسبة الزيادة على قيمة الذهب",
         smartPercentNote: "هذا يعني أن الزيادة تعادل", smartPercentOfGold: "من قيمة الذهب الخام",
         smartMarketPriceLabel: "سعر السوق", smartAdditionLabel: "الزيادة",
-        btnPrintAnalysisText: "طباعة التحليل", btnShareAnalysisText: "إرسال PDF"
+        btnPrintAnalysisText: "طباعة التحليل", btnShareAnalysisText: "إرسال PDF",
+        bestOfferTitle: "أفضل عرض", bestOfferSubtitle: "الأقل مصنعية (الأرخص)",
+        chartTitle: "📊 مقارنة بصرية بين العروض (المصنعية/غرام)"
     },
     en: {
         devTag: "Website developed by Muharraqi", title: "🇧🇭 Gold Price Comparison - Bahrain",
@@ -1346,6 +1455,7 @@ const translations = {
         noJewelryTransactions: "No transactions yet.", alertFillJewelry: "Please fill data correctly.", alertDeleteJewelry: "Delete this transaction?",
         jewelryEditTitle: "Edit ✏️", jewelryUpdateBtn: "Update ✅", jewelryAddTitle: "Add New Purchase", jewelrySaveBtn: "Save 💾",
         btnRefreshJewelryGold: "Refresh 🔄", helpBtnText: "Important Instructions",
+        modeNormal: "Normal Mode", modeAdvanced: "Advanced Mode",
         fabMenuHeader: "⚙️ Data Management", fabExportTxt: "Save Data (Backup)", fabImportTxt: "Restore Data", fabClearTxt: "Clear All Data",
         smartAdditionTitle: "Total Addition on Gold + (Making + Profit + Tax)",
         smartGoldValue: "Raw Gold Value", smartTotalAddition: "Total Addition",
@@ -1354,7 +1464,9 @@ const translations = {
         smartAdditionPercent: "Addition %",
         smartPercentNote: "Addition equals", smartPercentOfGold: "of raw gold value",
         smartMarketPriceLabel: "Market", smartAdditionLabel: "Addition",
-        btnPrintAnalysisText: "Print Analysis", btnShareAnalysisText: "Send PDF"
+        btnPrintAnalysisText: "Print Analysis", btnShareAnalysisText: "Send PDF",
+        bestOfferTitle: "Best Offer", bestOfferSubtitle: "Lowest making charges (Cheapest)",
+        chartTitle: "📊 Visual comparison between offers (Making/g)"
     },
     hi: {
         devTag: "वेबसाइट मुहर्रकी द्वारा", title: "🇧🇭 सोने की दुकानों के बीच मूल्य तुलना - बहरीन",
@@ -1414,6 +1526,7 @@ const translations = {
         noJewelryTransactions: "कोई लेनदेन नहीं।", alertFillJewelry: "डेटा भरें।", alertDeleteJewelry: "हटाएं?",
         jewelryEditTitle: "संपादित ✏️", jewelryUpdateBtn: "अपडेट ✅", jewelryAddTitle: "नई खरीद", jewelrySaveBtn: "सहेजें 💾",
         btnRefreshJewelryGold: "रीफ्रेश 🔄", helpBtnText: "महत्वपूर्ण निर्देश",
+        modeNormal: "सामान्य मोड", modeAdvanced: "उन्नत मोड",
         fabMenuHeader: "⚙️ डेटा प्रबंधन", fabExportTxt: "डेटा सहेजें", fabImportTxt: "पुनर्स्थापित", fabClearTxt: "सभी मिटाएं",
         smartAdditionTitle: "सोने पर कुल अतिरिक्त + (मेकिंग + लाभ + कर)",
         smartGoldValue: "कच्चे सोने का मूल्य", smartTotalAddition: "कुल अतिरिक्त",
@@ -1422,10 +1535,12 @@ const translations = {
         smartAdditionPercent: "अतिरिक्त %",
         smartPercentNote: "अतिरिक्त बराबर है", smartPercentOfGold: "कच्चे सोने के मूल्य का",
         smartMarketPriceLabel: "बाजार", smartAdditionLabel: "अतिरिक्त",
-        btnPrintAnalysisText: "विश्लेषण प्रिंट करें", btnShareAnalysisText: "PDF भेजें"
+        btnPrintAnalysisText: "विश्लेषण प्रिंट करें", btnShareAnalysisText: "PDF भेजें",
+        bestOfferTitle: "सर्वोत्तम ऑफर", bestOfferSubtitle: "सबसे कम मेकिंग (सबसे सस्ता)",
+        chartTitle: "📊 ऑफर की दृश्य तुलना (मेकिंग/ग्राम)"
     }
 };
-let goldData = { currentLang: 'ar', fontSize: 1.0, theme: 'light', savedShops: [] };
+let goldData = { currentLang: 'ar', fontSize: 1.0, theme: 'light', mode: 'normal', savedShops: [] };
 let bullionTransactions = [];
 let jewelryTransactions = [];
 let attachedImages = { 1: null, 2: null };
@@ -1724,7 +1839,7 @@ function calculateProfit() {
         document.getElementById('summaryBox2').style.display = 'none';
     }
     updateSummaryBox1(marketPrice, weight, profitPerGram);
-    if (pricePerGramStore < marketPrice && pricePerGramStore > 0) {
+    if (pricePerGramStore < marketPrice && pricePerGramStore > 0 && weight >= 1) {
         const diff = (marketPrice - pricePerGramStore).toFixed(3);
         alert(`⚠️ تنبيه: سعر الغرام في المحل (${pricePerGramStore.toFixed(3)} د.ب) أقل من سعر السوق (${marketPrice.toFixed(3)} د.ب) بفارق ${diff} د.ب.`);
     }
@@ -1978,6 +2093,65 @@ function renderComparisonTable() {
             </td>
         </tr>`;
     });
+    renderBestOfferRibbon();
+    renderComparisonChart();
+}
+/* ✅ NEW: Best offer ribbon */
+function renderBestOfferRibbon() {
+    const container = document.getElementById('bestOfferRibbon');
+    const t = translations[goldData.currentLang];
+    const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+    if (!goldData.savedShops || goldData.savedShops.length < 2) {
+        container.innerHTML = '';
+        return;
+    }
+    const sorted = [...goldData.savedShops].sort((a, b) => a.profitPerGram - b.profitPerGram);
+    const best = sorted[0];
+    if (!best) { container.innerHTML = ''; return; }
+    container.innerHTML = `<div class="best-offer-ribbon">
+        <div class="crown">👑</div>
+        <div class="info">
+            <div class="title">⭐ ${t.bestOfferTitle || 'أفضل عرض'} — ${t.bestOfferSubtitle || 'الأقل مصنعية (الأرخص)'}</div>
+            <div class="shop-name">${best.name}</div>
+            <div class="price">💵 ${best.profitPerGram >= 0 ? '+' : ''}${best.profitPerGram.toFixed(3)} ${currency} / غرام — الإجمالي: ${best.totalPrice.toFixed(3)} ${currency}</div>
+        </div>
+    </div>`;
+}
+/* ✅ NEW: Comparison bar chart */
+function renderComparisonChart() {
+    const container = document.getElementById('comparisonChart');
+    const t = translations[goldData.currentLang];
+    const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+    if (!goldData.savedShops || goldData.savedShops.length < 2) {
+        container.innerHTML = '';
+        return;
+    }
+    /* Only compare shops with weight >= 1g (for fairness) */
+    const shops = goldData.savedShops.filter(s => s.weight >= 1);
+    if (shops.length < 2) { container.innerHTML = ''; return; }
+    const sorted = [...shops].sort((a, b) => a.profitPerGram - b.profitPerGram);
+    const maxAbs = Math.max(...sorted.map(s => Math.abs(s.profitPerGram)));
+    if (maxAbs <= 0.001) { container.innerHTML = ''; return; }
+    let rows = '';
+    sorted.forEach((shop, idx) => {
+        const pct = Math.max(8, (Math.abs(shop.profitPerGram) / maxAbs) * 100);
+        let barClass = 'avg';
+        if (idx === 0) barClass = 'best';
+        else if (idx === sorted.length - 1) barClass = 'bad';
+        else barClass = 'good';
+        const sign = shop.profitPerGram >= 0 ? '+' : '';
+        rows += `<div class="chart-row">
+            <div class="chart-label" title="${shop.name}">${idx === 0 ? '👑 ' : ''}${shop.name}</div>
+            <div class="chart-bar-container">
+                <div class="chart-bar ${barClass}" style="width: ${pct}%;">${sign}${shop.profitPerGram.toFixed(2)}</div>
+            </div>
+            <div class="chart-value">${shop.totalPrice.toFixed(2)} ${currency}</div>
+        </div>`;
+    });
+    container.innerHTML = `<div class="comparison-chart">
+        <h4>${t.chartTitle || '📊 مقارنة بصرية بين العروض (المصنعية/غرام)'}</h4>
+        ${rows}
+    </div>`;
 }
 function deleteShopRow(id) { if(confirm(translations[goldData.currentLang].promptDelRow)) { goldData.savedShops = goldData.savedShops.filter(s => s.id !== id); saveLocalData(); renderComparisonTable(); } }
 function editShopRow(id) {
@@ -2199,6 +2373,7 @@ function changeLanguage() {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     saveLocalData();
+    applyMode();
     updateSelectedPrice(); renderComparisonTable(); renderBullionTable(); renderJewelryTable(); syncWeight();
     const activeSection = document.querySelector('.page-section.active');
     if (activeSection) {
@@ -2219,6 +2394,7 @@ function importBackupData(event) {
             const parsed = JSON.parse(e.target.result);
             if(parsed.goldData) {
                 goldData = parsed.goldData;
+                if (!goldData.mode) goldData.mode = 'normal';
                 bullionTransactions = parsed.bullionTransactions || [];
                 jewelryTransactions = parsed.jewelryTransactions || [];
                 if (parsed.bullionManualPrice) bullionManualPrice = parsed.bullionManualPrice;
@@ -2231,6 +2407,7 @@ function importBackupData(event) {
                 if(goldData.theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay; }
                 else { document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight; }
                 setFontSize(goldData.fontSize, null);
+                applyMode();
                 renderComparisonTable(); renderBullionTable(); renderJewelryTable();
                 updateBullionMarketPriceField(); updateJewelryMarketPriceField();
                 calculateBullionMetrics(); calculateJewelryMetrics();
@@ -2493,7 +2670,7 @@ window.onload = function() {
     const storedJewelryManualPrice = localStorage.getItem('jewelryManualPrice_Muharraqi');
     const storedBullionHist = localStorage.getItem('bullionHistoricalPrice_Muharraqi');
     const storedJewelryHist = localStorage.getItem('jewelryHistoricalPrice_Muharraqi');
-    if(stored) { try { goldData = JSON.parse(stored); if(!goldData.savedShops) goldData.savedShops = []; } catch(e){} }
+    if(stored) { try { goldData = JSON.parse(stored); if(!goldData.savedShops) goldData.savedShops = []; if(!goldData.mode) goldData.mode = 'normal'; } catch(e){} }
     if(storedBullions) { try { bullionTransactions = JSON.parse(storedBullions); } catch(e){} }
     if(storedJewelry) { try { jewelryTransactions = JSON.parse(storedJewelry); } catch(e){} }
     if(storedManualPrice) { try { bullionManualPrice = JSON.parse(storedManualPrice); } catch(e){} }
@@ -2505,6 +2682,7 @@ window.onload = function() {
     if(goldData.theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeIcon').innerText = '☀️'; document.getElementById('themeText').innerText = translations[goldData.currentLang].themeDay; }
     else { document.getElementById('themeText').innerText = translations[goldData.currentLang].themeNight; }
     setFontSize(goldData.fontSize, null);
+    applyMode();
     document.getElementById('bullion-date').valueAsDate = new Date();
     document.getElementById('jewelry-date').valueAsDate = new Date();
     const defaultDate = '2025-01-01';
@@ -2539,6 +2717,7 @@ window.onload = function() {
     document.getElementById('summaryBox1').style.display = 'none';
     document.getElementById('summaryBox2').style.display = 'none';
     document.getElementById('saveContainer').style.display = 'none';
+    restoreDraft();
     fetchGoldPrices();
     renderComparisonTable();
     renderBullionTable();

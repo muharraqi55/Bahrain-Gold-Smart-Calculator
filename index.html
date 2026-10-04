@@ -223,6 +223,11 @@ th { background-color: var(--bg-body); color: var(--text-sub); font-weight: bold
 .tbl-cell-total { color: var(--primary-hover); font-weight: bold; font-size: 13px; }
 .tbl-weight-warning { color: var(--danger); font-size: 10px; font-weight: bold; }
 .pdf-loader { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--primary); color: white; padding: 20px 30px; border-radius: 12px; z-index: 9999; font-weight: bold; box-shadow: 0 4px 20px rgba(0,0,0,0.3); font-size: 15px; text-align: center; }
+.analysis-buttons { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+.btn-print-analysis { flex: 1; min-width: 140px; background-color: #1976d2; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s; }
+.btn-print-analysis:hover { opacity: 0.9; }
+.btn-share-analysis { flex: 1; min-width: 140px; background-color: #2962FF; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s; }
+.btn-share-analysis:hover { opacity: 0.9; }
 @media (max-width: 768px) {
 header { flex-direction: column; align-items: stretch; gap: 8px; }
 .header-left, .header-center, .header-right { justify-content: center; flex-wrap: wrap; }
@@ -436,6 +441,10 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 
 <div class="save-container" id="saveContainer">
 <div class="save-flex">
+<div class="analysis-buttons">
+<button class="btn-print-analysis" onclick="printAnalysisInNewPage()">🖨️ <span id="btnPrintAnalysisText">طباعة التحليل</span></button>
+<button class="btn-share-analysis" onclick="shareAnalysisAsPDF()">📄 <span id="btnShareAnalysisText">إرسال PDF</span></button>
+</div>
 <div class="form-group" style="margin-bottom:10px;">
 <label id="lblSaveShop" for="shopNameInput">اسم المحل:</label>
 <input type="text" id="shopNameInput">
@@ -1084,6 +1093,120 @@ async function fetchHistoricalPrice(section) {
     } catch (e) { console.error(e); alert('❌ فشل جلب السعر التاريخي.\n' + e.message); }
     finally { btn.innerHTML = originalText; btn.disabled = false; }
 }
+/* ✅ UPDATED: Analysis print page title changed to "ربح المحل (قبل و بعد)" */
+function generateAnalysisComparisonHTML() {
+    const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
+    const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+    const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+    const shopTotalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+    const caratValue = document.getElementById('carat').value || '21';
+    const afterEl = document.getElementById('totalWithProfit');
+    let afterDiscountTotal = 0;
+    if (afterEl && afterEl.textContent) {
+        const m = afterEl.textContent.match(/[\d.]+/);
+        if (m) afterDiscountTotal = parseFloat(m[0]) || 0;
+    }
+    if (afterDiscountTotal === 0) afterDiscountTotal = shopTotalPrice;
+    const globalGoldValue = marketPrice * weight;
+    const totalShopProfit = shopTotalPrice - globalGoldValue;
+    const totalShopProfitAfter = afterDiscountTotal - globalGoldValue;
+    const isSmallWeight = weight < 1;
+    const shopGramPrice = (isSmallWeight || weight <= 0) ? 0 : shopTotalPrice / weight;
+    const afterDiscountGramPrice = (isSmallWeight || weight <= 0) ? 0 : afterDiscountTotal / weight;
+
+    let html = `<div class="header-print">
+        <h1>📊 تحليل مقارنة عرض المحل</h1>
+        <p>مقارنة السعر قبل وبعد الخصم مع ربح المحل</p>
+        <p>${getFormattedDateTime()}</p>
+    </div>`;
+
+    if (isSmallWeight && weight > 0) {
+        html += `<div style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:8px; margin-bottom:18px; text-align:center; color:#856404; font-weight:bold; line-height:1.7;">
+            ⚠️ تنبيه: الوزن أقل من 1 غرام (${weight.toFixed(3)} غ) — لا يمكن حساب سعر الغرام بشكل دقيق (لأنه يكون مضللاً).<br>
+            لذلك يتم عرض <b>السعر الإجمالي</b> بدلاً من سعر الغرام.
+        </div>`;
+    }
+
+    // Section 1: Basic Info (labels updated + carat after label)
+    html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:0;">📌 المعلومات الأساسية</h3>`;
+    html += `<table>
+        <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
+        <tbody>
+            <tr><td style="font-weight:bold;">سعر غرام السوق الحالي بالبحرين (د.ب) - عيار ${caratValue}</td><td style="color:#aa8c2c; font-weight:bold;">${marketPrice.toFixed(3)} ${currency}</td></tr>
+            <tr><td style="font-weight:bold;">الوزن الكلي للذهب</td><td style="font-weight:bold;">${weight.toFixed(3)} غرام</td></tr>
+            <tr><td style="font-weight:bold;">السعر الكلي لوزن الذهب اليوم حسب التسعير العالمية (بدون احتساب المصنعية+الفائدة+الضريبة)</td><td style="color:#aa8c2c; font-weight:bold;">${globalGoldValue.toFixed(3)} ${currency}</td></tr>
+        </tbody>
+    </table>`;
+
+    // Section 2: Price comparison - REMOVED "الفرق" column
+    html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:20px;">🔍 مقارنة السعر قبل وبعد الخصم</h3>`;
+    html += `<table>
+        <thead><tr><th>البند</th><th>سعر المحل (قبل الخصم)</th><th>سعر بعد الخصم</th></tr></thead>
+        <tbody>
+            <tr>
+                <td style="font-weight:bold;">السعر الإجمالي</td>
+                <td>${shopTotalPrice.toFixed(3)} ${currency}</td>
+                <td style="color:#2e7d32; font-weight:bold;">${afterDiscountTotal.toFixed(3)} ${currency}</td>
+            </tr>`;
+    if (!isSmallWeight) {
+        html += `<tr>
+            <td style="font-weight:bold;">سعر الغرام</td>
+            <td>${shopGramPrice.toFixed(3)} ${currency}</td>
+            <td style="color:#2e7d32; font-weight:bold;">${afterDiscountGramPrice.toFixed(3)} ${currency}</td>
+        </tr>`;
+    } else {
+        html += `<tr>
+            <td style="font-weight:bold;">سعر الغرام</td>
+            <td colspan="2" style="color:#c62828; font-weight:bold; background:#fff3cd;">⚠️ الوزن أقل من 1 غرام — لا يمكن حساب سعر الغرام بشكل دقيق</td>
+        </tr>`;
+    }
+    html += `</tbody></table>`;
+
+    // Section 3: Shop profit comparison (TITLE UPDATED)
+    html += `<h3 style="color:#aa8c2c; border-bottom:2px solid #d4af37; padding-bottom:5px; margin-top:20px;">💰 ربح المحل (قبل و بعد)</h3>`;
+    html += `<div class="summary-grid">
+        <div class="summary-box">
+            <h4>كم ربح المحل الكلي (قبل الخصم)</h4>
+            <div class="val" style="color:${totalShopProfit < 0 ? '#c62828' : '#2e7d32'};">${totalShopProfit >= 0 ? '+' : ''}${totalShopProfit.toFixed(3)} ${currency}</div>
+        </div>
+        <div class="summary-box">
+            <h4>كم ربح المحل الكلي بعد الخصم</h4>
+            <div class="val" style="color:${totalShopProfitAfter < 0 ? '#c62828' : '#2e7d32'};">${totalShopProfitAfter >= 0 ? '+' : ''}${totalShopProfitAfter.toFixed(3)} ${currency}</div>
+        </div>
+    </div>`;
+
+    return html;
+}
+function printAnalysisInNewPage() {
+    const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+    const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+    const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+    if (weight <= 0 || marketPrice <= 0 || totalPrice <= 0) {
+        alert('⚠️ الرجاء إدخال بيانات التحليل أولاً (الوزن، سعر السوق، السعر المعروض) ثم اضغط "تحليل السعر المعروض"');
+        return;
+    }
+    const htmlContent = generateAnalysisComparisonHTML();
+    const fullHtml = wrapPDFContent(htmlContent);
+    const win = window.open('', '_blank');
+    if (!win) { alert('⚠️ الرجاء السماح بالنوافذ المنبثقة (Pop-up)'); return; }
+    win.document.open();
+    win.document.write(fullHtml);
+    win.document.close();
+    setTimeout(() => {
+        try { win.focus(); win.print(); } catch(e) { console.error(e); }
+    }, 700);
+}
+function shareAnalysisAsPDF() {
+    const weight = parseFloat(document.getElementById('totalWeight').value) || 0;
+    const marketPrice = parseFloat(document.getElementById('marketPriceDisplay').value) || 0;
+    const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
+    if (weight <= 0 || marketPrice <= 0 || totalPrice <= 0) {
+        alert('⚠️ الرجاء إدخال بيانات التحليل أولاً ثم اضغط "تحليل السعر المعروض"');
+        return;
+    }
+    const htmlContent = generateAnalysisComparisonHTML();
+    sharePDFDirect(htmlContent, 'تحليل-عرض-المحل.pdf', 'تحليل عرض المحل');
+}
 const translations = {
     ar: {
         devTag: "تم عمل الموقع بواسطة Muharraqi", title: "🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين",
@@ -1161,7 +1284,8 @@ const translations = {
         smartCompareTip: "قارن العروض بناءً على إجمالي الزيادة.",
         smartAdditionPercent: "نسبة الزيادة على قيمة الذهب",
         smartPercentNote: "هذا يعني أن الزيادة تعادل", smartPercentOfGold: "من قيمة الذهب الخام",
-        smartMarketPriceLabel: "سعر السوق", smartAdditionLabel: "الزيادة"
+        smartMarketPriceLabel: "سعر السوق", smartAdditionLabel: "الزيادة",
+        btnPrintAnalysisText: "طباعة التحليل", btnShareAnalysisText: "إرسال PDF"
     },
     en: {
         devTag: "Website developed by Muharraqi", title: "🇧🇭 Gold Price Comparison - Bahrain",
@@ -1229,7 +1353,8 @@ const translations = {
         smartCompareTip: "Compare offers based on total addition.",
         smartAdditionPercent: "Addition %",
         smartPercentNote: "Addition equals", smartPercentOfGold: "of raw gold value",
-        smartMarketPriceLabel: "Market", smartAdditionLabel: "Addition"
+        smartMarketPriceLabel: "Market", smartAdditionLabel: "Addition",
+        btnPrintAnalysisText: "Print Analysis", btnShareAnalysisText: "Send PDF"
     },
     hi: {
         devTag: "वेबसाइट मुहर्रकी द्वारा", title: "🇧🇭 सोने की दुकानों के बीच मूल्य तुलना - बहरीन",
@@ -1296,7 +1421,8 @@ const translations = {
         smartCompareTip: "कुल अतिरिक्त के आधार पर तुलना करें।",
         smartAdditionPercent: "अतिरिक्त %",
         smartPercentNote: "अतिरिक्त बराबर है", smartPercentOfGold: "कच्चे सोने के मूल्य का",
-        smartMarketPriceLabel: "बाजार", smartAdditionLabel: "अतिरिक्त"
+        smartMarketPriceLabel: "बाजार", smartAdditionLabel: "अतिरिक्त",
+        btnPrintAnalysisText: "विश्लेषण प्रिंट करें", btnShareAnalysisText: "PDF भेजें"
     }
 };
 let goldData = { currentLang: 'ar', fontSize: 1.0, theme: 'light', savedShops: [] };
@@ -1414,7 +1540,6 @@ function updateSummaryBox1(marketPrice, weight, profitPerGram) {
     else if (totalShopProfit < -0.001) { profitBox.classList.add('loss'); profitAmountEl.className = 'amount negative'; statusTextEl.className = 'status-text loss-text'; statusTextEl.textContent = t.shopLossStatus; }
     else { profitAmountEl.className = 'amount'; statusTextEl.className = 'status-text'; statusTextEl.textContent = t.shopNeutralStatus; }
 }
-// ✅ FIXED: updateSummaryBox2 now properly shows the grid and applies profit/loss class
 function updateSummaryBox2(totalProfitAfter, weight) {
     const box = document.getElementById('summaryBox2');
     const t = translations[goldData.currentLang];
@@ -1608,7 +1733,6 @@ function calculateProfit() {
     document.getElementById('box1_2').classList.add('active');
     document.getElementById('saveContainer').style.display = 'block';
 }
-// ✅ FIXED: renderProfitBreakdownCard2 applies .profit/.loss class for border visibility
 function renderProfitBreakdownCard2(profitPerGram, weight) {
     const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
     const card = document.getElementById('profitPerGramCard2Box');
@@ -1976,6 +2100,8 @@ function changeLanguage() {
     document.getElementById('lblSaveShop').innerText = t.lblSaveShop;
     document.getElementById('shopNameInput').placeholder = t.shopNamePlaceholder;
     document.getElementById('btnSaveShop').innerText = editingShopId ? t.btnUpdateShop : t.btnSaveShop;
+    document.getElementById('btnPrintAnalysisText').innerText = t.btnPrintAnalysisText;
+    document.getElementById('btnShareAnalysisText').innerText = t.btnShareAnalysisText;
     document.getElementById('secTitleComparison').innerText = t.secTitleComparison;
     document.getElementById('btnClearAll').innerText = t.btnClearAll;
     document.getElementById('lblAddPhoto').innerText = t.lblAddPhoto;

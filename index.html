@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مقارنة الاسعار بين محلات الذهب - البحرين 🇧🇭</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
 :root { --primary: #d4af37; --primary-hover: #aa8c2c; --bg-body: #f0f2f5; --bg-card: #ffffff; --text-main: #1a1a1a; --text-sub: #555555; --border-color: #e0e0e0; --success: #2e7d32; --danger: #c62828; --bg-status: #fff9e6; --border-status: #ffeeba; --text-status: #856404; --bg-readonly: #e9ecef; --font-scale: 1; }
 [data-theme="dark"] { --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #f5f5f5; --text-sub: #b0b0b0; --border-color: #333333; --success: #81c784; --danger: #ef5350; --bg-status: #2c2514; --border-status: #4d3d1a; --text-status: #ffd54f; --bg-readonly: #2d2d2d; }
@@ -98,6 +99,7 @@ th { background-color: var(--bg-body); color: var(--text-sub); font-weight: bold
 .btn-edit-row { color: var(--primary); margin-inline-end: 5px; }
 .btn-print-row { color: #1976d2; margin-inline-end: 5px; }
 .btn-share-row { color: #2962FF; margin-inline-end: 5px; }
+.btn-excel-row { color: #107C41; margin-inline-end: 5px; }
 .table-images-container { display: flex; justify-content: center; gap: 5px; }
 .table-img { width: 38px; height: 38px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid var(--border-color); transition: transform 0.2s; }
 .table-img:hover { transform: scale(1.15); }
@@ -108,6 +110,10 @@ th { background-color: var(--bg-body); color: var(--text-sub); font-weight: bold
 .btn-print:hover { opacity: 0.9; }
 .btn-share { background-color: #2962FF; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; }
 .btn-share:hover { opacity: 0.9; }
+.btn-excel { background-color: #107C41; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+.btn-excel:hover { opacity: 0.88; }
+.btn-excel-analysis { flex: 1; min-width: 140px; background-color: #107C41; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s; }
+.btn-excel-analysis:hover { opacity: 0.88; }
 .btn-share-location { background-color: #4caf50; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; width: 100%; margin-top: 8px; }
 .btn-share-location:hover { opacity: 0.9; }
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
@@ -214,7 +220,6 @@ body.mode-normal #profitPerGramCard2Box .breakdown-list { font-size: 15px !impor
 body.mode-normal #profitPerGramCard2Box .breakdown-list .total-line { font-size: 17px !important; }
 body.mode-normal #profitPerGramCard2Box .breakdown-list b { font-size: 15px; }
 body.mode-normal #profitPerGramCard2Title { font-size: 15px !important; }
-/* ✅ NEW: Best offer ribbon */
 .best-offer-ribbon { background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #1a1a1a; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); animation: slideInDown 0.5s ease; border: 2px solid #aa8c2c; }
 .best-offer-ribbon .crown { font-size: 32px; }
 .best-offer-ribbon .info { flex: 1; text-align: right; }
@@ -222,7 +227,6 @@ body.mode-normal #profitPerGramCard2Title { font-size: 15px !important; }
 .best-offer-ribbon .shop-name { font-size: 18px; font-weight: bold; margin: 3px 0; }
 .best-offer-ribbon .price { font-size: 14px; font-weight: bold; color: #2e7d32; }
 @keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-/* ✅ NEW: Comparison bar chart */
 .comparison-chart { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
 .comparison-chart h4 { margin: 0 0 12px 0; font-size: 14px; color: var(--text-sub); font-weight: bold; }
 .chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
@@ -234,7 +238,6 @@ body.mode-normal #profitPerGramCard2Title { font-size: 15px !important; }
 .chart-bar.avg { background: linear-gradient(90deg, #ff9800, #ffb74d); color: #1a1a1a; }
 .chart-bar.bad { background: linear-gradient(90deg, #c62828, #ef5350); }
 .chart-value { min-width: 80px; text-align: left; font-size: 12px; font-weight: bold; color: var(--text-main); }
-/* ✅ NEW: Auto-save indicator */
 .draft-indicator { font-size: 11px; color: var(--success); text-align: center; margin-top: 8px; opacity: 0; transition: opacity 0.3s; }
 .draft-indicator.show { opacity: 1; }
 .help-modal-content { text-align: right; max-width: 600px; }
@@ -488,6 +491,7 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 <div class="save-flex">
 <div class="analysis-buttons">
 <button class="btn-print-analysis" onclick="printAnalysisInNewPage()">🖨️ <span id="btnPrintAnalysisText">طباعة التحليل</span></button>
+<button class="btn-excel-analysis" onclick="exportAnalysisToExcel()">📊 <span>Excel</span></button>
 <button class="btn-share-analysis" onclick="shareAnalysisAsPDF()">📄 <span id="btnShareAnalysisText">إرسال PDF</span></button>
 </div>
 <div class="form-group" style="margin-bottom:10px;">
@@ -562,6 +566,7 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 </div>
 <div style="display:flex; gap:8px; flex-wrap:wrap;">
 <button class="btn-print" onclick="printComparisonTable()">🖨️ طباعة الجدول</button>
+<button class="btn-excel" onclick="exportComparisonToExcel()">📊 Excel</button>
 <button class="btn-share" onclick="shareComparisonAsPDF()">📄 مشاركة PDF</button>
 <button class="btn-clear-all" id="btnClearAll" onclick="clearAllShops()">مسح الكل 🗑️</button>
 </div>
@@ -631,6 +636,7 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 <div class="section-title" id="bullionTableTitle" style="margin:0; border:none;">سجل عمليات الشراء والسبائك</div>
 <div style="display:flex; gap:8px; flex-wrap:wrap;">
 <button class="btn-print" onclick="printBullionTable()">🖨️ طباعة السجل</button>
+<button class="btn-excel" onclick="exportBullionToExcel()">📊 Excel</button>
 <button class="btn-share" onclick="shareBullionAsPDF()">📄 مشاركة PDF</button>
 </div>
 </div>
@@ -696,6 +702,7 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 <div class="section-title" id="jewelryTableTitle" style="margin:0; border:none;">سجل عمليات الشراء</div>
 <div style="display:flex; gap:8px; flex-wrap:wrap;">
 <button class="btn-print" onclick="printJewelryTable()">🖨️ طباعة السجل</button>
+<button class="btn-excel" onclick="exportJewelryToExcel()">📊 Excel</button>
 <button class="btn-share" onclick="shareJewelryAsPDF()">📄 مشاركة PDF</button>
 </div>
 </div>
@@ -781,7 +788,6 @@ function getCaratPrice(carat, basePrice24) {
     const caratMap = {'18':18/24,'20':20/24,'21':21/24,'22':22/24,'24':1};
     return basePrice24 * (caratMap[carat] || 1);
 }
-/* ✅ NEW: Auto-save draft */
 function saveDraft() {
     try {
         const draft = {
@@ -1022,7 +1028,6 @@ async function shareLocation() {
     try { await navigator.clipboard.writeText(shareText); alert('✅ تم نسخ رابط الموقع إلى الحافظة'); }
     catch(e) { prompt('انسخ رابط الموقع:', mapUrl); }
 }
-/* ✅ UPDATED: applySmartDisplay - when weight < 1g, show total shop profit card instead of percentage */
 function applySmartDisplay(weight, marketPrice, totalPrice) {
     const currency = goldData.currentLang === 'ar' ? 'د.ب' : 'BHD';
     const box1 = document.getElementById('box1_1');
@@ -1035,8 +1040,6 @@ function applySmartDisplay(weight, marketPrice, totalPrice) {
     const goldValue = marketPrice * weight;
     const totalAddition = totalPrice - goldValue;
     if (weight < 1 && weight > 0) {
-        /* ---- SMALL WEIGHT MODE (< 1g) ---- */
-        /* Box 1: Show total addition on gold */
         resBox1Title.innerText = t.smartAdditionTitle || 'إجمالي الزيادة على الذهب +(مصنعية + فائدة + ضريبة)';
         document.getElementById('pricePerGramStore').innerHTML = `${totalPrice.toFixed(3)} <span class="currency">${currency}</span>`;
         const subtitle = document.createElement('div');
@@ -1047,7 +1050,6 @@ function applySmartDisplay(weight, marketPrice, totalPrice) {
         note.className = 'smart-note';
         note.innerHTML = `⚠️ ${t.smartSmallWeightNote || 'الوزن أقل من 1 غرام.'}<br>💡 ${t.smartCompareTip || 'قارن العروض بناءً على إجمالي الزيادة.'}`;
         box1.appendChild(note);
-        /* ✅ Box 2: Show TOTAL SHOP PROFIT (instead of percentage) */
         resBox2Title.innerText = 'ربح المحل الكلي +"المصنعية+الفائدة+الضريبة" (بدون احتساب الوزن الكلي)';
         const isProfit = totalAddition > 0.001;
         const isLoss = totalAddition < -0.001;
@@ -1057,19 +1059,11 @@ function applySmartDisplay(weight, marketPrice, totalPrice) {
         const statusEl = document.createElement('div');
         statusEl.className = 'status-inline';
         statusEl.style.cssText = 'margin-top: 8px; font-size: 14px; font-weight: bold;';
-        if (isProfit) {
-            statusEl.style.color = 'var(--success)';
-            statusEl.textContent = '🟢 المحل ربحان';
-        } else if (isLoss) {
-            statusEl.style.color = 'var(--danger)';
-            statusEl.textContent = '🔴 المحل خسران';
-        } else {
-            statusEl.style.color = 'var(--text-sub)';
-            statusEl.textContent = '⚪ لا ربح ولا خسارة';
-        }
+        if (isProfit) { statusEl.style.color = 'var(--success)'; statusEl.textContent = '🟢 المحل ربحان'; }
+        else if (isLoss) { statusEl.style.color = 'var(--danger)'; statusEl.textContent = '🔴 المحل خسران'; }
+        else { statusEl.style.color = 'var(--text-sub)'; statusEl.textContent = '⚪ لا ربح ولا خسارة'; }
         box2.appendChild(statusEl);
     } else {
-        /* ---- NORMAL MODE (≥ 1g) ---- */
         resBox1Title.innerText = t.resBox1Title;
         resBox2Title.innerText = t.resBox2Title;
         const pricePerGramStore = totalPrice / weight;
@@ -1315,6 +1309,493 @@ function shareAnalysisAsPDF() {
     const htmlContent = generateAnalysisComparisonHTML();
     sharePDFDirect(htmlContent, 'تحليل-عرض-المحل.pdf', 'تحليل عرض المحل');
 }
+
+/* ============================================================
+   📊 EXCEL EXPORT ENGINE — xlsx-js-style
+   ============================================================ */
+const XL_DARK    = "0F172A";
+const XL_NAVY    = "1E3A5F";
+const XL_BORDER  = "94A3B8";
+const XL_BRAND   = "34D399";
+const XL_INPUT   = "0EA5E9";
+const XL_CONVERT = "8B5CF6";
+
+function xlBorder(color, style) {
+    style = style || "thin";
+    return {
+        top:    { style: style, color: { rgb: color } },
+        bottom: { style: style, color: { rgb: color } },
+        left:   { style: style, color: { rgb: color } },
+        right:  { style: style, color: { rgb: color } }
+    };
+}
+function xlAlign(h, v) {
+    return { horizontal: h, vertical: v || "center", readingOrder: 2, wrapText: true };
+}
+const XL = {
+    title:        { fill: { patternType: "solid", fgColor: { rgb: XL_DARK } },    font: { color: { rgb: "FFFFFF" }, bold: true, sz: 16, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    subtitle:     { fill: { patternType: "solid", fgColor: { rgb: XL_NAVY } },    font: { color: { rgb: "FFD54F" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    brand:        { fill: { patternType: "solid", fgColor: { rgb: XL_DARK } },    font: { color: { rgb: XL_BRAND }, bold: true, sz: 10, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    header:       { fill: { patternType: "solid", fgColor: { rgb: XL_NAVY } },    font: { color: { rgb: "FFFFFF" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    headerInput:  { fill: { patternType: "solid", fgColor: { rgb: XL_INPUT } },   font: { color: { rgb: "FFFFFF" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    headerConvert:{ fill: { patternType: "solid", fgColor: { rgb: XL_CONVERT } }, font: { color: { rgb: "FFFFFF" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    data:         { font: { sz: 11, name: "Segoe UI", color: { rgb: "1A1A1A" } }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    dataFlight:   { fill: { patternType: "solid", fgColor: { rgb: "E0F2FE" } }, font: { sz: 11, name: "Segoe UI", color: { rgb: "1A1A1A" } }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    dataHotel:    { fill: { patternType: "solid", fgColor: { rgb: "CCFBF1" } }, font: { sz: 11, name: "Segoe UI", color: { rgb: "1A1A1A" } }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    dataOther:    { fill: { patternType: "solid", fgColor: { rgb: "FEF3C7" } }, font: { sz: 11, name: "Segoe UI", color: { rgb: "1A1A1A" } }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    dataProfit:   { fill: { patternType: "solid", fgColor: { rgb: "DCFCE7" } }, font: { sz: 11, name: "Segoe UI", color: { rgb: "15803D" }, bold: true }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    dataLoss:     { fill: { patternType: "solid", fgColor: { rgb: "FEE2E2" } }, font: { sz: 11, name: "Segoe UI", color: { rgb: "B91C1C" }, bold: true }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    totalLabel:   { fill: { patternType: "solid", fgColor: { rgb: XL_DARK } }, font: { color: { rgb: "FFFFFF" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    totalValue:   { fill: { patternType: "solid", fgColor: { rgb: XL_DARK } }, font: { color: { rgb: XL_BRAND }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_DARK, "medium") },
+    statGreen:    { fill: { patternType: "solid", fgColor: { rgb: "DCFCE7" } }, font: { color: { rgb: "15803D" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    statPurple:   { fill: { patternType: "solid", fgColor: { rgb: "EDE9FE" } }, font: { color: { rgb: "6D28D9" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    statAmber:    { fill: { patternType: "solid", fgColor: { rgb: "FEF3C7" } }, font: { color: { rgb: "B45309" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    statRed:      { fill: { patternType: "solid", fgColor: { rgb: "FEE2E2" } }, font: { color: { rgb: "B91C1C" }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("center"), border: xlBorder(XL_BORDER, "thin") },
+    sectionLabel: { fill: { patternType: "solid", fgColor: { rgb: "F1F5F9" } }, font: { color: { rgb: XL_DARK }, bold: true, sz: 12, name: "Segoe UI" }, alignment: xlAlign("right"), border: xlBorder(XL_BORDER, "thin") }
+};
+
+function xlSet(ws, r, c, v, style) {
+    const addr = XLSX.utils.encode_cell({ r: r, c: c });
+    const t = (typeof v === "number") ? "n" : "s";
+    ws[addr] = { v: v, t: t, s: style || XL.data };
+}
+function xlMerge(merges, r1, c1, r2, c2) { merges.push({ s: { r: r1, c: c1 }, e: { r: r2, c: c2 } }); }
+function xlFillEmpty(ws, row, cols, style) { for (let c = 1; c < cols; c++) xlSet(ws, row, c, "", style); }
+function getTodayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function showToast(msg) {
+    const t = document.createElement("div");
+    t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#107C41;color:#fff;padding:14px 24px;border-radius:30px;font-weight:bold;z-index:99999;box-shadow:0 6px 20px rgba(0,0,0,0.3);font-size:14px;font-family:'Segoe UI',Tahoma,sans-serif;";
+    t.textContent = "✅ " + msg;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.transition = "opacity 0.4s"; t.style.opacity = "0"; setTimeout(() => t.remove(), 400); }, 2200);
+}
+function xlSaveWorkbook(wb, filename) {
+    XLSX.writeFile(wb, filename, { bookType: "xlsx", type: "binary" });
+}
+function xlNewWorkbook() {
+    const wb = XLSX.utils.book_new();
+    wb.Workbook = { Views: [{ RTL: true }] };
+    return wb;
+}
+function xlFinalizeSheet(ws, rows, cols, merges, colWidths, rowHeights) {
+    ws["!ref"] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows, c: cols - 1 } });
+    ws["!merges"] = merges;
+    ws["!cols"] = colWidths;
+    ws["!rows"] = rowHeights || [];
+    ws["!views"] = [{ RTL: true }];
+}
+
+/* =============== 1) تصدير جدول مقارنة العروض =============== */
+function exportComparisonToExcel() {
+    if (!goldData.savedShops || goldData.savedShops.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
+    const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
+    const ws = {}; const merges = []; const COLS = 8;
+
+    xlSet(ws, 0, 0, "🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين", XL.title);
+    xlMerge(merges, 0, 0, 0, COLS - 1); xlFillEmpty(ws, 0, COLS, XL.title);
+
+    xlSet(ws, 1, 0, `📊 جدول مقارنة عروض المحلات — ${getFormattedDateTime()}`, XL.subtitle);
+    xlMerge(merges, 1, 0, 1, COLS - 1); xlFillEmpty(ws, 1, COLS, XL.subtitle);
+
+    xlSet(ws, 2, 0, "✨ MUHARRAQI ✨", XL.brand);
+    xlMerge(merges, 2, 0, 2, COLS - 1); xlFillEmpty(ws, 2, COLS, XL.brand);
+
+    const headers = ["#", "المحل", "الوزن (غ)", "السعر الإجمالي", "سعر غرام المحل", "المصنعية/غرام", "الموقع (GPS)", "الحالة"];
+    headers.forEach((h, i) => xlSet(ws, 3, i, h, XL.header));
+
+    let r = 4;
+    goldData.savedShops.forEach((shop, i) => {
+        const isProfit = shop.profitPerGram >= 0;
+        const statusStyle = isProfit ? XL.dataProfit : XL.dataLoss;
+        const statusText = isProfit
+            ? `🟢 ربحان (+${shop.profitPerGram.toFixed(2)} ${currency}/غ)`
+            : `🔴 خسران (${shop.profitPerGram.toFixed(2)} ${currency}/غ)`;
+        const loc = shop.gps ? `${shop.gps.lat.toFixed(5)}, ${shop.gps.lng.toFixed(5)}` : "—";
+
+        xlSet(ws, r, 0, i + 1, XL.data);
+        xlSet(ws, r, 1, shop.name, XL.data);
+        xlSet(ws, r, 2, parseFloat(shop.weight.toFixed(2)), XL.data);
+        xlSet(ws, r, 3, parseFloat(shop.totalPrice.toFixed(2)), XL.dataFlight);
+        xlSet(ws, r, 4, parseFloat(shop.pricePerGram.toFixed(2)), XL.dataFlight);
+        xlSet(ws, r, 5, parseFloat(shop.profitPerGram.toFixed(2)), statusStyle);
+        xlSet(ws, r, 6, loc, XL.data);
+        xlSet(ws, r, 7, statusText, statusStyle);
+        r++;
+    });
+
+    const totalWeight = goldData.savedShops.reduce((s, x) => s + x.weight, 0);
+    const totalPrice  = goldData.savedShops.reduce((s, x) => s + x.totalPrice, 0);
+    const avgProfit   = totalWeight > 0 ? goldData.savedShops.reduce((s, x) => s + x.profitPerGram * x.weight, 0) / totalWeight : 0;
+    xlSet(ws, r, 0, "الإجمالي", XL.totalLabel);
+    xlSet(ws, r, 1, "", XL.totalLabel);
+    xlSet(ws, r, 2, parseFloat(totalWeight.toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 3, parseFloat(totalPrice.toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 4, parseFloat((totalWeight > 0 ? totalPrice / totalWeight : 0).toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 5, parseFloat(avgProfit.toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 6, "", XL.totalLabel);
+    xlSet(ws, r, 7, "", XL.totalLabel);
+    xlMerge(merges, r, 0, r, 1);
+
+    xlFinalizeSheet(ws, r, COLS, merges,
+        [{ wch: 6 }, { wch: 22 }, { wch: 12 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 22 }, { wch: 28 }],
+        [{ hpt: 30 }, { hpt: 22 }, { hpt: 18 }, { hpt: 26 }]
+    );
+
+    const wb = xlNewWorkbook();
+    XLSX.utils.book_append_sheet(wb, ws, "مقارنة المحلات");
+
+    const wsS = {}; const mS = [];
+    xlSet(wsS, 0, 0, "📑 ملخص المقارنة", XL.title);
+    xlMerge(mS, 0, 0, 0, 4); xlFillEmpty(wsS, 0, 5, XL.title);
+
+    const sumHeaders = ["البند", "القيمة", "ملاحظة", "الحالة", "المحل الأفضل"];
+    sumHeaders.forEach((h, i) => xlSet(wsS, 1, i, h, XL.header));
+
+    const bestShop = [...goldData.savedShops].sort((a, b) => a.profitPerGram - b.profitPerGram)[0];
+    const rows2 = [
+        ["عدد المحلات", goldData.savedShops.length, "عرض تم حفظه", "🟢", bestShop ? bestShop.name : "—"],
+        ["إجمالي الوزن", parseFloat(totalWeight.toFixed(2)), "غرام", "🟡", ""],
+        ["إجمالي السعر", parseFloat(totalPrice.toFixed(2)), currency, "🔵", ""],
+        ["متوسط المصنعية", parseFloat(avgProfit.toFixed(2)), currency + "/غرام", "🟣", ""]
+    ];
+    rows2.forEach((row, i) => row.forEach((v, c) => {
+        const st = c === 1 ? XL.statGreen : (c === 3 ? XL.statPurple : (c === 4 ? XL.statAmber : XL.data));
+        xlSet(wsS, 2 + i, c, v, st);
+    }));
+
+    xlFinalizeSheet(wsS, 2 + rows2.length - 1, 5, mS,
+        [{ wch: 18 }, { wch: 16 }, { wch: 16 }, { wch: 10 }, { wch: 22 }],
+        [{ hpt: 30 }, { hpt: 24 }]
+    );
+    XLSX.utils.book_append_sheet(wb, wsS, "ملخص");
+
+    xlSaveWorkbook(wb, `مقارنة-عروض-المحلات-${getTodayStr()}.xlsx`);
+    showToast("تم تصدير Excel بنجاح");
+}
+
+/* =============== 2) تصدير صف محل واحد =============== */
+function exportShopRowToExcel(shopId) {
+    const shop = goldData.savedShops.find(s => s.id === shopId);
+    if (!shop) { alert("المحل غير موجود"); return; }
+    const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
+    const ws = {}; const merges = []; const COLS = 2;
+
+    xlSet(ws, 0, 0, `🏪 ${shop.name}`, XL.title);
+    xlMerge(merges, 0, 0, 0, COLS - 1); xlFillEmpty(ws, 0, COLS, XL.title);
+
+    xlSet(ws, 1, 0, `📅 ${getFormattedDateTime()}`, XL.subtitle);
+    xlMerge(merges, 1, 0, 1, COLS - 1); xlFillEmpty(ws, 1, COLS, XL.subtitle);
+
+    xlSet(ws, 2, 0, "✨ MUHARRAQI ✨", XL.brand);
+    xlMerge(merges, 2, 0, 2, COLS - 1); xlFillEmpty(ws, 2, COLS, XL.brand);
+
+    xlSet(ws, 3, 0, "البند", XL.header);
+    xlSet(ws, 3, 1, "القيمة", XL.header);
+
+    const isProfit = shop.profitPerGram >= 0;
+    const statusStyle = isProfit ? XL.dataProfit : XL.dataLoss;
+    const details = [
+        ["الوزن الكلي (غرام)", parseFloat(shop.weight.toFixed(2)), XL.dataHotel],
+        ["السعر الإجمالي", parseFloat(shop.totalPrice.toFixed(2)), XL.dataFlight],
+        ["سعر الغرام في المحل", parseFloat(shop.pricePerGram.toFixed(2)), XL.dataFlight],
+        ["المصنعية/غرام", parseFloat(shop.profitPerGram.toFixed(2)), statusStyle],
+        ["الحالة", isProfit ? "🟢 المحل ربحان" : "🔴 المحل خسران", statusStyle],
+        ["العملة", currency, XL.data],
+        ["الموقع (GPS)", shop.gps ? `${shop.gps.lat.toFixed(5)}, ${shop.gps.lng.toFixed(5)}` : "—", XL.data]
+    ];
+    details.forEach((row, i) => {
+        xlSet(ws, 4 + i, 0, row[0], XL.sectionLabel);
+        xlSet(ws, 4 + i, 1, row[1], row[2] || XL.data);
+    });
+
+    xlFinalizeSheet(ws, 4 + details.length - 1, COLS, merges,
+        [{ wch: 24 }, { wch: 30 }],
+        [{ hpt: 30 }, { hpt: 20 }, { hpt: 16 }]
+    );
+
+    const wb = xlNewWorkbook();
+    XLSX.utils.book_append_sheet(wb, ws, "عرض المحل");
+    xlSaveWorkbook(wb, `عرض-${shop.name}-${getTodayStr()}.xlsx`);
+    showToast("تم تصدير Excel بنجاح");
+}
+
+/* =============== 3) تصدير التحليل (قبل/بعد الخصم) =============== */
+function exportAnalysisToExcel() {
+    const marketPrice    = parseFloat(document.getElementById("marketPriceDisplay").value) || 0;
+    const weight         = parseFloat(document.getElementById("totalWeight").value) || 0;
+    const shopTotalPrice = parseFloat(document.getElementById("totalPrice").value) || 0;
+    const caratValue     = document.getElementById("carat").value || "21";
+    if (marketPrice <= 0 || weight <= 0 || shopTotalPrice <= 0) {
+        alert("⚠️ الرجاء إدخال بيانات التحليل أولاً");
+        return;
+    }
+    const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
+    const afterEl  = document.getElementById("totalWithProfit");
+    let afterDiscountTotal = 0;
+    if (afterEl && afterEl.textContent) {
+        const m = afterEl.textContent.match(/[\d.]+/);
+        if (m) afterDiscountTotal = parseFloat(m[0]) || 0;
+    }
+    if (afterDiscountTotal === 0) afterDiscountTotal = shopTotalPrice;
+
+    const globalGoldValue      = marketPrice * weight;
+    const totalShopProfit      = shopTotalPrice - globalGoldValue;
+    const totalShopProfitAfter = afterDiscountTotal - globalGoldValue;
+    const isSmallWeight        = weight < 1;
+    const shopGramPrice        = (isSmallWeight || weight <= 0) ? 0 : shopTotalPrice / weight;
+    const afterGramPrice       = (isSmallWeight || weight <= 0) ? 0 : afterDiscountTotal / weight;
+
+    const ws = {}; const merges = []; const COLS = 3;
+
+    xlSet(ws, 0, 0, "📊 تحليل مقارنة عرض المحل", XL.title);
+    xlMerge(merges, 0, 0, 0, COLS - 1); xlFillEmpty(ws, 0, COLS, XL.title);
+
+    xlSet(ws, 1, 0, `مقارنة السعر قبل وبعد الخصم — ${getFormattedDateTime()}`, XL.subtitle);
+    xlMerge(merges, 1, 0, 1, COLS - 1); xlFillEmpty(ws, 1, COLS, XL.subtitle);
+
+    xlSet(ws, 2, 0, "✨ MUHARRAQI ✨", XL.brand);
+    xlMerge(merges, 2, 0, 2, COLS - 1); xlFillEmpty(ws, 2, COLS, XL.brand);
+
+    xlSet(ws, 3, 0, "📌 المعلومات الأساسية", XL.sectionLabel);
+    xlMerge(merges, 3, 0, 3, COLS - 1); xlFillEmpty(ws, 3, COLS, XL.sectionLabel);
+
+    xlSet(ws, 4, 0, "البند", XL.header);
+    xlSet(ws, 4, 1, "القيمة", XL.headerInput);
+    xlSet(ws, 4, 2, "العملة", XL.headerInput);
+
+    const infoRows = [
+        [`سعر غرام السوق (عيار ${caratValue})`, parseFloat(marketPrice.toFixed(3)), currency, XL.dataHotel],
+        ["الوزن الكلي (غرام)", parseFloat(weight.toFixed(3)), "", XL.dataHotel],
+        ["قيمة الذهب الخام", parseFloat(globalGoldValue.toFixed(3)), currency, XL.dataFlight]
+    ];
+    infoRows.forEach((row, i) => {
+        xlSet(ws, 5 + i, 0, row[0], XL.sectionLabel);
+        xlSet(ws, 5 + i, 1, row[1], row[3] || XL.data);
+        xlSet(ws, 5 + i, 2, row[2], row[3] || XL.data);
+    });
+
+    let r = 8;
+    xlSet(ws, r, 0, "🔍 مقارنة السعر قبل وبعد الخصم", XL.sectionLabel);
+    xlMerge(merges, r, 0, r, COLS - 1); xlFillEmpty(ws, r, COLS, XL.sectionLabel);
+    r++;
+    xlSet(ws, r, 0, "البند", XL.header);
+    xlSet(ws, r, 1, "سعر المحل (قبل الخصم)", XL.headerInput);
+    xlSet(ws, r, 2, "سعر بعد الخصم", XL.headerConvert);
+    r++;
+    xlSet(ws, r, 0, "السعر الإجمالي", XL.sectionLabel);
+    xlSet(ws, r, 1, parseFloat(shopTotalPrice.toFixed(3)), XL.dataFlight);
+    xlSet(ws, r, 2, parseFloat(afterDiscountTotal.toFixed(3)), XL.dataProfit);
+    r++;
+    if (!isSmallWeight) {
+        xlSet(ws, r, 0, "سعر الغرام", XL.sectionLabel);
+        xlSet(ws, r, 1, parseFloat(shopGramPrice.toFixed(3)), XL.dataFlight);
+        xlSet(ws, r, 2, parseFloat(afterGramPrice.toFixed(3)), XL.dataProfit);
+    } else {
+        xlSet(ws, r, 0, "سعر الغرام", XL.sectionLabel);
+        xlSet(ws, r, 1, "⚠️ الوزن أقل من 1 غرام", XL.statAmber);
+        xlSet(ws, r, 2, "—", XL.statAmber);
+    }
+    r++;
+
+    r++;
+    xlSet(ws, r, 0, "💰 ربح المحل (قبل و بعد)", XL.sectionLabel);
+    xlMerge(merges, r, 0, r, COLS - 1); xlFillEmpty(ws, r, COLS, XL.sectionLabel);
+    r++;
+    xlSet(ws, r, 0, "البند", XL.header);
+    xlSet(ws, r, 1, "قبل الخصم", XL.headerInput);
+    xlSet(ws, r, 2, "بعد الخصم", XL.headerConvert);
+    r++;
+    xlSet(ws, r, 0, "ربح المحل الكلي", XL.sectionLabel);
+    xlSet(ws, r, 1, parseFloat(totalShopProfit.toFixed(3)), totalShopProfit >= 0 ? XL.dataProfit : XL.dataLoss);
+    xlSet(ws, r, 2, parseFloat(totalShopProfitAfter.toFixed(3)), totalShopProfitAfter >= 0 ? XL.dataProfit : XL.dataLoss);
+
+    xlFinalizeSheet(ws, r, COLS, merges,
+        [{ wch: 30 }, { wch: 22 }, { wch: 22 }],
+        [{ hpt: 30 }, { hpt: 22 }, { hpt: 18 }]
+    );
+
+    const wb = xlNewWorkbook();
+    XLSX.utils.book_append_sheet(wb, ws, "تحليل العرض");
+    xlSaveWorkbook(wb, `تحليل-عرض-المحل-${getTodayStr()}.xlsx`);
+    showToast("تم تصدير Excel بنجاح");
+}
+
+/* =============== 4) تصدير جدول السبائك =============== */
+function exportBullionToExcel() {
+    if (!bullionTransactions || bullionTransactions.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
+    const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
+    const marketPrice = parseFloat(document.getElementById("bullion-market-price").value) || 0;
+    const ws = {}; const merges = []; const COLS = 7;
+
+    let totalInvested = 0, totalWeight = 0;
+    bullionTransactions.forEach(t => { totalInvested += t.price; totalWeight += t.weight; });
+    const currentValue = totalWeight * marketPrice;
+    const pl = currentValue - totalInvested;
+    const avgPrice = totalWeight > 0 ? totalInvested / totalWeight : 0;
+
+    xlSet(ws, 0, 0, "📊 المتوسط السعري للسبائك", XL.title);
+    xlMerge(merges, 0, 0, 0, COLS - 1); xlFillEmpty(ws, 0, COLS, XL.title);
+
+    xlSet(ws, 1, 0, `سجل عمليات الشراء والسبائك — ${getFormattedDateTime()}`, XL.subtitle);
+    xlMerge(merges, 1, 0, 1, COLS - 1); xlFillEmpty(ws, 1, COLS, XL.subtitle);
+
+    xlSet(ws, 2, 0, "✨ MUHARRAQI ✨", XL.brand);
+    xlMerge(merges, 2, 0, 2, COLS - 1); xlFillEmpty(ws, 2, COLS, XL.brand);
+
+    const headers = ["التاريخ", "الوزن (غرام)", "سعر الشراء", "سعر الغرام", "القيمة الحالية", "الربح/الخسارة", "النسبة %"];
+    headers.forEach((h, i) => xlSet(ws, 3, i, h, i === 0 ? XL.headerInput : (i >= 5 ? XL.headerConvert : XL.header)));
+
+    let r = 4;
+    bullionTransactions.forEach(txn => {
+        const cur = txn.weight * marketPrice;
+        const plT = cur - txn.price;
+        const pct = txn.price > 0 ? (plT / txn.price) * 100 : 0;
+        const st = plT >= 0 ? XL.dataProfit : XL.dataLoss;
+        xlSet(ws, r, 0, txn.date, XL.dataHotel);
+        xlSet(ws, r, 1, parseFloat(txn.weight.toFixed(2)), XL.dataHotel);
+        xlSet(ws, r, 2, parseFloat(txn.price.toFixed(3)), XL.dataFlight);
+        xlSet(ws, r, 3, parseFloat((txn.weight > 0 ? txn.price / txn.weight : 0).toFixed(3)), XL.dataFlight);
+        xlSet(ws, r, 4, parseFloat(cur.toFixed(3)), XL.data);
+        xlSet(ws, r, 5, parseFloat(plT.toFixed(3)), st);
+        xlSet(ws, r, 6, parseFloat(pct.toFixed(2)), st);
+        r++;
+    });
+
+    xlSet(ws, r, 0, "الإجمالي", XL.totalLabel);
+    xlSet(ws, r, 1, parseFloat(totalWeight.toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 2, parseFloat(totalInvested.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 3, parseFloat(avgPrice.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 4, parseFloat(currentValue.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 5, parseFloat(pl.toFixed(3)), pl >= 0 ? XL.totalValue : XL.totalLabel);
+    xlSet(ws, r, 6, "", XL.totalValue);
+
+    xlFinalizeSheet(ws, r, COLS, merges,
+        [{ wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 12 }],
+        [{ hpt: 30 }, { hpt: 22 }, { hpt: 18 }, { hpt: 26 }]
+    );
+
+    const wb = xlNewWorkbook();
+    XLSX.utils.book_append_sheet(wb, ws, "السبائك");
+
+    /* ورقة الملخص */
+    const wsS = {}; const mS = [];
+    xlSet(wsS, 0, 0, "📑 ملخص السبائك", XL.title);
+    xlMerge(mS, 0, 0, 0, 4); xlFillEmpty(wsS, 0, 5, XL.title);
+
+    ["البند", "القيمة", "ملاحظة", "الحالة", ""].forEach((h, i) => xlSet(wsS, 1, i, h, XL.header));
+    const sumRows = [
+        ["عدد العمليات", bullionTransactions.length, "عملية", "🟢", ""],
+        ["إجمالي الوزن", parseFloat(totalWeight.toFixed(2)), "غرام", "🟡", ""],
+        ["إجمالي الاستثمار", parseFloat(totalInvested.toFixed(3)), currency, "🔵", ""],
+        ["القيمة الحالية", parseFloat(currentValue.toFixed(3)), currency, "🟣", ""],
+        ["صافي الربح/الخسارة", parseFloat(pl.toFixed(3)), currency, pl >= 0 ? "🟢 ربح" : "🔴 خسارة", ""]
+    ];
+    sumRows.forEach((row, i) => row.forEach((v, c) => {
+        const st = c === 1 ? (pl < 0 && i === sumRows.length - 1 ? XL.statRed : XL.statGreen) : (c === 3 ? XL.statPurple : XL.data);
+        xlSet(wsS, 2 + i, c, v, st);
+    }));
+    xlFinalizeSheet(wsS, 2 + sumRows.length - 1, 5, mS,
+        [{ wch: 18 }, { wch: 16 }, { wch: 14 }, { wch: 14 }, { wch: 14 }],
+        [{ hpt: 30 }, { hpt: 24 }]
+    );
+    XLSX.utils.book_append_sheet(wb, wsS, "ملخص");
+
+    xlSaveWorkbook(wb, `المتوسط-السعري-للسبائك-${getTodayStr()}.xlsx`);
+    showToast("تم تصدير Excel بنجاح");
+}
+
+/* =============== 5) تصدير جدول الملبوس =============== */
+function exportJewelryToExcel() {
+    if (!jewelryTransactions || jewelryTransactions.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
+    const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
+    const basePrice24 = parseFloat(document.getElementById("jewelry-market-price").value) || 0;
+    const ws = {}; const merges = []; const COLS = 8;
+
+    let totalInvested = 0, totalWeight = 0, totalCurrentValue = 0;
+    jewelryTransactions.forEach(t => {
+        totalInvested += t.price;
+        totalWeight += t.weight;
+        totalCurrentValue += t.weight * getCaratPrice(t.carat, basePrice24);
+    });
+    const pl = totalCurrentValue - totalInvested;
+    const avgPrice = totalWeight > 0 ? totalInvested / totalWeight : 0;
+
+    xlSet(ws, 0, 0, "📊 المتوسط السعري للملبوس", XL.title);
+    xlMerge(merges, 0, 0, 0, COLS - 1); xlFillEmpty(ws, 0, COLS, XL.title);
+
+    xlSet(ws, 1, 0, `سجل عمليات الشراء — ${getFormattedDateTime()}`, XL.subtitle);
+    xlMerge(merges, 1, 0, 1, COLS - 1); xlFillEmpty(ws, 1, COLS, XL.subtitle);
+
+    xlSet(ws, 2, 0, "✨ MUHARRAQI ✨", XL.brand);
+    xlMerge(merges, 2, 0, 2, COLS - 1); xlFillEmpty(ws, 2, COLS, XL.brand);
+
+    const headers = ["التاريخ", "العيار", "الوزن (غرام)", "سعر الشراء", "سعر الغرام", "القيمة الحالية", "الربح/الخسارة", "النسبة %"];
+    headers.forEach((h, i) => xlSet(ws, 3, i, h, i === 0 ? XL.headerInput : (i >= 6 ? XL.headerConvert : XL.header)));
+
+    let r = 4;
+    jewelryTransactions.forEach(txn => {
+        const cur = txn.weight * getCaratPrice(txn.carat, basePrice24);
+        const plT = cur - txn.price;
+        const pct = txn.price > 0 ? (plT / txn.price) * 100 : 0;
+        const st = plT >= 0 ? XL.dataProfit : XL.dataLoss;
+        xlSet(ws, r, 0, txn.date, XL.dataHotel);
+        xlSet(ws, r, 1, `عيار ${txn.carat}`, XL.dataOther);
+        xlSet(ws, r, 2, parseFloat(txn.weight.toFixed(2)), XL.dataHotel);
+        xlSet(ws, r, 3, parseFloat(txn.price.toFixed(3)), XL.dataFlight);
+        xlSet(ws, r, 4, parseFloat((txn.weight > 0 ? txn.price / txn.weight : 0).toFixed(3)), XL.dataFlight);
+        xlSet(ws, r, 5, parseFloat(cur.toFixed(3)), XL.data);
+        xlSet(ws, r, 6, parseFloat(plT.toFixed(3)), st);
+        xlSet(ws, r, 7, parseFloat(pct.toFixed(2)), st);
+        r++;
+    });
+
+    xlSet(ws, r, 0, "الإجمالي", XL.totalLabel);
+    xlSet(ws, r, 1, "", XL.totalLabel);
+    xlSet(ws, r, 2, parseFloat(totalWeight.toFixed(2)), XL.totalValue);
+    xlSet(ws, r, 3, parseFloat(totalInvested.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 4, parseFloat(avgPrice.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 5, parseFloat(totalCurrentValue.toFixed(3)), XL.totalValue);
+    xlSet(ws, r, 6, parseFloat(pl.toFixed(3)), pl >= 0 ? XL.totalValue : XL.totalLabel);
+    xlSet(ws, r, 7, "", XL.totalValue);
+
+    xlFinalizeSheet(ws, r, COLS, merges,
+        [{ wch: 14 }, { wch: 10 }, { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 12 }],
+        [{ hpt: 30 }, { hpt: 22 }, { hpt: 18 }, { hpt: 26 }]
+    );
+
+    const wb = xlNewWorkbook();
+    XLSX.utils.book_append_sheet(wb, ws, "الملبوس");
+
+    /* ورقة الملخص */
+    const wsS = {}; const mS = [];
+    xlSet(wsS, 0, 0, "📑 ملخص الملبوس", XL.title);
+    xlMerge(mS, 0, 0, 0, 4); xlFillEmpty(wsS, 0, 5, XL.title);
+
+    ["البند", "القيمة", "ملاحظة", "الحالة", ""].forEach((h, i) => xlSet(wsS, 1, i, h, XL.header));
+    const sumRows = [
+        ["عدد العمليات", jewelryTransactions.length, "عملية", "🟢", ""],
+        ["إجمالي الوزن", parseFloat(totalWeight.toFixed(2)), "غرام", "🟡", ""],
+        ["إجمالي الاستثمار", parseFloat(totalInvested.toFixed(3)), currency, "🔵", ""],
+        ["القيمة الحالية", parseFloat(totalCurrentValue.toFixed(3)), currency, "🟣", ""],
+        ["صافي الربح/الخسارة", parseFloat(pl.toFixed(3)), currency, pl >= 0 ? "🟢 ربح" : "🔴 خسارة", ""]
+    ];
+    sumRows.forEach((row, i) => row.forEach((v, c) => {
+        const st = c === 1 ? (pl < 0 && i === sumRows.length - 1 ? XL.statRed : XL.statGreen) : (c === 3 ? XL.statPurple : XL.data);
+        xlSet(wsS, 2 + i, c, v, st);
+    }));
+    xlFinalizeSheet(wsS, 2 + sumRows.length - 1, 5, mS,
+        [{ wch: 18 }, { wch: 16 }, { wch: 14 }, { wch: 14 }, { wch: 14 }],
+        [{ hpt: 30 }, { hpt: 24 }]
+    );
+    XLSX.utils.book_append_sheet(wb, wsS, "ملخص");
+
+    xlSaveWorkbook(wb, `المتوسط-السعري-للملبوس-${getTodayStr()}.xlsx`);
+    showToast("تم تصدير Excel بنجاح");
+}
+
 const translations = {
     ar: {
         devTag: "تم عمل الموقع بواسطة Muharraqi", title: "🇧🇭 مقارنة الاسعار بين محلات الذهب - البحرين",
@@ -2090,6 +2571,7 @@ function renderComparisonTable() {
             <td>
                 <button class="btn-action-row btn-edit-row" onclick="editShopRow(${shop.id})" title="تعديل">✏️</button>
                 <button class="btn-action-row btn-print-row" onclick="printShopRow(${shop.id})" title="طباعة">🖨️</button>
+                <button class="btn-action-row btn-excel-row" onclick="exportShopRowToExcel(${shop.id})" title="Excel">📊</button>
                 <button class="btn-action-row btn-share-row" onclick="shareShopRow(${shop.id})" title="مشاركة PDF">📄</button>
                 <button class="btn-action-row btn-delete-row" onclick="deleteShopRow(${shop.id})" title="حذف">🗑️</button>
             </td>
@@ -2098,7 +2580,6 @@ function renderComparisonTable() {
     renderBestOfferRibbon();
     renderComparisonChart();
 }
-/* ✅ NEW: Best offer ribbon */
 function renderBestOfferRibbon() {
     const container = document.getElementById('bestOfferRibbon');
     const t = translations[goldData.currentLang];
@@ -2119,7 +2600,6 @@ function renderBestOfferRibbon() {
         </div>
     </div>`;
 }
-/* ✅ NEW: Comparison bar chart */
 function renderComparisonChart() {
     const container = document.getElementById('comparisonChart');
     const t = translations[goldData.currentLang];
@@ -2128,7 +2608,6 @@ function renderComparisonChart() {
         container.innerHTML = '';
         return;
     }
-    /* Only compare shops with weight >= 1g (for fairness) */
     const shops = goldData.savedShops.filter(s => s.weight >= 1);
     if (shops.length < 2) { container.innerHTML = ''; return; }
     const sorted = [...shops].sort((a, b) => a.profitPerGram - b.profitPerGram);

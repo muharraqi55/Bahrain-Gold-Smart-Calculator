@@ -84,6 +84,12 @@ header h1 { margin: 0; font-size: calc(18px * var(--font-scale)); font-weight: b
 .tradingview-nav-btn:hover { background-color: var(--primary-hover); transform: scale(1.03); }
 .share-location-header-btn { background-color: #4caf50; color: white; border: none; padding: 8px 14px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; }
 .share-location-header-btn:hover { opacity: 0.9; transform: scale(1.03); }
+/* ===== What-If button ===== */
+.what-if-btn { background-color: #9c27b0; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; gap: 8px; transition: 0.2s; white-space: nowrap; }
+.what-if-btn:hover { background-color: #7b1fa2; transform: scale(1.03); }
+.what-if-modal-content { max-width: 560px; }
+.what-if-summary { font-size: calc(11px * var(--font-scale)); color: var(--text-sub); text-align: center; margin-top: 10px; line-height: 1.7; }
+/* =========================== */
 h2 { text-align: center; color: var(--text-main); margin-top: 0; margin-bottom: 25px; font-size: calc(24px * var(--font-scale)); }
 .status-bar { background-color: var(--bg-status); border: 1px solid var(--border-status); color: var(--text-status); padding: 12px; border-radius: 8px; text-align: center; font-size: calc(14px * var(--font-scale)); margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
 .btn-refresh { background-color: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: calc(12px * var(--font-scale)); transition: background 0.3s; }
@@ -350,6 +356,7 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 </button>
 </div>
 <div class="header-right">
+<button class="what-if-btn" onclick="openWhatIfModal()" title="حاسبة لو - ماذا لو كان سعر الأونصة؟">💭 <span id="whatIfBtnText">لو</span></button>
 <button class="share-location-header-btn" onclick="shareLocation()" title="مشاركة الموقع">
 📍 <span id="shareLocationText">مشاركة موقعي</span>
 </button>
@@ -786,6 +793,48 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 </div>
 </div>
 
+<!-- ============================================================
+     💭 NEW: "What If" (لو) Modal — تحويل سعر الأونصة العالمية
+     إلى سعر الغرام لعيارات 24 / 22 / 21 / 18
+     ============================================================ -->
+<div id="whatIfModal" class="modal-overlay">
+<div class="modal-content what-if-modal-content">
+<button class="modal-close" onclick="closeWhatIfModal()">✕</button>
+<h3 id="whatIfTitle" style="margin-top:0; color:var(--text-main);">💭 حاسبة "لو"</h3>
+<p id="whatIfSubtitle" style="color:var(--text-sub); font-size:13px; margin:0 0 15px 0; line-height:1.6;">أدخل سعر الأونصة العالمية بالدولار لتعرف كم يكون سعر الغرام بالعيارات المختلفة</p>
+<div class="form-group">
+<label id="whatIfOunceLabel" for="whatIfOuncePrice">سعر الأونصة العالمية بالدولار الأمريكي ($):</label>
+<input type="number" id="whatIfOuncePrice" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+</div>
+<div class="price-source-container" style="justify-content:center;">
+<label class="radio-group"><input type="radio" name="whatIfCurrency" value="USD" checked onchange="calculateWhatIf()"><span id="whatIfCurrencyUSDText">دولار أمريكي ($)</span></label>
+<label class="radio-group"><input type="radio" name="whatIfCurrency" value="BHD" onchange="calculateWhatIf()"><span id="whatIfCurrencyBHDText">دينار بحريني (د.ب)</span></label>
+</div>
+<div class="results-container">
+<div class="result-box active">
+<h3 id="whatIfCarat24Title">عيار 24</h3>
+<div class="value" id="whatIfG24">0.000 <span class="currency">$</span></div>
+</div>
+<div class="result-box active">
+<h3 id="whatIfCarat22Title">عيار 22</h3>
+<div class="value" id="whatIfG22">0.000 <span class="currency">$</span></div>
+</div>
+</div>
+<div class="results-container">
+<div class="result-box active">
+<h3 id="whatIfCarat21Title">عيار 21</h3>
+<div class="value" id="whatIfG21">0.000 <span class="currency">$</span></div>
+</div>
+<div class="result-box active">
+<h3 id="whatIfCarat18Title">عيار 18</h3>
+<div class="value" id="whatIfG18">0.000 <span class="currency">$</span></div>
+</div>
+</div>
+<div id="whatIfNote" class="what-if-summary"></div>
+<button class="btn-calc" onclick="closeWhatIfModal()" style="margin-top: 15px;">✔️ <span id="whatIfCloseBtn">إغلاق</span></button>
+</div>
+</div>
+
 <div id="cameraModal" class="modal-overlay">
 <div class="modal-content">
 <button class="modal-close" onclick="closeLiveCamera()">✕</button>
@@ -818,6 +867,52 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 
 <script>
 const GOLD_API_KEY = 'goldapi-4ce604c6334baceaab771f5a376ef4b4-io';
+const OUNCE_GRAMS = 31.1034768;
+const USD_TO_BHD_RATE = 0.377;
+
+/* ============================================================
+   💭 NEW: "What If" (لو) — Calculator Functions
+   ============================================================ */
+function openWhatIfModal() {
+    document.getElementById('whatIfModal').style.display = 'flex';
+    calculateWhatIf();
+}
+function closeWhatIfModal() {
+    document.getElementById('whatIfModal').style.display = 'none';
+}
+function calculateWhatIf() {
+    const ounceUSD = parseFloat(document.getElementById('whatIfOuncePrice').value) || 0;
+    const currencyRadio = document.querySelector('input[name="whatIfCurrency"]:checked');
+    const currency = currencyRadio ? currencyRadio.value : 'USD';
+    const symbol = currency === 'USD' ? '$' : 'د.ب';
+    const gram24USD = ounceUSD / OUNCE_GRAMS;
+    const convert = (usd) => currency === 'USD' ? usd : usd * USD_TO_BHD_RATE;
+
+    const g24 = convert(gram24USD);
+    const g22 = convert(gram24USD * (22 / 24));
+    const g21 = convert(gram24USD * (21 / 24));
+    const g18 = convert(gram24USD * (18 / 24));
+
+    document.getElementById('whatIfG24').innerHTML = `${g24.toFixed(3)} <span class="currency">${symbol}</span>`;
+    document.getElementById('whatIfG22').innerHTML = `${g22.toFixed(3)} <span class="currency">${symbol}</span>`;
+    document.getElementById('whatIfG21').innerHTML = `${g21.toFixed(3)} <span class="currency">${symbol}</span>`;
+    document.getElementById('whatIfG18').innerHTML = `${g18.toFixed(3)} <span class="currency">${symbol}</span>`;
+
+    const noteEl = document.getElementById('whatIfNote');
+    if (ounceUSD > 0) {
+        const gram24NoteUSD = gram24USD.toFixed(3);
+        const gram24NoteBHD = (gram24USD * USD_TO_BHD_RATE).toFixed(3);
+        noteEl.innerHTML =
+            `💡 سعر الأونصة: <b>${ounceUSD.toLocaleString('en-US', { maximumFractionDigits: 2 })} $</b><br>` +
+            `⚖️ الأونصة = <b>${OUNCE_GRAMS} غرام</b><br>` +
+            `🟡 سعر الغرام الخام (24) بالدولار: <b>${gram24NoteUSD} $</b><br>` +
+            `🇧🇭 سعر الغرام الخام (24) بالدينار: <b>${gram24NoteBHD} د.ب</b>`;
+    } else {
+        noteEl.innerHTML = '';
+    }
+}
+/* ============================================================ */
+
 function getFormattedDateTime() {
     const now = new Date();
     const lang = goldData.currentLang;
@@ -945,17 +1040,6 @@ function wrapPDFContent(htmlContent) {
     </style></head><body>${htmlContent}<div class="footer-print">تم الإنشاء بواسطة حاسبة الذهب الذكية - البحرين 🇧🇭 — ${getFormattedDateTime()}</div></body></html>`;
 }
 
-/* ============================================================
-   📄 PDF Generation via html2canvas + jsPDF
-   - Visible container (position:fixed; top:0; left:0)
-   - Dark overlay z-index highest
-   - DOMParser: split <style> / <body> and re-merge inside container
-   - Wait 500ms before html2canvas
-   - Dynamic scale: min(2, max(0.8, targetPx / scrollWidth))
-   - scrollX:0, scrollY:0
-   - Multi-page A4 splitting
-   - Full DOM cleanup
-   ============================================================ */
 function waitForImages(container) {
     const images = container.querySelectorAll('img');
     const promises = Array.from(images).map(img => {
@@ -972,18 +1056,14 @@ function waitForImages(container) {
 }
 
 async function generatePDFBlob(htmlContent, filename) {
-    // 1) تأكد من تحميل المكتبات (html2canvas + jsPDF) من أول CDN متاح
     await window.ensurePDFLibraries();
     const { jsPDF } = window.jspdf;
-
-    // 2) افصل <style> عن <body> باستخدام DOMParser
     const fullHtml = wrapPDFContent(htmlContent);
     const parsed = new DOMParser().parseFromString(fullHtml, 'text/html');
     const stylesText = Array.from(parsed.querySelectorAll('style'))
         .map(s => s.textContent).join('\n');
     const bodyHTML = parsed.body ? parsed.body.innerHTML : fullHtml;
 
-    // 3) أنشئ حاوية مرئية فعلاً (position:fixed; top:0; left:0)
     const container = document.createElement('div');
     container.id = 'pdf-render-container';
     container.style.cssText = [
@@ -1002,7 +1082,6 @@ async function generatePDFBlob(htmlContent, filename) {
         "font-family:'Segoe UI',Tahoma,sans-serif"
     ].join(';');
 
-    // أعِد دمج <style> داخل الحاوية
     const styleEl = document.createElement('style');
     styleEl.textContent = stylesText;
     container.appendChild(styleEl);
@@ -1013,7 +1092,6 @@ async function generatePDFBlob(htmlContent, filename) {
 
     document.body.appendChild(container);
 
-    // 4) غطِّ الحاوية بطبقة معتمة (z-index أعلى)
     const overlay = document.createElement('div');
     overlay.id = 'pdf-render-overlay';
     overlay.style.cssText = [
@@ -1037,17 +1115,14 @@ async function generatePDFBlob(htmlContent, filename) {
     document.body.appendChild(overlay);
 
     try {
-        // 5) انتظر تحميل الصور + 500ms قبل html2canvas
         await waitForImages(container);
         await new Promise(r => setTimeout(r, 500));
 
-        // 6) احسب scale ديناميكياً
         const targetPx = 800;
         const scrollWidth = container.scrollWidth || container.offsetWidth || targetPx;
         const scrollHeight = container.scrollHeight || container.offsetHeight || 1;
         const scale = Math.min(2, Math.max(0.8, targetPx / scrollWidth));
 
-        // 7) التقط الصورة
         const canvas = await html2canvas(container, {
             scale: scale,
             useCORS: true,
@@ -1062,7 +1137,6 @@ async function generatePDFBlob(htmlContent, filename) {
             logging: false
         });
 
-        // 8) قسّم على عدة صفحات A4 تلقائياً
         const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
         const pageWidth  = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
@@ -1099,7 +1173,6 @@ async function generatePDFBlob(htmlContent, filename) {
 
         return pdf.output('blob');
     } finally {
-        // 9) نظّف DOM بالكامل
         try { container.remove(); } catch(e) {}
         try { overlay.remove(); } catch(e) {}
         try { if (container.parentNode) container.parentNode.removeChild(container); } catch(e) {}
@@ -1118,18 +1191,15 @@ async function sharePDFDirect(htmlContent, filename, title) {
 
         const file = new File([pdfBlob], filename, { type: 'application/pdf' });
 
-        // محاولة المشاركة عبر Web Share API أولاً
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
                 await navigator.share({ files: [file], title: title });
                 return;
             } catch (e) {
                 if (e.name === 'AbortError') return;
-                // إذا فشلت المشاركة، انزل الملف
             }
         }
 
-        // تنزيل الملف كبديل
         const url = URL.createObjectURL(pdfBlob);
         const a = document.createElement('a');
         a.href = url;
@@ -1596,7 +1666,6 @@ function xlFinalizeSheet(ws, rows, cols, merges, colWidths, rowHeights) {
     ws["!views"] = [{ RTL: true }];
 }
 
-/* =============== 1) تصدير جدول مقارنة العروض =============== */
 function exportComparisonToExcel() {
     if (!goldData.savedShops || goldData.savedShops.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
     const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
@@ -1684,7 +1753,6 @@ function exportComparisonToExcel() {
     showToast("تم تصدير Excel بنجاح");
 }
 
-/* =============== 2) تصدير صف محل واحد =============== */
 function exportShopRowToExcel(shopId) {
     const shop = goldData.savedShops.find(s => s.id === shopId);
     if (!shop) { alert("المحل غير موجود"); return; }
@@ -1730,7 +1798,6 @@ function exportShopRowToExcel(shopId) {
     showToast("تم تصدير Excel بنجاح");
 }
 
-/* =============== 3) تصدير التحليل (قبل/بعد الخصم) =============== */
 function exportAnalysisToExcel() {
     const marketPrice    = parseFloat(document.getElementById("marketPriceDisplay").value) || 0;
     const weight         = parseFloat(document.getElementById("totalWeight").value) || 0;
@@ -1831,7 +1898,6 @@ function exportAnalysisToExcel() {
     showToast("تم تصدير Excel بنجاح");
 }
 
-/* =============== 4) تصدير جدول السبائك =============== */
 function exportBullionToExcel() {
     if (!bullionTransactions || bullionTransactions.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
     const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
@@ -1888,7 +1954,6 @@ function exportBullionToExcel() {
     const wb = xlNewWorkbook();
     XLSX.utils.book_append_sheet(wb, ws, "السبائك");
 
-    /* ورقة الملخص */
     const wsS = {}; const mS = [];
     xlSet(wsS, 0, 0, "📑 ملخص السبائك", XL.title);
     xlMerge(mS, 0, 0, 0, 4); xlFillEmpty(wsS, 0, 5, XL.title);
@@ -1915,7 +1980,6 @@ function exportBullionToExcel() {
     showToast("تم تصدير Excel بنجاح");
 }
 
-/* =============== 5) تصدير جدول الملبوس =============== */
 function exportJewelryToExcel() {
     if (!jewelryTransactions || jewelryTransactions.length === 0) { alert("لا توجد بيانات للتصدير"); return; }
     const currency = goldData.currentLang === "ar" ? "د.ب" : "BHD";
@@ -1977,7 +2041,6 @@ function exportJewelryToExcel() {
     const wb = xlNewWorkbook();
     XLSX.utils.book_append_sheet(wb, ws, "الملبوس");
 
-    /* ورقة الملخص */
     const wsS = {}; const mS = [];
     xlSet(wsS, 0, 0, "📑 ملخص الملبوس", XL.title);
     xlMerge(mS, 0, 0, 0, 4); xlFillEmpty(wsS, 0, 5, XL.title);
@@ -2085,7 +2148,16 @@ const translations = {
         smartMarketPriceLabel: "سعر السوق", smartAdditionLabel: "الزيادة",
         btnPrintAnalysisText: "طباعة التحليل", btnShareAnalysisText: "إرسال PDF",
         bestOfferTitle: "أفضل عرض", bestOfferSubtitle: "الأقل مصنعية (الأرخص)",
-        chartTitle: "📊 مقارنة بصرية بين العروض (المصنعية/غرام)"
+        chartTitle: "📊 مقارنة بصرية بين العروض (المصنعية/غرام)",
+        /* NEW — What If */
+        whatIfBtnText: "لو",
+        whatIfTitle: "💭 حاسبة لو",
+        whatIfSubtitle: "أدخل سعر الأونصة العالمية بالدولار لتعرف كم يكون سعر الغرام بالعيارات المختلفة",
+        whatIfOunceLabel: "سعر الأونصة العالمية بالدولار الأمريكي ($):",
+        whatIfCurrencyUSD: "دولار أمريكي ($)",
+        whatIfCurrencyBHD: "دينار بحريني (د.ب)",
+        whatIfCloseBtn: "إغلاق",
+        whatIfCarat24: "عيار 24", whatIfCarat22: "عيار 22", whatIfCarat21: "عيار 21", whatIfCarat18: "عيار 18"
     },
     en: {
         devTag: "Website developed by Muharraqi", title: "🇧🇭 Gold Price Comparison - Bahrain",
@@ -2157,7 +2229,15 @@ const translations = {
         smartMarketPriceLabel: "Market", smartAdditionLabel: "Addition",
         btnPrintAnalysisText: "Print Analysis", btnShareAnalysisText: "Send PDF",
         bestOfferTitle: "Best Offer", bestOfferSubtitle: "Lowest making charges (Cheapest)",
-        chartTitle: "📊 Visual comparison between offers (Making/g)"
+        chartTitle: "📊 Visual comparison between offers (Making/g)",
+        whatIfBtnText: "What If",
+        whatIfTitle: "💭 What If Calculator",
+        whatIfSubtitle: "Enter the global ounce price in USD to see gram prices by carat",
+        whatIfOunceLabel: "Global Ounce Price in USD ($):",
+        whatIfCurrencyUSD: "US Dollar ($)",
+        whatIfCurrencyBHD: "Bahraini Dinar (BHD)",
+        whatIfCloseBtn: "Close",
+        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K"
     },
     hi: {
         devTag: "वेबसाइट मुहर्रकी द्वारा", title: "🇧🇭 सोने की दुकानों के बीच मूल्य तुलना - बहरीन",
@@ -2228,7 +2308,15 @@ const translations = {
         smartMarketPriceLabel: "बाजार", smartAdditionLabel: "अतिरिक्त",
         btnPrintAnalysisText: "विश्लेषण प्रिंट करें", btnShareAnalysisText: "PDF भेजें",
         bestOfferTitle: "सर्वोत्तम ऑफर", bestOfferSubtitle: "सबसे कम मेकिंग (सबसे सस्ता)",
-        chartTitle: "📊 ऑफर की दृश्य तुलना (मेकिंग/ग्राम)"
+        chartTitle: "📊 ऑफर की दृश्य तुलना (मेकिंग/ग्राम)",
+        whatIfBtnText: "क्या हो",
+        whatIfTitle: "💭 क्या हो अगर कैलकुलेटर",
+        whatIfSubtitle: "ग्राम कीमत देखने के लिए अंतर्राष्ट्रीय औंस मूल्य दर्ज करें",
+        whatIfOunceLabel: "अंतर्राष्ट्रीय औंस मूल्य (USD $):",
+        whatIfCurrencyUSD: "अमेरिकी डॉलर ($)",
+        whatIfCurrencyBHD: "बहरीनी दिनार (BHD)",
+        whatIfCloseBtn: "बंद करें",
+        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K"
     }
 };
 let goldData = { currentLang: 'ar', fontSize: 1.0, theme: 'light', mode: 'normal', savedShops: [] };
@@ -3059,11 +3147,25 @@ function changeLanguage() {
     document.getElementById('fabExportTxt').innerText = t.fabExportTxt;
     document.getElementById('fabImportTxt').innerText = t.fabImportTxt;
     document.getElementById('fabClearTxt').innerText = t.fabClearTxt;
+    /* NEW — What If translations */
+    const whatIfBtnEl = document.getElementById('whatIfBtnText');
+    if (whatIfBtnEl) whatIfBtnEl.innerText = t.whatIfBtnText || 'لو';
+    document.getElementById('whatIfTitle').innerText = t.whatIfTitle || '💭 حاسبة لو';
+    document.getElementById('whatIfSubtitle').innerText = t.whatIfSubtitle || '';
+    document.getElementById('whatIfOunceLabel').innerText = t.whatIfOunceLabel || '';
+    document.getElementById('whatIfCurrencyUSDText').innerText = t.whatIfCurrencyUSD || '';
+    document.getElementById('whatIfCurrencyBHDText').innerText = t.whatIfCurrencyBHD || '';
+    document.getElementById('whatIfCloseBtn').innerText = t.whatIfCloseBtn || 'إغلاق';
+    document.getElementById('whatIfCarat24Title').innerText = t.whatIfCarat24 || 'عيار 24';
+    document.getElementById('whatIfCarat22Title').innerText = t.whatIfCarat22 || 'عيار 22';
+    document.getElementById('whatIfCarat21Title').innerText = t.whatIfCarat21 || 'عيار 21';
+    document.getElementById('whatIfCarat18Title').innerText = t.whatIfCarat18 || 'عيار 18';
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     saveLocalData();
     applyMode();
     updateSelectedPrice(); renderComparisonTable(); renderBullionTable(); renderJewelryTable(); syncWeight();
+    calculateWhatIf();
     const activeSection = document.querySelector('.page-section.active');
     if (activeSection) {
         let pageTitle = "";
@@ -3415,6 +3517,8 @@ window.onload = function() {
     updateJewelryMarketPriceField();
     calculateBullionMetrics();
     calculateJewelryMetrics();
+    /* NEW — initial What If calc */
+    calculateWhatIf();
 };
 </script>
 </body>

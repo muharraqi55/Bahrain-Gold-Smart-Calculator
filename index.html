@@ -87,7 +87,35 @@ header h1 { margin: 0; font-size: calc(18px * var(--font-scale)); font-weight: b
 /* ===== What-If button ===== */
 .what-if-btn { background-color: #9c27b0; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: calc(14px * var(--font-scale)); display: flex; align-items: center; gap: 8px; transition: 0.2s; white-space: nowrap; }
 .what-if-btn:hover { background-color: #7b1fa2; transform: scale(1.03); }
-.what-if-modal-content { max-width: 560px; }
+.what-if-modal-content { max-width: 640px; max-height: 92vh; overflow-y: auto; }
+.wi-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.wi-field { text-align: center; }
+.wi-field-label { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: bold; font-size: calc(14px * var(--font-scale)); color: var(--text-main); margin-bottom: 6px; }
+.wi-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 50%; font-size: 13px; font-weight: bold; box-sizing: border-box; line-height: 1; }
+.wi-badge.sm { min-width: 18px; height: 18px; padding: 0 4px; font-size: 11px; }
+.wi-field input { text-align: center; font-weight: bold; font-size: calc(18px * var(--font-scale)); border: 2px solid transparent; }
+.wi-field input::placeholder { color: var(--wi-fg, #888); opacity: 0.65; font-weight: normal; font-size: 0.75em; }
+.wi-carat-block { background: var(--bg-body); border: 2px solid var(--primary); border-radius: 12px; padding: 12px; margin-top: 12px; text-align: center; }
+.wi-carat-block h3 { margin: 0 0 10px 0; font-size: calc(15px * var(--font-scale)); color: var(--text-main); }
+.wi-cells { display: flex; gap: 8px; flex-wrap: wrap; }
+.wi-cell { flex: 1 1 110px; border-radius: 10px; padding: 10px 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.wi-cell-label { font-size: calc(12px * var(--font-scale)); font-weight: bold; margin-bottom: 4px; }
+.wi-cell-value { font-size: calc(17px * var(--font-scale)); font-weight: bold; }
+.wi-cell-cur { font-size: 0.75em; font-weight: normal; opacity: 0.9; }
+.wi-empty { color: var(--text-sub); padding: 8px; }
+.wi-diffs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.wi-diff { flex: 1 1 200px; border-radius: 10px; padding: 8px 10px; border: 2px solid var(--border-color); background: var(--bg-card); }
+.wi-diff.up { border-color: var(--success); background: rgba(46, 125, 50, 0.1); }
+.wi-diff.down { border-color: var(--danger); background: rgba(198, 40, 40, 0.1); }
+.wi-diff-caption { font-size: 11px; color: var(--text-sub); font-weight: bold; margin-bottom: 4px; }
+.wi-diff-head { display: flex; align-items: center; justify-content: center; gap: 5px; flex-wrap: wrap; font-size: 12px; font-weight: bold; color: var(--text-main); }
+.wi-diff-arrow { color: var(--text-sub); }
+.wi-diff-detail { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+.wi-diff-val { font-size: calc(17px * var(--font-scale)); font-weight: bold; margin-top: 4px; color: var(--text-sub); }
+.wi-diff-val small { font-size: 0.7em; font-weight: normal; }
+.wi-diff.up .wi-diff-val { color: var(--success); }
+.wi-diff.down .wi-diff-val { color: var(--danger); }
+.wi-note-title { font-weight: bold; font-size: 13px; color: var(--text-main); margin-top: 14px; }
 .what-if-summary { font-size: calc(11px * var(--font-scale)); color: var(--text-sub); text-align: center; margin-top: 10px; line-height: 1.7; }
 /* =========================== */
 h2 { text-align: center; color: var(--text-main); margin-top: 0; margin-bottom: 25px; font-size: calc(24px * var(--font-scale)); }
@@ -801,34 +829,47 @@ header h1 { font-size: calc(14px * var(--font-scale)); text-align: center; }
 <div class="modal-content what-if-modal-content">
 <button class="modal-close" onclick="closeWhatIfModal()">✕</button>
 <h3 id="whatIfTitle" style="margin-top:0; color:var(--text-main);">💭 حاسبة "لو"</h3>
-<p id="whatIfSubtitle" style="color:var(--text-sub); font-size:13px; margin:0 0 15px 0; line-height:1.6;">أدخل سعر الأونصة العالمية بالدولار لتعرف كم يكون سعر الغرام بالعيارات المختلفة</p>
+<p id="whatIfSubtitle" style="color:var(--text-sub); font-size:13px; margin:0 0 15px 0; line-height:1.6;">أدخل سعر الأونصة العالمية بالدولار في الخانات الأربع (نزول ← صعود ← نزول ← صعود) لتعرف سعر الغرام بكل عيار والفارق بين النزول والصعود</p>
 <div class="form-group">
-<label id="whatIfOunceLabel" for="whatIfOuncePrice">سعر الأونصة العالمية بالدولار الأمريكي ($):</label>
-<input type="number" id="whatIfOuncePrice" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+<label id="whatIfOunceLabel">سعر الأونصة العالمية بالدولار الأمريكي ($) — أدخل ما تحتاجه فقط:</label>
+<div class="wi-inputs-grid">
+<div class="wi-field">
+<div class="wi-field-label"><span class="wi-badge" data-wi-idx="0">1</span><span id="whatIfLbl1">نزول</span></div>
+<input type="number" id="whatIfOunce1" data-wi-idx="0" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+</div>
+<div class="wi-field">
+<div class="wi-field-label"><span class="wi-badge" data-wi-idx="1">2</span><span id="whatIfLbl2">صعود</span></div>
+<input type="number" id="whatIfOunce2" data-wi-idx="1" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+</div>
+<div class="wi-field">
+<div class="wi-field-label"><span class="wi-badge" data-wi-idx="2">3</span><span id="whatIfLbl3">نزول</span></div>
+<input type="number" id="whatIfOunce3" data-wi-idx="2" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+</div>
+<div class="wi-field">
+<div class="wi-field-label"><span class="wi-badge" data-wi-idx="3">4</span><span id="whatIfLbl4">صعود</span></div>
+<input type="number" id="whatIfOunce4" data-wi-idx="3" step="any" min="0" placeholder="مثال: 4100" oninput="if(this.value < 0) this.value = 0; calculateWhatIf();" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46">
+</div>
+</div>
 </div>
 <div class="price-source-container" style="justify-content:center;">
 <label class="radio-group"><input type="radio" name="whatIfCurrency" value="USD" checked onchange="calculateWhatIf()"><span id="whatIfCurrencyUSDText">دولار أمريكي ($)</span></label>
 <label class="radio-group"><input type="radio" name="whatIfCurrency" value="BHD" onchange="calculateWhatIf()"><span id="whatIfCurrencyBHDText">دينار بحريني (د.ب)</span></label>
 </div>
-<div class="results-container">
-<div class="result-box active">
+<div class="wi-carat-block">
 <h3 id="whatIfCarat24Title">عيار 24</h3>
-<div class="value" id="whatIfG24">0.000 <span class="currency">$</span></div>
+<div id="whatIfG24"><div class="wi-empty">—</div></div>
 </div>
-<div class="result-box active">
+<div class="wi-carat-block">
 <h3 id="whatIfCarat22Title">عيار 22</h3>
-<div class="value" id="whatIfG22">0.000 <span class="currency">$</span></div>
+<div id="whatIfG22"><div class="wi-empty">—</div></div>
 </div>
-</div>
-<div class="results-container">
-<div class="result-box active">
+<div class="wi-carat-block">
 <h3 id="whatIfCarat21Title">عيار 21</h3>
-<div class="value" id="whatIfG21">0.000 <span class="currency">$</span></div>
+<div id="whatIfG21"><div class="wi-empty">—</div></div>
 </div>
-<div class="result-box active">
+<div class="wi-carat-block">
 <h3 id="whatIfCarat18Title">عيار 18</h3>
-<div class="value" id="whatIfG18">0.000 <span class="currency">$</span></div>
-</div>
+<div id="whatIfG18"><div class="wi-empty">—</div></div>
 </div>
 <div id="whatIfNote" class="what-if-summary"></div>
 <button class="btn-calc" onclick="closeWhatIfModal()" style="margin-top: 15px;">✔️ <span id="whatIfCloseBtn">إغلاق</span></button>
@@ -873,40 +914,134 @@ const USD_TO_BHD_RATE = 0.377;
 /* ============================================================
    💭 NEW: "What If" (لو) — Calculator Functions
    ============================================================ */
+const WHATIF_FIELDS = [
+    { id: 'whatIfOunce1', type: 'down', num: '1', bg: '#e53935' },
+    { id: 'whatIfOunce2', type: 'up',   num: '2', bg: '#43a047' },
+    { id: 'whatIfOunce3', type: 'down', num: '3', bg: '#fb8c00' },
+    { id: 'whatIfOunce4', type: 'up',   num: '4', bg: '#1e88e5' }
+];
+const WHATIF_PAIRS = [[0, 1], [2, 3]];
+const WHATIF_CARATS = [
+    { carat: 24, boxId: 'whatIfG24' },
+    { carat: 22, boxId: 'whatIfG22' },
+    { carat: 21, boxId: 'whatIfG21' },
+    { carat: 18, boxId: 'whatIfG18' }
+];
+
+function getReadableTextColor(hex) {
+    const h = hex.replace('#', '');
+    const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+    return ((r * 299 + g * 587 + b * 114) / 1000) >= 150 ? '#000000' : '#ffffff';
+}
+function whatIfT() { return translations[goldData.currentLang] || translations.ar; }
+function whatIfTypeLabel(type) {
+    const t = whatIfT();
+    return type === 'down' ? (t.whatIfDown || 'نزول') : (t.whatIfUp || 'صعود');
+}
+function whatIfBadge(i) {
+    const f = WHATIF_FIELDS[i];
+    return `<span class="wi-badge sm" style="background:${f.bg};color:${getReadableTextColor(f.bg)};">${f.num}</span>`;
+}
+function updateWhatIfLabels() {
+    WHATIF_FIELDS.forEach((f, i) => {
+        const el = document.getElementById('whatIfLbl' + (i + 1));
+        if (el) el.innerText = whatIfTypeLabel(f.type);
+    });
+}
+function initWhatIfColors() {
+    WHATIF_FIELDS.forEach((f, i) => {
+        const fg = getReadableTextColor(f.bg);
+        const inp = document.getElementById(f.id);
+        if (inp) {
+            inp.style.backgroundColor = f.bg;
+            inp.style.color = fg;
+            inp.style.borderColor = f.bg;
+            inp.style.setProperty('--wi-fg', fg);
+        }
+        document.querySelectorAll('.wi-badge[data-wi-idx="' + i + '"]').forEach(b => {
+            b.style.backgroundColor = f.bg;
+            b.style.color = fg;
+        });
+    });
+    updateWhatIfLabels();
+}
 function openWhatIfModal() {
     document.getElementById('whatIfModal').style.display = 'flex';
+    initWhatIfColors();
     calculateWhatIf();
 }
 function closeWhatIfModal() {
     document.getElementById('whatIfModal').style.display = 'none';
 }
+function whatIfDiffChip(a, b, diff, pct, symbol, decimals, detailHTML) {
+    const t = whatIfT();
+    const fa = WHATIF_FIELDS[a], fb = WHATIF_FIELDS[b];
+    const rounded = Number(diff.toFixed(decimals));
+    const cls = rounded > 0 ? 'up' : (rounded < 0 ? 'down' : 'flat');
+    const arrow = cls === 'up' ? '▲' : (cls === 'down' ? '▼' : '＝');
+    const sign = rounded > 0 ? '+' : '';
+    const pctTxt = (pct > 0 ? '+' : '') + pct.toFixed(2) + '%';
+    const dirArrow = goldData.currentLang === 'ar' ? '←' : '→';
+    return `<div class="wi-diff ${cls}">
+        <div class="wi-diff-caption">${t.whatIfDiffLabel || 'الفارق'}</div>
+        <div class="wi-diff-head">${whatIfBadge(a)} ${whatIfTypeLabel(fa.type)} <span class="wi-diff-arrow">${dirArrow}</span> ${whatIfBadge(b)} ${whatIfTypeLabel(fb.type)}</div>
+        ${detailHTML ? `<div class="wi-diff-detail">${detailHTML}</div>` : ''}
+        <div class="wi-diff-val">${arrow} ${sign}${rounded.toFixed(decimals)} <span class="wi-cell-cur">${symbol}</span> <small>(${pctTxt})</small></div>
+    </div>`;
+}
 function calculateWhatIf() {
-    const ounceUSD = parseFloat(document.getElementById('whatIfOuncePrice').value) || 0;
+    const t = whatIfT();
     const currencyRadio = document.querySelector('input[name="whatIfCurrency"]:checked');
     const currency = currencyRadio ? currencyRadio.value : 'USD';
     const symbol = currency === 'USD' ? '$' : 'د.ب';
-    const gram24USD = ounceUSD / OUNCE_GRAMS;
-    const convert = (usd) => currency === 'USD' ? usd : usd * USD_TO_BHD_RATE;
+    const rate = currency === 'USD' ? 1 : USD_TO_BHD_RATE;
+    const dirArrow = goldData.currentLang === 'ar' ? '←' : '→';
 
-    const g24 = convert(gram24USD);
-    const g22 = convert(gram24USD * (22 / 24));
-    const g21 = convert(gram24USD * (21 / 24));
-    const g18 = convert(gram24USD * (18 / 24));
+    const values = WHATIF_FIELDS.map(f => {
+        const el = document.getElementById(f.id);
+        const v = el ? parseFloat(el.value) : NaN;
+        return (isFinite(v) && v > 0) ? v : null;
+    });
+    const anyValue = values.some(v => v !== null);
 
-    document.getElementById('whatIfG24').innerHTML = `${g24.toFixed(3)} <span class="currency">${symbol}</span>`;
-    document.getElementById('whatIfG22').innerHTML = `${g22.toFixed(3)} <span class="currency">${symbol}</span>`;
-    document.getElementById('whatIfG21').innerHTML = `${g21.toFixed(3)} <span class="currency">${symbol}</span>`;
-    document.getElementById('whatIfG18').innerHTML = `${g18.toFixed(3)} <span class="currency">${symbol}</span>`;
+    WHATIF_CARATS.forEach(def => {
+        const box = document.getElementById(def.boxId);
+        if (!box) return;
+        const gramOf = (oz) => (oz / OUNCE_GRAMS) * (def.carat / 24) * rate;
+        let cells = '';
+        values.forEach((oz, i) => {
+            if (oz === null) return;
+            const f = WHATIF_FIELDS[i];
+            cells += `<div class="wi-cell" style="background:${f.bg};color:${getReadableTextColor(f.bg)};">
+                <div class="wi-cell-label">${whatIfTypeLabel(f.type)} ${f.num}</div>
+                <div class="wi-cell-value">${gramOf(oz).toFixed(3)} <span class="wi-cell-cur">${symbol}</span></div>
+            </div>`;
+        });
+        let html = cells ? `<div class="wi-cells">${cells}</div>` : `<div class="wi-empty">—</div>`;
+        let diffs = '';
+        WHATIF_PAIRS.forEach(([a, b]) => {
+            if (values[a] === null || values[b] === null) return;
+            const ga = gramOf(values[a]), gb = gramOf(values[b]);
+            diffs += whatIfDiffChip(a, b, gb - ga, ((gb - ga) / ga) * 100, symbol, 3, '');
+        });
+        if (diffs) html += `<div class="wi-diffs">${diffs}</div>`;
+        box.innerHTML = html;
+    });
 
     const noteEl = document.getElementById('whatIfNote');
-    if (ounceUSD > 0) {
-        const gram24NoteUSD = gram24USD.toFixed(3);
-        const gram24NoteBHD = (gram24USD * USD_TO_BHD_RATE).toFixed(3);
+    if (!noteEl) return;
+    if (anyValue) {
+        const fmt = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        let ounceDiffs = '';
+        WHATIF_PAIRS.forEach(([a, b]) => {
+            if (values[a] === null || values[b] === null) return;
+            const diff = values[b] - values[a];
+            ounceDiffs += whatIfDiffChip(a, b, diff, (diff / values[a]) * 100, '$', 2, `${fmt(values[a])} ${dirArrow} ${fmt(values[b])} $`);
+        });
         noteEl.innerHTML =
-            `💡 سعر الأونصة: <b>${ounceUSD.toLocaleString('en-US', { maximumFractionDigits: 2 })} $</b><br>` +
-            `⚖️ الأونصة = <b>${OUNCE_GRAMS} غرام</b><br>` +
-            `🟡 سعر الغرام الخام (24) بالدولار: <b>${gram24NoteUSD} $</b><br>` +
-            `🇧🇭 سعر الغرام الخام (24) بالدينار: <b>${gram24NoteBHD} د.ب</b>`;
+            (ounceDiffs ? `<div class="wi-note-title">${t.whatIfOunceDiffTitle || '📏 فارق سعر الأونصة (بالدولار)'}</div><div class="wi-diffs">${ounceDiffs}</div>` : '') +
+            `<div style="margin-top:10px;">⚖️ ${t.whatIfOunceEq || 'الأونصة'} = <b>${OUNCE_GRAMS}</b> ${t.whatIfGramUnit || 'غرام'}` +
+            (currency === 'BHD' ? ` &nbsp;|&nbsp; 💱 1 $ = <b>${USD_TO_BHD_RATE}</b> د.ب` : '') + `</div>`;
     } else {
         noteEl.innerHTML = '';
     }
@@ -2152,12 +2287,13 @@ const translations = {
         /* NEW — What If */
         whatIfBtnText: "لو",
         whatIfTitle: "💭 حاسبة لو",
-        whatIfSubtitle: "أدخل سعر الأونصة العالمية بالدولار لتعرف كم يكون سعر الغرام بالعيارات المختلفة",
-        whatIfOunceLabel: "سعر الأونصة العالمية بالدولار الأمريكي ($):",
+        whatIfSubtitle: "أدخل سعر الأونصة العالمية بالدولار في الخانات الأربع (نزول ← صعود ← نزول ← صعود) لتعرف سعر الغرام بكل عيار والفارق بين النزول والصعود",
+        whatIfOunceLabel: "سعر الأونصة العالمية بالدولار الأمريكي ($) — أدخل ما تحتاجه فقط:",
         whatIfCurrencyUSD: "دولار أمريكي ($)",
         whatIfCurrencyBHD: "دينار بحريني (د.ب)",
         whatIfCloseBtn: "إغلاق",
-        whatIfCarat24: "عيار 24", whatIfCarat22: "عيار 22", whatIfCarat21: "عيار 21", whatIfCarat18: "عيار 18"
+        whatIfCarat24: "عيار 24", whatIfCarat22: "عيار 22", whatIfCarat21: "عيار 21", whatIfCarat18: "عيار 18",
+        whatIfDown: "نزول", whatIfUp: "صعود", whatIfDiffLabel: "الفارق", whatIfOunceDiffTitle: "📏 فارق سعر الأونصة (بالدولار)", whatIfOunceEq: "الأونصة", whatIfGramUnit: "غرام"
     },
     en: {
         devTag: "Website developed by Muharraqi", title: "🇧🇭 Gold Price Comparison - Bahrain",
@@ -2232,12 +2368,13 @@ const translations = {
         chartTitle: "📊 Visual comparison between offers (Making/g)",
         whatIfBtnText: "What If",
         whatIfTitle: "💭 What If Calculator",
-        whatIfSubtitle: "Enter the global ounce price in USD to see gram prices by carat",
-        whatIfOunceLabel: "Global Ounce Price in USD ($):",
+        whatIfSubtitle: "Enter the global ounce price in USD in the four fields (Drop → Rise → Drop → Rise) to see gram prices by carat and the difference between drop and rise",
+        whatIfOunceLabel: "Global Ounce Price in USD ($) — fill only what you need:",
         whatIfCurrencyUSD: "US Dollar ($)",
         whatIfCurrencyBHD: "Bahraini Dinar (BHD)",
         whatIfCloseBtn: "Close",
-        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K"
+        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K",
+        whatIfDown: "Drop", whatIfUp: "Rise", whatIfDiffLabel: "Difference", whatIfOunceDiffTitle: "📏 Ounce price difference (USD)", whatIfOunceEq: "Ounce", whatIfGramUnit: "grams"
     },
     hi: {
         devTag: "वेबसाइट मुहर्रकी द्वारा", title: "🇧🇭 सोने की दुकानों के बीच मूल्य तुलना - बहरीन",
@@ -2311,12 +2448,13 @@ const translations = {
         chartTitle: "📊 ऑफर की दृश्य तुलना (मेकिंग/ग्राम)",
         whatIfBtnText: "क्या हो",
         whatIfTitle: "💭 क्या हो अगर कैलकुलेटर",
-        whatIfSubtitle: "ग्राम कीमत देखने के लिए अंतर्राष्ट्रीय औंस मूल्य दर्ज करें",
+        whatIfSubtitle: "चारों खानों में अंतर्राष्ट्रीय औंस मूल्य दर्ज करें (गिरावट → बढ़त → गिरावट → बढ़त) ताकि हर कैरेट का ग्राम मूल्य और अंतर दिखे",
         whatIfOunceLabel: "अंतर्राष्ट्रीय औंस मूल्य (USD $):",
         whatIfCurrencyUSD: "अमेरिकी डॉलर ($)",
         whatIfCurrencyBHD: "बहरीनी दिनार (BHD)",
         whatIfCloseBtn: "बंद करें",
-        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K"
+        whatIfCarat24: "24K", whatIfCarat22: "22K", whatIfCarat21: "21K", whatIfCarat18: "18K",
+        whatIfDown: "गिरावट", whatIfUp: "बढ़त", whatIfDiffLabel: "अंतर", whatIfOunceDiffTitle: "📏 औंस मूल्य अंतर (USD)", whatIfOunceEq: "औंस", whatIfGramUnit: "ग्राम"
     }
 };
 let goldData = { currentLang: 'ar', fontSize: 1.0, theme: 'light', mode: 'normal', savedShops: [] };
@@ -3160,6 +3298,7 @@ function changeLanguage() {
     document.getElementById('whatIfCarat22Title').innerText = t.whatIfCarat22 || 'عيار 22';
     document.getElementById('whatIfCarat21Title').innerText = t.whatIfCarat21 || 'عيار 21';
     document.getElementById('whatIfCarat18Title').innerText = t.whatIfCarat18 || 'عيار 18';
+    updateWhatIfLabels();
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     saveLocalData();
@@ -3518,6 +3657,7 @@ window.onload = function() {
     calculateBullionMetrics();
     calculateJewelryMetrics();
     /* NEW — initial What If calc */
+    initWhatIfColors();
     calculateWhatIf();
 };
 </script>
